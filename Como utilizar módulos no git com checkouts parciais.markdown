@@ -1,5 +1,4 @@
 tags: git, módulo, módulo parcial
-
 ---
 
 # Introdução
@@ -32,7 +31,7 @@ Para finalizar aplique os filtros que você criou, com o seguinte comando na rai
 
 # 3. Atualizar módulos 
 
-## 3.1. Atualizar um único módulo
+## 3.1. Atualizar um único módulo do projeto
 
 Cada módulo é um repositório normal do git, isso significa se estiver na raiz do módulo, você será capaz de executar:
 
