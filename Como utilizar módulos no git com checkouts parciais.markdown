@@ -1,3 +1,4 @@
+---
 tags: git, módulo, módulo parcial
 ---
 
