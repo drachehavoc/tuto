@@ -2,7 +2,7 @@
 
 O propósito deste tútorial é criar uma instalação portável para desenvolvimento com Flutter.
 
-# 1 - Download de Ferramentas
+# 1 - Download das Ferramentas
 
 Todos os downloads não devem ser feitos das versões de instalação e sim das verões compactadas (zip).
 
@@ -38,7 +38,7 @@ Acesse [https://git-scm.com/](https://git-scm.com/) e clique no botão de downlo
 ---
 **ATENÇÃO**
 
-Na próxima página um download iniciará automaticamente, cancele esta ação pois precisamos selecionar a versão portátil da aplicação.
+Na próxima página um download da versão instalavel iniciará automaticamente, cancele esta ação pois é preciso baixar a versão portátil da aplicação.
 ---
 
 ### 1.3.2 - Download, GitSCM - Passo 2
