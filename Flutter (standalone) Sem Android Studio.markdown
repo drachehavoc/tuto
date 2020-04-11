@@ -4,7 +4,7 @@ O propósito deste tútorial é criar uma instalação portável para desenvolvi
 
 # 1 - Download de Ferramentas
 
-Todos os downloads não devem ser feitos das versões de instalção e sim das verões compactadas (zip).
+Todos os downloads não devem ser feitos das versões de instalação e sim das verões compactadas (zip).
 
 ## 1.1 - Download, Java JDK (ODK):
 
