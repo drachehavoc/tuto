@@ -94,7 +94,7 @@ Certifique-se que todos os arquivos foram baixados, corretamente:
 
 ## 2.1 - Descompactação das Ferramentas
 
-Descompacte os arquivos com sua ferramenta de extração favorita ou utilize o extrator do windows, o único arquivo que não será necessário utilizar uma ferramenta para descompactação é o **PortableGit-\*.7z.exe** que já é um arquivo auto extrator.
+Descompacte os arquivos com sua ferramenta de extração favorita 7-Zip, WinRar, Winzip, mas não utilize o extrator do windows pois alguns arquivos são corrompidos; O único arquivo que não será necessário utilizar uma ferramenta para descompactação é o **PortableGit-\*.7z.exe** pois ele tem um extrator embutido, apenas de dois cliques e escolha a pasta e clique em ok.
 
 ## 2.2 - Renomeando as pastas
 
@@ -175,10 +175,17 @@ SET PATH=%APP_ROOT%gitscm\mingw64\bin;%PATH%
 
 _Para configurar o Android SDK, vamos apontar para pastas que ainda não existem, pois ainda não foi executado o passo onde os dowloads das ferramentas serão feitos, mas isso não será um problema._
 
-Para o Android SDK é necessário criar a várivael de ambiente **ANDROID_SDK_ROOT** que serve para indicar em que pasta o Android SDK esta descompactado, também é necessário adicionar duas pastas ao **PATH**, **platform-tools** e **cmdline-tools\latest\bin**:
+Para o Android SDK é necessário criar a várivael de ambiente **ANDROID_SDK_ROOT** que serve para indicar em que pasta o Android SDK esta descompactado, também é necessário adicionar duas pastas ao **PATH**, **platform-tools**, **cmdline-tools\latest\bin**:
+
+---
+**ERRO DA VERSÃO DO FLUTTER**
+
+por conta de um erro da versão atual do flutter precisaremos também adicionar **tools\bin** ao **PATH**.
+---
 
 ```bat
 SET ANDROID_SDK_ROOT=%SOFTWARES_HOME%\android-sdk
+SET PATH=%ANDROID_SDK_ROOT%\tools\bin;%PATH%
 SET PATH=%ANDROID_SDK_ROOT%\platform-tools;%PATH%
 SET PATH=%ANDROID_SDK_ROOT%\cmdline-tools\latest\bin;%PATH%
 ```
@@ -207,7 +214,7 @@ Após tudo pronto o arquivo deve se parecer com o seguinte:
 @ECHO OFF
 
 ::
-:: VÁRIAVEIS COMUNS
+:: VARIÁVEIS COMUNS
 ::
 
 SET APP_ROOT=%~dp0
@@ -238,6 +245,7 @@ SET PATH=%APP_ROOT%gitscm\mingw64\bin;%PATH%
 ::
 
 SET ANDROID_SDK_ROOT=%APP_ROOT%\android-sdk
+SET PATH=%ANDROID_SDK_ROOT%\tools\bin;%PATH%
 SET PATH=%ANDROID_SDK_ROOT%\platform-tools;%PATH%
 SET PATH=%ANDROID_SDK_ROOT%\cmdline-tools\latest\bin;%PATH%
 
@@ -256,3 +264,9 @@ SET PATH=%APP_ROOT%\vscode\bin;%PATH%
 
 CMD /K
 ```
+
+# 4 Instalação 
+
+## 4.1 - Instalação, Android SDK
+
+
