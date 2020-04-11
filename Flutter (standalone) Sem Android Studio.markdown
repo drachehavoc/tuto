@@ -92,13 +92,34 @@ Certifique-se que todos os arquivos foram baixados, corretamente:
 
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/uncompress-files-list.png?raw=true)
 
-## 2.1 - Descompactação das Ferramentas - Passo 1 
+## 2.1 - Descompactação das Ferramentas
 
-Descompacte os arquivos com extenção **zip** com sua ferramenta de extração favorita ou utilize o extrator do windows, caso opte por utilizar o extrator do windows, selecione os aquivos **zip** clique com o botão direito, então clique em **extrair tudo**:
+Descompacte os arquivos com sua ferramenta de extração favorita ou utilize o extrator do windows, o único arquivo que não será necessário utilizar uma ferramente para descompactação é o **PortableGit-\*.7z.exe** que já é um arquivo auto extrator.
+
+## 2.2 - Renomenado as pastas
+
+Após a descompactação você deve ter uma pasta com as seguintes sub-pastas:
 
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/uncompress-files-a.png?raw=true)
 
-## 2.2 - Descompactação das Ferramentas - Passo 2
-Na tela a seguir, certifique-se que o caminho para extração esta correto:
+para fácilitar o processo vamos renomear as pastas conforme a tabela a seguir:
 
-![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/uncompress-files-a-1.png?raw=true)
+| Renomear de:                                                     | Para:         |
+| ---------------------------------------------------------------- | ------------- |
+| flutter                                                          |               |
+| commandlinetools-win-6200805_latest                              | android-sdk   |
+| java-1.8.0-openjdk-1.8.0.242-1.b08.ojdkbuild.windows.x86_64      | jdk           |
+| PortableGit                                                      | gitscm        |
+| VSCode-win32-x64-1.44.0                                          | vscode        |
+
+**Opcionalmente é possível escluir os arquivos compactados deixando somente as pastas das aplicações**, ao término deste processo a estrutura de pastas devem estar como a imagem a seguir:
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/a.png?raw=true)
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/b.png?raw=true)
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/c.png?raw=true)
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/d.png?raw=true)
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/e.png?raw=true)
