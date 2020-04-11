@@ -33,6 +33,7 @@ Na próxima página encontre o botão de download do Flutter, clique e aguarde o
 ### 1.3.1 - Download, GitSCM - Passo 1
 
 Acesse [https://git-scm.com/](https://git-scm.com/) e clique no botão de download:
+
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/download-gitscm-1.png?raw=true)
   
 ---
@@ -74,3 +75,17 @@ Acesse [https://code.visualstudio.com/](https://code.visualstudio.com/) e clique
 
 Na próxima página encontre a versão portátil para download:
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/download-vscode-2.png?raw=true)
+
+# 2 - Descompactação das Ferramentas
+
+Certifique-se que todos os arquivos foram baixados, corretamente:
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/uncompress-files-list.png?raw=true)
+
+## 2.1 - Descompactação das Ferramentas - Passo 1 
+
+Descompacte os arquivos com extenção **zip** com sua ferramenta de extração favorita ou utilize o extrator do windows, caso opte por utilizar o extrator do windows, selecione os aquivos **zip** clique com o botão direito, então clique em **extrair tudo**:
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/uncompress-files-a.png?raw=true)
+
+## 2.2 - Descompactação das Ferramentas - Passo 2
+Na tela a seguir, certifique-se que o caminho para extração esta correto:
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/uncompress-files-a-1.png?raw=true)
