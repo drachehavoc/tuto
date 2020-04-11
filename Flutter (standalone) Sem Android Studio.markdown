@@ -123,3 +123,73 @@ para fácilitar o processo vamos renomear as pastas conforme a tabela a seguir:
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/d.png?raw=true)
 
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/e.png?raw=true)
+
+# 3 Arquivo de Configuração de Ambiente
+
+Crie um arquivo chamado **run.cmd** e abra em seu editor de texto/ide favorito.
+
+Para prosseguir é preciso compreensão do que são variáveis de ambiente, caso não saiba sobre o que se tratam sugiro uma pesquisa na internet acerca do assunto, também é interessante entender como a variável de ambiente **PAT** funciona, segue uma breve descrição:
+
+_A variavel path contém uma lista de pastas separadas por _;_, ela serve para dizer para o ambiente onde encontrar os arquivos a serem executados._
+
+Como dito anteriormente, tavez seja interessante uma pesquisa mais aprofundada sobre o funcionamento da váriavel de ambiente **PATH**.
+
+## 3.1 - Variáveis Comuns
+
+No arquivo **run.cmd** crie as seguintes variáveis, **APP_ROOT**, para armazenar o caminho raiz de nosso ambiente e **APP_DATA**, para armazenar o caminho onde serão salvos os dados de nosso ambiente portátil:
+
+```bat
+SET APP_ROOT=%~dp0
+SET APP_DATA=%APP_ROOT%\.appdata
+```
+
+## 3.2 - Configuração, JDK (ODK)
+
+No arquivo vamos adicionar a váriavel **JAVA_HOME**, que serve para apontar onde esta a pasta raiz do JDK e também vamos adicionar na váriavel **PATH** onde estão os arquivos _executáveis_ do Java:
+
+```bat
+SET JAVA_HOME=%APP_ROOT%jdk
+SET PATH=%JAVA_HOME%\bin;%PATH%
+```
+
+## 3.3 - Configuração, Flutter
+
+Para configurar Flutter tudo que é preciso fazer é adicionar a sua pasta **bin** na lista de pastas da váriavel de ambiente **PATH**:
+
+```bat
+SET PATH=%APP_ROOT%flutter\bin;%PATH%
+```
+
+## 3.4 - Configuração, GitSCM
+
+Assim como o Flutter, para configurar o GitSCM é necessário adicionar a pasta **bin** na lista de pastas da váriavel de ambiente **PATH**, porém é necessário adicionar também a pasta **mingw64\bin**:
+
+```bat
+SET PATH=%APP_ROOT%gitscm\bin;%PATH%
+SET PATH=%APP_ROOT%gitscm\mingw64\bin;%PATH%
+```
+
+## 3.5 - Configuração, Android SDK
+
+_Para configurar o Android SDK, vamos apontar para pastas que ainda não existem, pois ainda não foi executado o passo onde os dowloads das ferramentas serão feitos, mas isso não será um problema._
+
+Para o Android SDK é necessário criar a várivael de ambiente **ANDROID_SDK_ROOT** que serve para indicar em que pasta o Android SDK esta descompactado, também é necessário adicionar duas pastas ao **PATH**, **platform-tools** e **cmdline-tools\latest\bin**:
+
+```bat
+SET ANDROID_SDK_ROOT=%SOFTWARES_HOME%\android-sdk
+SET PATH=%ANDROID_SDK_ROOT%\platform-tools;%PATH%
+SET PATH=%ANDROID_SDK_ROOT%\cmdline-tools\latest\bin;%PATH%
+```
+
+## 3.6 - Configuração, Visual Studio Code (VSCode)
+
+Por último precisamos configurar as váriaveis de ambiente para o VSCode, porém temos que garantir que o VSCOde irá funcionar de forma portátil, por isso é preciso configurar as sguintes váriaveis **VSCODE_EXTENSIONS**, responsável por onde as extensões do VSCode são salvas; **VSCODE_APPDATA**, responsável por informar onde serão salvos os dados pessoais do usuário, como prefencia de cores, tamonho de fonte etc; **VSCODE_LOGS**, responsável por informar onde serão salvos os logs do VSCode.
+
+Além das váriaveis que farão com que o VSCode funcione de maneira portátil, também é preciso adicionar a pasta **bin** do VSCode ao **PATH**.
+
+```bat
+SET VSCODE_EXTENSIONS=%APP_DATA%\vscode\extentions
+SET VSCODE_APPDATA=%APP_DATA%\vscode\data
+SET VSCODE_LOGS=%APP_DATA%\vscode\logs
+SET PATH=%APP_ROOT%\vscode\bin;%PATH%
+```
