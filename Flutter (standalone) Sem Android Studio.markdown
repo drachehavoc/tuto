@@ -134,6 +134,8 @@ _A variavel path contém uma lista de pastas separadas por _;_, ela serve para d
 
 Como dito anteriormente, tavez seja interessante uma pesquisa mais aprofundada sobre o funcionamento da váriavel de ambiente **PATH**.
 
+Na primeira linha de nosso arquivo vamos adicionar o seguinte trecho de código ```bat @ECHO OFF ```, para que não sejam impressos no terminal as instruções que iremos adicionar no arquivo.
+
 ## 3.1 - Variáveis Comuns
 
 No arquivo **run.cmd** crie as seguintes variáveis, **APP_ROOT**, para armazenar o caminho raiz de nosso ambiente e **APP_DATA**, para armazenar o caminho onde serão salvos os dados de nosso ambiente portátil:
