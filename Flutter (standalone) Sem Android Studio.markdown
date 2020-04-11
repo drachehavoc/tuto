@@ -1,10 +1,10 @@
-# Indrocução
+# Introdução
 
-O propósito deste tútorial é criar uma instalação portável para desenvolvimento com Flutter.
+O propósito deste tutorial é criar uma instalação portável para desenvolvimento com Flutter.
 
 # 1 - Download das Ferramentas
 
-Todos os downloads não devem ser feitos das versões de instalação e sim das verões compactadas (zip).
+Todos os downloads não devem ser feitos das versões de instalação e sim das versões compactadas (zip).
 
 ## 1.1 - Download, Java JDK (ODK):
 
@@ -43,12 +43,12 @@ Acesse [https://git-scm.com/](https://git-scm.com/) e clique no botão de downlo
 ---
 **ATENÇÃO**
 
-Na próxima página um download da versão instalavel iniciará automaticamente, cancele esta ação pois é preciso baixar a versão portátil da aplicação.
+Na próxima página um download da versão instalável iniciará automaticamente, cancele esta ação pois é preciso baixar a versão portátil da aplicação.
 ---
 
 ### 1.3.2 - Download, GitSCM - Passo 2
 
-Clique no link de download para a versão portatil da aplicação:
+Clique no link de download para a versão portátil da aplicação:
 
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/download-gitscm-2.png?raw=true)
   
@@ -94,15 +94,15 @@ Certifique-se que todos os arquivos foram baixados, corretamente:
 
 ## 2.1 - Descompactação das Ferramentas
 
-Descompacte os arquivos com sua ferramenta de extração favorita ou utilize o extrator do windows, o único arquivo que não será necessário utilizar uma ferramente para descompactação é o **PortableGit-\*.7z.exe** que já é um arquivo auto extrator.
+Descompacte os arquivos com sua ferramenta de extração favorita ou utilize o extrator do windows, o único arquivo que não será necessário utilizar uma ferramenta para descompactação é o **PortableGit-\*.7z.exe** que já é um arquivo auto extrator.
 
-## 2.2 - Renomenado as pastas
+## 2.2 - Renomeando as pastas
 
-Após a descompactação você deve ter uma pasta com as seguintes sub-pastas:
+Após a descompactação você deve ter uma pasta com as seguintes subpastas:
 
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/uncompress-files-a.png?raw=true)
 
-para fácilitar o processo vamos renomear as pastas conforme a tabela a seguir:
+para facilitar o processo vamos renomear as pastas conforme a tabela a seguir:
 
 | Renomear de:                                                     | Para:         |
 | ---------------------------------------------------------------- | ------------- |
@@ -112,7 +112,7 @@ para fácilitar o processo vamos renomear as pastas conforme a tabela a seguir:
 | PortableGit                                                      | gitscm        |
 | VSCode-win32-x64-1.44.0                                          | vscode        |
 
-**Opcionalmente é possível escluir os arquivos compactados deixando somente as pastas das aplicações**, ao término deste processo a estrutura de pastas devem estar como a imagem a seguir:
+**Opcionalmente é possível excluir os arquivos compactados deixando somente as pastas das aplicações**, ao término deste processo a estrutura de pastas devem estar como a imagem a seguir:
 
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/a.png?raw=true)
 
@@ -130,11 +130,11 @@ Crie um arquivo chamado **run.cmd** e abra em seu editor de texto/ide favorito.
 
 Para prosseguir é preciso compreensão do que são variáveis de ambiente, caso não saiba sobre o que se tratam sugiro uma pesquisa na internet acerca do assunto, também é interessante entender como a variável de ambiente **PAT** funciona, segue uma breve descrição:
 
-_A variavel path contém uma lista de pastas separadas por _;_, ela serve para dizer para o ambiente onde encontrar os arquivos a serem executados._
+_A variável path contém uma lista de pastas separadas por _;_, ela serve para dizer para o ambiente onde encontrar os arquivos a serem executados._
 
-Como dito anteriormente, tavez seja interessante uma pesquisa mais aprofundada sobre o funcionamento da váriavel de ambiente **PATH**.
+Como dito anteriormente, talvez seja interessante uma pesquisa mais aprofundada sobre o funcionamento da variável de ambiente **PATH**.
 
-Na primeira linha de nosso arquivo vamos adicionar o seguinte trecho de código ```bat @ECHO OFF ```, para que não sejam impressos no terminal as instruções que iremos adicionar no arquivo.
+Na primeira linha de nosso arquivo vamos adicionar o seguinte trecho de código ```@ECHO OFF```, para que não sejam impressos no terminal as instruções que iremos adicionar no arquivo.
 
 ## 3.1 - Variáveis Comuns
 
@@ -147,7 +147,7 @@ SET APP_DATA=%APP_ROOT%\.appdata
 
 ## 3.2 - Configuração, JDK (ODK)
 
-No arquivo vamos adicionar a váriavel **JAVA_HOME**, que serve para apontar onde esta a pasta raiz do JDK e também vamos adicionar na váriavel **PATH** onde estão os arquivos _executáveis_ do Java:
+No arquivo vamos adicionar a variável **JAVA_HOME**, que serve para apontar onde está a pasta raiz do JDK e também vamos adicionar na variável **PATH** onde estão os arquivos _executáveis_ do Java:
 
 ```bat
 SET JAVA_HOME=%APP_ROOT%jdk
@@ -156,7 +156,7 @@ SET PATH=%JAVA_HOME%\bin;%PATH%
 
 ## 3.3 - Configuração, Flutter
 
-Para configurar Flutter tudo que é preciso fazer é adicionar a sua pasta **bin** na lista de pastas da váriavel de ambiente **PATH**:
+Para configurar Flutter tudo que é preciso fazer é adicionar a sua pasta **bin** na lista de pastas da variável de ambiente **PATH**:
 
 ```bat
 SET PATH=%APP_ROOT%flutter\bin;%PATH%
@@ -164,7 +164,7 @@ SET PATH=%APP_ROOT%flutter\bin;%PATH%
 
 ## 3.4 - Configuração, GitSCM
 
-Assim como o Flutter, para configurar o GitSCM é necessário adicionar a pasta **bin** na lista de pastas da váriavel de ambiente **PATH**, porém é necessário adicionar também a pasta **mingw64\bin**:
+Assim como o Flutter, para configurar o GitSCM é necessário adicionar a pasta **bin** na lista de pastas da variável de ambiente **PATH**, porém é necessário adicionar também a pasta **mingw64\bin**:
 
 ```bat
 SET PATH=%APP_ROOT%gitscm\bin;%PATH%
@@ -185,13 +185,74 @@ SET PATH=%ANDROID_SDK_ROOT%\cmdline-tools\latest\bin;%PATH%
 
 ## 3.6 - Configuração, Visual Studio Code (VSCode)
 
-Por último precisamos configurar as váriaveis de ambiente para o VSCode, porém temos que garantir que o VSCOde irá funcionar de forma portátil, por isso é preciso configurar as sguintes váriaveis **VSCODE_EXTENSIONS**, responsável por onde as extensões do VSCode são salvas; **VSCODE_APPDATA**, responsável por informar onde serão salvos os dados pessoais do usuário, como prefencia de cores, tamonho de fonte etc; **VSCODE_LOGS**, responsável por informar onde serão salvos os logs do VSCode.
+Por último precisamos configurar as variáveis de ambiente para o VSCode, porém temos que garantir que o VSCode irá funcionar de forma portátil, por isso é preciso configurar as sguintes váriaveis **VSCODE_EXTENSIONS**, responsável por onde as extensões do VSCode são salvas; **VSCODE_APPDATA**, responsável por informar onde serão salvos os dados pessoais do usuário, como preferência de cores, tamanho de fonte etc; **VSCODE_LOGS**, responsável por informar onde serão salvos os logs do VSCode.
 
-Além das váriaveis que farão com que o VSCode funcione de maneira portátil, também é preciso adicionar a pasta **bin** do VSCode ao **PATH**.
+Além das variáveis que farão com que o VSCode funcione de maneira portátil, também é preciso adicionar a pasta **bin** do VSCode ao **PATH**.
 
 ```bat
 SET VSCODE_EXTENSIONS=%APP_DATA%\vscode\extentions
 SET VSCODE_APPDATA=%APP_DATA%\vscode\data
 SET VSCODE_LOGS=%APP_DATA%\vscode\logs
 SET PATH=%APP_ROOT%\vscode\bin;%PATH%
+```
+## 3.6 - Configuração, Terminal
+
+Por último será adicionado a seguinte instrução ```CMD /K```, para que o terminal fique livre para executarmos os próximos passos.
+
+## 3.7 - Configuração, Finalmente
+
+Após tudo pronto o arquivo deve se parecer com o seguinte:
+
+```bat
+@ECHO OFF
+
+::
+:: VÁRIAVEIS COMUNS
+::
+
+SET APP_ROOT=%~dp0
+SET APP_DATA=%APP_ROOT%.appdata
+
+::
+:: JAVA
+::
+
+SET JAVA_HOME=%APP_ROOT%jdk
+SET PATH=%JAVA_HOME%\bin;%PATH%
+
+::
+:: FLUTTER
+::
+
+SET PATH=%APP_ROOT%flutter\bin;%PATH%
+
+::
+:: GitSCM
+::
+
+SET PATH=%APP_ROOT%gitscm\bin;%PATH%
+SET PATH=%APP_ROOT%gitscm\mingw64\bin;%PATH%
+
+::
+::  ANDROID SDK
+::
+
+SET ANDROID_SDK_ROOT=%APP_ROOT%\android-sdk
+SET PATH=%ANDROID_SDK_ROOT%\platform-tools;%PATH%
+SET PATH=%ANDROID_SDK_ROOT%\cmdline-tools\latest\bin;%PATH%
+
+::
+:: VSCode
+::
+
+SET VSCODE_EXTENSIONS=%APP_DATA%\vscode\extentions
+SET VSCODE_APPDATA=%APP_DATA%\vscode\data
+SET VSCODE_LOGS=%APP_DATA%\vscode\logs
+SET PATH=%APP_ROOT%\vscode\bin;%PATH%
+
+::
+:: Terminal
+::
+
+CMD /K
 ```
