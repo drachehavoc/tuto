@@ -96,6 +96,12 @@ Certifique-se que todos os arquivos foram baixados, corretamente:
 
 Descompacte os arquivos com sua ferramenta de extração favorita 7-Zip, WinRar, Winzip, mas não utilize o extrator do windows pois alguns arquivos são corrompidos; O único arquivo que não será necessário utilizar uma ferramenta para descompactação é o **PortableGit-\*.7z.exe** pois ele tem um extrator embutido, apenas de dois cliques e escolha a pasta e clique em ok.
 
+---
+**ERRO DA VERSÃO ATUAL DO FLUTTER (v1.12.13+hotfix.9 ou anterior)**
+
+O Android-SDK mudou os padrões de pastas e por hora o Flutter não é capaz de encontrar os novos locais, por isso baixe uma versão mais antiga do android tools, que pode ser encontrado aqui [https://dl.google.com/android/repository/sdk-tools-windows-4333796.zip](https://dl.google.com/android/repository/sdk-tools-windows-4333796.zip), e substitua a _pasta android-sdk\tools_ pela encontrada neste arquivo.
+---
+
 ## 2.2 - Renomeando as pastas
 
 Após a descompactação você deve ter uma pasta com as seguintes subpastas:
@@ -178,7 +184,7 @@ _Para configurar o Android SDK, vamos apontar para pastas que ainda não existem
 Para o Android SDK é necessário criar a várivael de ambiente **ANDROID_SDK_ROOT** que serve para indicar em que pasta o Android SDK esta descompactado, também é necessário adicionar duas pastas ao **PATH**, **platform-tools**, **cmdline-tools\latest\bin**:
 
 ---
-**ERRO DA VERSÃO DO FLUTTER**
+**ERRO DA VERSÃO ATUAL DO FLUTTER**
 
 por conta de um erro da versão atual do flutter precisaremos também adicionar **tools\bin** ao **PATH**.
 ---
@@ -269,4 +275,17 @@ CMD /K
 
 ## 4.1 - Instalação, Android SDK
 
+De dois cliques no aqruivo que criamos **run.cmd** e digite o seguinte comando:
+
+```bat
+sdkmanager --sdk_root=%android_sdk_root% platforms;android-28 build-tools;28.0.3 emulator system-images;android-26;google_apis_playstore;x86
+```
+
+---
+**ERRO DA VERSÃO ATUAL DO FLUTTER**
+
+por conta de um erro da versão atual do flutter precisaremos adicionar o trecho --sdk_root=%android_sdk_root% a este comando. 
+---
+
+## 4.1.1 - WORKAROUND DO ERRO ATUAL DA VERSÃO DO FLUTTER
 
