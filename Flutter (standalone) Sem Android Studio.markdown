@@ -300,3 +300,33 @@ No terminal que criamos **run.cmd**, abra o VSCode executando o comando ```code`
 Na janela de extenções na caixa de pesquisa digete **Flutter**, selecione o plugin oficial Flutter e clique em **install**:
 
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-002.png?raw=true)
+
+# 5 Criando um projeto e executando
+
+## 5.1 - Novo projeto
+
+Pressione ```Ctrl+Shift+P```, uma caixa de pesquisa irá aparecer, pesquise pela palavra **flutter**, então selecione na lista o item **Flutter: New Project**:
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-003.png?raw=true)
+
+## 5.2 - Selecionar o nome e local do projeto
+
+Após o passo anterior um caixa de texto solicitando um nome para o projeto aparecerá, informe um nome sem acentos ou espaços e pressione enter:
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-004.png?raw=true)
+
+Em seguida será solicitado que escolha uma pasta para que o projeto seja criado, escolha uma pasta e então clique em **Select a folder to create the project in**:
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-004.png?raw=true)
+
+Aguarde alguns instantes e seu novo projeto Flutter será criado:
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-005.png?raw=true)
+
+## 5.3 - Executando o projeto
+
+Pressione ```F5``` e uma janela aparecerá solicitando que você selecione um _device_ para executar seu teste, aqui você pode escolher a maquina virtual que criamos no passo 4.2 ou caso você tenha um celunar com o modo debug ativado conectado em seu computador, também será possível seleciona-lo.
+
+Depois de escolher o _device_ em que deseja executar sua aplicação, aguarde alguns instantes e **BOOMM**, sua aplicação excutará:
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-006.png?raw=true)
