@@ -278,14 +278,10 @@ CMD /K
 De dois cliques no aqruivo que criamos **run.cmd** e digite o seguinte comando:
 
 ```bat
-sdkmanager --sdk_root=%android_sdk_root% platforms;android-28 build-tools;28.0.3 emulator system-images;android-26;google_apis_playstore;x86
+sdkmanager platform-tools platforms;android-28 build-tools;28.0.3 emulator system-images;android-26;google_apis_playstore;x86 cmdline-tools;latest
 ```
 
----
-**ERRO DA VERSÃO ATUAL DO FLUTTER**
+Algumas mensagens serão apresentadas pedindo que você aceite os termos de uso das ferramentas que você deseja instalar, aceite cada um dos termos e aguarde o download terminar.
 
-por conta de um erro da versão atual do flutter precisaremos adicionar o trecho --sdk_root=%android_sdk_root% a este comando. 
----
-
-## 4.1.1 - WORKAROUND DO ERRO ATUAL DA VERSÃO DO FLUTTER
+## 4.1 - Configuração de uma maquina virtual Android
 
