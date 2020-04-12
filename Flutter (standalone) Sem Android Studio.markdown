@@ -275,7 +275,7 @@ CMD /K
 
 ## 4.1 - Instalação, Android SDK
 
-De dois cliques no aqruivo que criamos **run.cmd** e digite o seguinte comando:
+De dois cliques no arquivo que criamos **run.cmd** e digite o seguinte comando:
 
 ```bat
 sdkmanager platform-tools platforms;android-28 build-tools;28.0.3 emulator system-images;android-26;google_apis_playstore;x86 cmdline-tools;latest
@@ -283,7 +283,7 @@ sdkmanager platform-tools platforms;android-28 build-tools;28.0.3 emulator syste
 
 Algumas mensagens serão apresentadas pedindo que você aceite os termos de uso das ferramentas que você deseja instalar, aceite cada um dos termos e aguarde o download terminar.
 
-## 4.2 - Criação da maquina virtual Android
+## 4.2 - Criação da máquina virtual Android
 
 Este passo é realmente muito simples, no terminal que criamos **run.cmd** digite o seguinte comando:
 
@@ -293,7 +293,7 @@ flutter emulator --create
 
 ## 4.3 - Abrindo e configurando VSCode
 
-No terminal que criamos **run.cmd**, abra o VSCode executando o comando ```code```, abra a janela para instalação de extenções:
+No terminal que criamos **run.cmd**, abra o VSCode executando o comando ```code```, abra a janela para instalação de extensões:
 
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-001.png?raw=true)
 
@@ -325,8 +325,8 @@ Aguarde alguns instantes e seu novo projeto Flutter será criado:
 
 ## 5.3 - Executando o projeto
 
-Pressione ```F5``` e uma janela aparecerá solicitando que você selecione um _device_ para executar seu teste, aqui você pode escolher a maquina virtual que criamos no passo 4.2 ou caso você tenha um celunar com o modo debug ativado conectado em seu computador, também será possível seleciona-lo.
+Pressione ```F5``` e uma janela aparecerá solicitando que você selecione um _device_ para executar seu teste, aqui você pode escolher a máquina virtual que criamos no passo 4.2 ou caso você tenha um celular com o modo debug ativado conectado em seu computador, também será possível seleciona-lo.
 
-Depois de escolher o _device_ em que deseja executar sua aplicação, aguarde alguns instantes e **BOOMM**, sua aplicação excutará:
+Depois de escolher o _device_ em que deseja executar sua aplicação, aguarde alguns instantes e **BOOMM**, sua aplicação executará:
 
 ![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-007.png?raw=true)
