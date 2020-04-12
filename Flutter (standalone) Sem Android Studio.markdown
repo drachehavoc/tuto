@@ -329,4 +329,4 @@ Pressione ```F5``` e uma janela aparecerá solicitando que você selecione um _d
 
 Depois de escolher o _device_ em que deseja executar sua aplicação, aguarde alguns instantes e **BOOMM**, sua aplicação excutará:
 
-![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-006.png?raw=true)
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-007.png?raw=true)
