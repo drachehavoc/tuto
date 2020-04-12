@@ -283,5 +283,20 @@ sdkmanager platform-tools platforms;android-28 build-tools;28.0.3 emulator syste
 
 Algumas mensagens serão apresentadas pedindo que você aceite os termos de uso das ferramentas que você deseja instalar, aceite cada um dos termos e aguarde o download terminar.
 
-## 4.1 - Configuração de uma maquina virtual Android
+## 4.2 - Criação da maquina virtual Android
 
+Este passo é realmente muito simples, no terminal que criamos **run.cmd** digite o seguinte comando:
+
+```bat
+flutter emulator --create
+```
+
+## 4.3 - Abrindo e configurando VSCode
+
+No terminal que criamos **run.cmd**, abra o VSCode executando o comando ```code```, abra a janela para instalação de extenções:
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-001.png?raw=true)
+
+Na janela de extenções na caixa de pesquisa digete **Flutter**, selecione o plugin oficial Flutter e clique em **install**:
+
+![](https://github.com/drachehavoc/tuto/blob/master/Flutter%20(standalone)%20Sem%20Android%20Studio/vscode-002.png?raw=true)
