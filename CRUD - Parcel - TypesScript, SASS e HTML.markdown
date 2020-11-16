@@ -156,7 +156,7 @@ Em nosso proejto utilizaremos HTML, SCSS e TS, então na pasra `src` e `srv` cri
 
 #### 1.2.5.1 Pasta src (Cliente)
 
-index.html
+./src/index.html
 ```html
 <!DOCTYPE html>
   <html lang="en">
@@ -171,14 +171,14 @@ index.html
 </html>
 ```
 
-main.ts
+./src/main.ts
 ```ts
 import "./main.scss";
 
 alert("Hello World!");
 ```
 
-main.scss
+./src/main.scss
 ```scss
 body {
     background: lightgreen;
@@ -187,7 +187,7 @@ body {
 
 #### 1.2.5.2 Pasta srv (Servidor)
 
-main.ts
+./srv/main.ts
 ```ts
 console.log("Server: Hello World!");
 ```
@@ -286,6 +286,39 @@ Server: Hello World!
 
 # 2. Conexão e criação do banco de dados
 
-No arquivo `./srv/main.ts`  
+No arquivo `./srv/database.ts`  
+```ts
+import { Database } from 'sqlite3';
+import { open } from 'sqlite';
 
+export async function init() {
+    const db = await open({
+        filename: 'srv/database.db',
+        driver: Database,
+    });
+
+    await db.exec(`
+        CREATE TABLE IF NOT EXISTS pessoa (
+            id        INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome      TEXT NOT NULL,
+            sobrenome TEXT NOT NULL,
+            email     TEXT NOT NULL UNIQUE,
+            telefone  TEXT NOT NULL UNIQUE
+        )
+    `);
+
+    return db;
+}
+```
+
+./srv/main.ts
+```ts
+import { init as initDatabase } from "./database";
+
+async function init() {
+    await initDatabase();
+}
+
+init();
+```
 …
