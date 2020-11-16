@@ -116,7 +116,24 @@ Precisamos criar também o arquivo de configuração que informa como os arquivo
 npx tsc --init
 ```
 
-Este comando criará um arquivo chamado `tsconfig.json`, resposável por informar como os arquivos `.ts` devem ser compilados para `.js`, portanto neste arquivo mudaremos o a chave `target` de `"es5"` para `"ES2019"`, para que possamos assim utilizar APIs mais modernas do Javascript.
+Este comando cria-rá um arquivo chamado `tsconfig.json`, resposável por informar como os arquivos `.ts` devem ser compilados para `.js`, portanto neste arquivo mudaremos o a chave `target` de `"es5"` para `"ES2019"`, para que possamos assim utilizar APIs mais modernas do Javascript, o arquivo `tsconfig.json` vai deve ficar parecido com o seguinte:
+
+```json
+{
+  "compilerOptions": {
+    …
+    "target": "ES2019",
+    "module": "commonjs",
+    …
+    "strict": true,
+    …
+    "esModuleInterop": true,
+    …
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
+```
 
 ### 1.2.4 Como recriar a pasta node_module
 
@@ -178,14 +195,15 @@ A estrutura final das pastas devem ficar da seguinte maneira:
 - tuto_crud
   - node_module
     - …
-  - server
-    - main.ts
   - dist
   - src
     - index.html
     - main.scss
     - main.ts
+  - srv
+    - main.ts
   - package.json
+  - tsconfig.json
 
 
 ## 1.3 Preparando aplicação para execução
