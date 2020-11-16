@@ -1,4 +1,4 @@
-# 1. Pré-requisitos - Aplicação cliente
+# 1. Pré-requisitos
 
 ## 1.1 Instalação NodeJS e NPM
 
