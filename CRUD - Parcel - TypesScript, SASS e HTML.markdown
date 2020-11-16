@@ -71,11 +71,11 @@ npm install parcel --save-dev
 Todos os comandos de instalação de pacotes irá demorar um pouco, pois o NPM irá baixar estes pacotes dos servidores oficiais, após a primeira instalação de qualquer pacote uma nova pasta será criada com o nome `node_modules` onde ficaram todas as bibliotecas que utilizaremos no desenvolvimento da aplicação, o arquivo `package.json` irá ser atualizado, adicionando o trecho onde temos a lista de `dependencias de desenvolvimento`, ou seja os pacotes que serão utilizados somente durante o desenvolvimento:
 
 ```json
-...
+…
 "devDependencies": {
     "parcel": "^1.12.4"
 }
-...
+…
 ```
 
 ### 1.2.2 Pacotes Express e SQLite
@@ -91,12 +91,12 @@ Note que desta vez não utilizamos o parâmetro `--save-dev`, pois estes pacotes
 Como a aplicação depende desses pacotes para funcionar mesmo depois de empacotada, o arquivo `package.json` irá ser atualizado com a seguinte sessão:
 
 ```json
-...
+…
 "dependencies": {
     "express": "^4.17.1",
     "sqlite": "^4.0.15"
 }
-...
+…
 ```
 
 ### 1.2.3 Como recriar a pasta node_module
@@ -148,7 +148,7 @@ A estrutura final das pastas devem ficar da seguinte maneira:
 
 - tuto_crud
   - node_module
-    - ...
+    - …
   - dist
   - src
     - index.html
@@ -162,12 +162,12 @@ A estrutura final das pastas devem ficar da seguinte maneira:
 Para que possamos testar nosso projeto adicionaremos ao arquivo `package.json` o comando para depuação e teste de nossa aplicação, então adicione dentro da chave `scripts` o seguinte comando 
 
 ```json
-...
-  "scripts": {
-    "debug": "parcel src/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-...
+…
+"scripts": {
+  "debug": "parcel src/index.html",
+  "test": "echo \"Error: no test specified\" && exit 1"
+},
+…
 ```
 
 O arquivo `package.json` final ficará parecido com o seguinte:
@@ -210,5 +210,4 @@ npm run debug
 
  ## 1.4 Conexão com o Banco de Dados
 
-
-...
+…
