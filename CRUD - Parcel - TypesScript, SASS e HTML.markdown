@@ -283,6 +283,17 @@ A executção de comando deve imprimir no terminal o seguinte conteúdo:
 Server: Hello World!
 ```
 
+## 1.4 EXTRA: Melhorando a o intelisense da IDE/Editor
+
+Para facilitar o desenvolvimento, podemos instalar alguns pacotes de tipo extras que ajudam a IDE/Editor dr melhores sugestões de métodos, variaves etc a serem utilizados, em nosso caso, podemos instalar as seguintes bibliotecas de tipos:
+
+- @types/sqlite3
+- …
+
+```shell
+ npm install -save-dev @types/sqlite3 …
+```
+
 # 2. Conexão e criação do banco de dados
 
 No arquivo `./srv/main.ts`  
