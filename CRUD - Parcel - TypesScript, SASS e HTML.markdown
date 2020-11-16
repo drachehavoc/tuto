@@ -91,10 +91,10 @@ Todos os comandos de instalação de pacotes irá demorar um pouco, pois o NPM i
 
 ### 1.2.2 Pacotes Express e SQLite
 
-Outros dois pacotes que utilizaremos é o `sqlite` e o `express`, um responsável ao acessar e escrever em nosso banco de dados e outro responsável por manipular o acesso via HTTP ao nosso projeto, para instalar estes dois pacotes de uma única vez, utilizaremos o seguinte comando:
+Outros dois pacotes que utilizaremos é o `sqlite3` e o `express`, um responsável pela conexão com nosso banco de dados e outro responsável por manipular o acesso via HTTP ao nosso projeto, além das biliotecas já citadas, tabém instaleremos o pacote `sqlite` que nos permitirar fazer acesso ao banco de dados de maneira assincrona e com maior super as APIs modernas do Jasvascript/TypeScrit, para instalar estes dois pacotes de uma única vez, utilizaremos o seguinte comando:
 
 ```shell
-npm install sqlite express
+npm install sqlite sqlite3 express
 ```
 
 Note que desta vez não utilizamos o parâmetro `--save-dev`, pois estes pacotes serão necessários para o funcionamento da aplicação após a versão distribuição.
@@ -281,17 +281,6 @@ A executção de comando deve imprimir no terminal o seguinte conteúdo:
 > ts-node srv/main.ts
 
 Server: Hello World!
-```
-
-## 1.4 EXTRA: Melhorando a o intelisense da IDE/Editor
-
-Para facilitar o desenvolvimento, podemos instalar alguns pacotes de tipo extras que ajudam a IDE/Editor dr melhores sugestões de métodos, variaves etc a serem utilizados, em nosso caso, podemos instalar as seguintes bibliotecas de tipos:
-
-- @types/sqlite3
-- …
-
-```shell
- npm install -save-dev @types/sqlite3 …
 ```
 
 # 2. Conexão e criação do banco de dados
