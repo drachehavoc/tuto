@@ -91,7 +91,7 @@ Todos os comandos de instalação de pacotes irá demorar um pouco, pois o NPM i
 
 ### 1.2.2 Pacotes Express e SQLite
 
-Outros dois pacotes que utilizaremos é o `sqlite3` e o `express`, um responsável pela conexão com nosso banco de dados e outro responsável por manipular o acesso via HTTP ao nosso projeto, além das biliotecas já citadas, tabém instaleremos o pacote `sqlite` que nos permitirar fazer acesso ao banco de dados de maneira assincrona e com maior super as APIs modernas do Jasvascript/TypeScrit, para instalar estes dois pacotes de uma única vez, utilizaremos o seguinte comando:
+Outros dois pacotes que utilizaremos é o `sqlite3` e o `express`, um responsável pela conexão com nosso banco de dados e outro responsável por manipular o acesso via HTTP ao nosso projeto, além das biliotecas já citadas, tabém instaleremos o pacote `sqlite` que nos permitirar fazer acesso ao banco de dados de maneira assincrona e com maior super as APIs modernas do Jasvascript/TypeScrit, para instalar estes pacotes de uma única vez, utilizaremos o seguinte comando:
 
 ```shell
 npm install sqlite sqlite3 express
@@ -105,8 +105,9 @@ Como a aplicação depende desses pacotes para funcionar mesmo depois de empacot
 {
   …
   "dependencies": {
-      "express": "^4.17.1",
-      "sqlite": "^4.0.15"
+    "express": "^4.17.1",
+    "sqlite": "^4.0.17",
+    "sqlite3": "^5.0.0"
   }
   …
 }
