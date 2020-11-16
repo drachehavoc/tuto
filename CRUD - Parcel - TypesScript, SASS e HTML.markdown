@@ -79,12 +79,14 @@ npm install --save-dev ts-node
 Todos os comandos de instalação de pacotes irá demorar um pouco, pois o NPM irá baixar estes pacotes dos servidores oficiais, após a primeira instalação de qualquer pacote uma nova pasta será criada com o nome `node_modules` onde ficaram todas as bibliotecas que utilizaremos no desenvolvimento da aplicação, o arquivo `package.json` irá ser atualizado, adicionando o trecho onde temos a lista de `dependencias de desenvolvimento`, ou seja os pacotes que serão utilizados somente durante o desenvolvimento:
 
 ```json
-…
-"devDependencies": {
-    "parcel": "^1.12.4",
-    "ts-node": "^9.0.0"
+{
+  …
+  "devDependencies": {
+      "parcel": "^1.12.4",
+      "ts-node": "^9.0.0"
+  }
+  …
 }
-…
 ```
 
 ### 1.2.2 Pacotes Express e SQLite
@@ -100,12 +102,14 @@ Note que desta vez não utilizamos o parâmetro `--save-dev`, pois estes pacotes
 Como a aplicação depende desses pacotes para funcionar mesmo depois de empacotada, o arquivo `package.json` irá ser atualizado com a seguinte sessão:
 
 ```json
-…
-"dependencies": {
-    "express": "^4.17.1",
-    "sqlite": "^4.0.15"
+{
+  …
+  "dependencies": {
+      "express": "^4.17.1",
+      "sqlite": "^4.0.15"
+  }
+  …
 }
-…
 ```
 
 ### 1.2.3 Arquivo de configuração de compilação TypsScript
@@ -187,7 +191,6 @@ main.ts
 console.log("Server: Hello World!");
 ```
 
-
 ### 1.2.5 Estrutura final das pastas
 
 A estrutura final das pastas devem ficar da seguinte maneira:
@@ -205,19 +208,20 @@ A estrutura final das pastas devem ficar da seguinte maneira:
   - package.json
   - tsconfig.json
 
-
 ## 1.3 Preparando aplicação para execução
 
 Para que possamos testar nosso projeto adicionaremos ao arquivo `package.json` o comando para depuação e teste de nossa aplicação, então adicione dentro da chave `scripts` os seguintes comandos 
 
 ```json
-…
-"scripts": {
-  "debug": "parcel src/index.html",
-  "server": "ts-node-script srv/main.ts",
-  "test": "echo \"Error: no test specified\" && exit 1"
-},
-…
+{
+  …
+  "scripts": {
+    "debug": "parcel src/index.html",
+    "server": "ts-node-script srv/main.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  …
+}
 ```
 
 O arquivo `package.json` final ficará parecido com o seguinte:
@@ -273,7 +277,7 @@ npm run server
 A executção de comando deve imprimir no terminal o seguinte conteúdo:
 
 ```shell
-> tuto_crud@1.0.0 server C:\tuto_crud
+> tuto_crud@1.0.0 server …tuto_crud
 > ts-node srv/main.ts
 
 Server: Hello World!
