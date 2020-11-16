@@ -1,4 +1,4 @@
-# 1. Pré-requisitos
+# 1. Pré-requisitos - Aplicação cliente
 
 ## 1.1 Instalação NodeJS e NPM
 
@@ -17,7 +17,7 @@ caso esteja esteja fazendo a instalação em uma distribuição linux acesse [ht
 
 Para verificar se o NodeJS esta instalado corretamente abra seu terminal e digite o seguinte comando:
 
-```
+```shell
 node --version
 ```
 
@@ -25,7 +25,7 @@ Se tudo ocorreu bem na instalação isso deve apresentar a versão do NodeJS ins
 
 Para verificar se o **NPM** também está instalado corretamente execute o seguinte comando:
 
-``` 
+```shell
 npm --version
 ```
 
@@ -35,9 +35,11 @@ assim como no caso do comando anterior apresentava a versão do NodeJS instalado
 
 Crie uma pasta com o nome que preferir, o nome escolhido para este tutorial foi `tuto_crud` (evite a utilização de caracteres especiais), dentro desta pasta criaremos uma subpasta chamada `src`, abreviação de _source_, é aqui onde colocaremos todos os fontes de nosso projeto, também criaremos uma subpasta chamada `dis` abreviação para _distributable_ é nesta pasta onde nossos arquivos prontos para serem distribuidos ficaram.
 
+Além destas duas sub-pastas também criaremos uma terceira chamada `srv`, avreviação para _server_, é nesta pasta que colocaremos os arquivos do servidor de nossa aplicação. 
+
 O próximo passo é criar o arquivo `package.json`, este arquivo é responsável por manter informações importantes sobre o projeto, como comandos para empacotamento e quais pacotes de terceiro serão utilizados etc. para criar este arquivo iremos utilizar o **NPM**, abra seu terminal e navegue até a pasta do projeto e então digite o seguinte comando:
 
-```
+```shell
 npm init -y
 ```
 
@@ -60,12 +62,18 @@ O arquivo gerado terá uma estrutura semelhante ao listado aqui:
 }
 ```
 
-### 1.2.1 Pacote para desenvolvimento: Parcel
+### 1.2.1 Pacotes para desenvolvimento: Parcel e ts-node
 
-Neste projeto utilizaremos o empacotador `Parcel`, ele será responsável por criar os arquivos para distribuição do projeto como por exemplo compilando arquivos TypeScript e SCSS para Javascript e CSS para que possam serem interpretados pelo browser, como este pacote será utilizado somente no momento do desenvolvimento, instalaremos o pacote da seguinte maneira, pelo terminal na pasta raiz do executaaresmos o seguinte comando:
+Neste projeto utilizaremos o empacotador `Parcel`, ele será responsável por criar os arquivos para distribuição do projeto como por exemplo compilando arquivos TypeScript e SCSS para Javascript e CSS para que possam serem interpretados pelo browser, como este pacote será utilizado somente no momento do desenvolvimento, instalaremos o pacote da seguinte maneira, pelo terminal na pasta raiz do projeto executaresmos o seguinte comando:
 
-```
+```shell
 npm install parcel --save-dev
+```
+
+Assim como o Parcel também instalaremos o modulo `ts-node`, este será responsavel por permitir exectarmos os arquivos `.ts` sem a necessidade de compila-los para `.js`, no lado servidor, para intalrmos o `ts-node`, na pasta raiz do projeto executatemos o seguinte comando:
+
+```shell
+npm install --save-dev ts-node
 ```
 
 Todos os comandos de instalação de pacotes irá demorar um pouco, pois o NPM irá baixar estes pacotes dos servidores oficiais, após a primeira instalação de qualquer pacote uma nova pasta será criada com o nome `node_modules` onde ficaram todas as bibliotecas que utilizaremos no desenvolvimento da aplicação, o arquivo `package.json` irá ser atualizado, adicionando o trecho onde temos a lista de `dependencias de desenvolvimento`, ou seja os pacotes que serão utilizados somente durante o desenvolvimento:
@@ -73,7 +81,8 @@ Todos os comandos de instalação de pacotes irá demorar um pouco, pois o NPM i
 ```json
 …
 "devDependencies": {
-    "parcel": "^1.12.4"
+    "parcel": "^1.12.4",
+    "ts-node": "^9.0.0"
 }
 …
 ```
@@ -82,7 +91,7 @@ Todos os comandos de instalação de pacotes irá demorar um pouco, pois o NPM i
 
 Outros dois pacotes que utilizaremos é o `sqlite` e o `express`, um responsável ao acessar e escrever em nosso banco de dados e outro responsável por manipular o acesso via HTTP ao nosso projeto, para instalar estes dois pacotes de uma única vez, utilizaremos o seguinte comando:
 
-```
+```shell
 npm install sqlite express
 ```
 
@@ -99,19 +108,31 @@ Como a aplicação depende desses pacotes para funcionar mesmo depois de empacot
 …
 ```
 
-### 1.2.3 Como recriar a pasta node_module
+### 1.2.3 Arquivo de configuração de compilação TypsScript
+
+Precisamos criar também o arquivo de configuração que informa como os arquivos `.ts` devem ser compilados para isso executaremos o seguinte comando na pasta raiz do nosso projeto:
+
+```shell
+npx tsc --init
+```
+
+Este comando criará um arquivo chamado `tsconfig.json`, resposável por informar como os arquivos `.ts` devem ser compilados para `.js`, portanto neste arquivo mudaremos o a chave `target` de `"es5"` para `"ES2019"`, para que possamos assim utilizar APIs mais modernas do Javascript.
+
+### 1.2.4 Como recriar a pasta node_module
 
 A pasta `node_modules` pode ser excluida e recriada, pois o arquivo `package.json` possui toda a lista de pacotes necessários para o funcionamento e desenvolvimento da aplicação, o comando para recriar a pasta `node_module` é o seguinte:
 
-```
+```shell
 npm install
 ```
 
 este comando ira baixar novamente todos os modulos listados no arquivo `package.json`.
 
-### 1.2.4 Arquivos de projeto: HTML, SCSS e TS
+### 1.2.5 Arquivos de projeto: HTML, SCSS e TS
 
-Em nosso proejto  utilizaremos HTML, SCSS e TS, então na pasra `src` criaremos os seguintes arquivos com os seguintes conteúdos:
+Em nosso proejto utilizaremos HTML, SCSS e TS, então na pasra `src` e `srv` criaremos os seguintes arquivos com os seguintes conteúdos:
+
+#### 1.2.5.1 Pasta src (Cliente)
 
 index.html
 ```html
@@ -142,6 +163,14 @@ body {
 }
 ```
 
+#### 1.2.5.2 Pasta srv (Servidor)
+
+main.ts
+```ts
+console.log("Server: Hello World!");
+```
+
+
 ### 1.2.5 Estrutura final das pastas
 
 A estrutura final das pastas devem ficar da seguinte maneira:
@@ -149,6 +178,8 @@ A estrutura final das pastas devem ficar da seguinte maneira:
 - tuto_crud
   - node_module
     - …
+  - server
+    - main.ts
   - dist
   - src
     - index.html
@@ -159,12 +190,13 @@ A estrutura final das pastas devem ficar da seguinte maneira:
 
 ## 1.3 Preparando aplicação para execução
 
-Para que possamos testar nosso projeto adicionaremos ao arquivo `package.json` o comando para depuação e teste de nossa aplicação, então adicione dentro da chave `scripts` o seguinte comando 
+Para que possamos testar nosso projeto adicionaremos ao arquivo `package.json` o comando para depuação e teste de nossa aplicação, então adicione dentro da chave `scripts` os seguintes comandos 
 
 ```json
 …
 "scripts": {
   "debug": "parcel src/index.html",
+  "server": "ts-node-script srv/main.ts",
   "test": "echo \"Error: no test specified\" && exit 1"
 },
 …
@@ -196,11 +228,15 @@ O arquivo `package.json` final ficará parecido com o seguinte:
 }
 ```
 
-## 1.3 Execução da aplicação
+## 1.3 Teste do ambiente de desenvolvimento
+
+Agora com nossa _ambiente de desenvolvimento_ configurado, vamos testar se tudo esta funcionando, se a aplicação cliente esta sendo empacotada corretamente e se conseguimos executar os arquivos da nossa aplicação servidora sem problemas. 
+
+### 1.3.1 Teste da aplicação Cliente
 
 Para executar a aplicação o seguinte comando deve ser executato no terminal na pasta raiz da aplicação:
 
-```
+```shell
 npm run debug
 ```
 
@@ -208,6 +244,25 @@ npm run debug
 
  Assim que o comando terminar, será apresentado uma mensagem com o seguinte enderço ip: `http://127.0.0.1:1234`, abra este endereço no _browser_ e você verá uma página azul com o alerta "Hello World".
 
- ## 1.4 Conexão com o Banco de Dados
+### 1.3.2 Teste da aplicação Servidora
+
+Para executar a aplicação o seguinte comando deve ser executato no terminal na pasta raiz da aplicação:
+
+```shell
+npm run server
+```
+
+A executção de comando deve imprimir no terminal o seguinte conteúdo:
+
+```shell
+> tuto_crud@1.0.0 server C:\tuto_crud
+> ts-node srv/main.ts
+
+Server: Hello World!
+```
+
+# 2. Conexão e criação do banco de dados
+
+No arquivo `./srv/main.ts`  
 
 …
