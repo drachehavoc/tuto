@@ -196,7 +196,7 @@ console.log("Server: Hello World!");
 
 A estrutura final das pastas devem ficar da seguinte maneira:
 
-<pre style="line-height: 1.2">
+```
 🗁 tuto_crud
 ├🗀 node_module
 ├🗀 dist
@@ -208,7 +208,7 @@ A estrutura final das pastas devem ficar da seguinte maneira:
 │  └▹🗎 main.ts
 ├▹🗎 package.json
 └▹🗎 tsconfig.json
-</pre>
+```
 
 ## 1.3 Preparando aplicação para execução
 
