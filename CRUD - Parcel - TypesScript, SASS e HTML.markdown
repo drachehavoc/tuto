@@ -347,7 +347,11 @@ init();
 Para testar o que foi desenvolvido até o momento execute o comando `npm run server`, assim que a execução terminar, um arquivo chamado `database.db` deve aparecer na pasta `./srv`, é possível _abri-lo_ utilizando qualquer programa cliente de SQLite, aqui eu sugiro o [DB Browser for SQLite](https://sqlitebrowser.org/).
 
 # [WIP] 3. Fomulário de cadastro
+  
+Para manter nossa aplicação cliente organizada e permiter a reunitlização de código, faremos componetes para os elementos de interface gráfica, aqui criaremos um componente que ficará responsável por apresentar dados de pessoas na tela, além de enviar informações para nossa aplicação servidora que permita adicionar, salvar, alterar e excluir pessoas,
+para isso adicionaremos uma sub-pasta chamada `components` dentro da pasta `src`, e nesta pasta `components` adicionaremos uma sub-pasta chamada `form` que conterá três arquivos, `index.ts`, `template.html` e `template.scss`, além destes arquivos também criaremos `d.ts` dentro da pasta `./src/components`, este arquivo servirá apenas no momento de desenvolvimento para explicarmos como o `TypeScript` deve interpretar a importação de arquivos `.html`, logo mais falaremos mais sobre isso, no próximo tópico trataremos da criação dos arquivos de components.
 
+## 3.1 Criando componente de formuláio pessoa
 
 ./src/components/form/template.html
 ```html
@@ -508,6 +512,8 @@ class CrudModal extends HTMLElement {
 customElements.define('crud-form', CrudModal);
 ```
 
+## 3.2 Adicionando componente de formulário pessoa ao projeto
+
 ./src/main.ts
 ```ts
 import "./main.scss";
@@ -528,4 +534,16 @@ import "./components/form"; // <- adicionado a importação do componente
   </body>
 </html>
 ```
+
+./src/main.scss
+```scss
+body {
+    background: lightgreen;
+}
+
+crud-form {
+    max-width: 500px; // <- adicionado largura máxima para os componentes de formulários
+}
+```
+
 …
