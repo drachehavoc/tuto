@@ -383,6 +383,11 @@ Para testar o que foi desenvolvido até o momento execute o comando `npm run ser
     font-family: Arial, Helvetica, sans-serif;
 }
 
+:host {
+    display: inline-block;
+    width: 100%;
+}
+
 form {
     font-size: 1.5em;
 
