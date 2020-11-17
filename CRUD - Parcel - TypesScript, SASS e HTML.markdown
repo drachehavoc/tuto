@@ -196,18 +196,19 @@ console.log("Server: Hello World!");
 
 A estrutura final das pastas devem ficar da seguinte maneira:
 
-- tuto_crud
-  - node_module
-    - …
-  - dist
-  - src
-    - index.html
-    - main.scss
-    - main.ts
-  - srv
-    - main.ts
-  - package.json
-  - tsconfig.json
+```
+🗁 tuto_crud
+├▹🗀 node_module
+├▹🗀 dist
+├▹🗁 src
+│ ├▹🗎 index.html
+│ ├▹🗎 main.scss
+│ └▹🗎 main.ts
+├▹🗁 srv
+│  └▹🗎 main.ts
+├▹🗎 package.json
+└▹🗎 tsconfig.json
+```
 
 ## 1.3 Preparando aplicação para execução
 
@@ -353,16 +354,18 @@ para isso adicionaremos uma sub-pasta chamada `components` dentro da pasta `src`
 
 Após a criação destas pastas e arquivos a estrutura da pasta `src` deve ficar da seguinte maneira:
 
-- src
-  - components
-    - form
-      - index.ts
-      - template.html
-      - template.scss
-    - d.ts
-  - index.html
-  - main.scss
-  - main.ts
+```
+🗁 src
+├▹🗁 components
+│ ├▹🗁form
+│ │ ├▹🗎 index.ts
+│ │ ├▹🗎 template.html
+│ │ └▹🗎 template.scss
+│ └▹🗎 d.ts
+├▹🗎 index.html
+├▹🗎 main.scss
+└▹🗎 main.ts
+```
 
 ## [WIP] 3.1 Criando componente de formulário pessoa
 
