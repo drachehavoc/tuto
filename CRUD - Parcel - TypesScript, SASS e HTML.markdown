@@ -251,11 +251,11 @@ O arquivo `package.json` final ficará parecido com o seguinte:
 }
 ```
 
-## 1.3 Teste do ambiente de desenvolvimento
+## 1.3 Teste/Execução do ambiente de desenvolvimento
 
 Agora com nossa _ambiente de desenvolvimento_ configurado, vamos testar se tudo esta funcionando, se a aplicação cliente esta sendo empacotada corretamente e se conseguimos executar os arquivos da nossa aplicação servidora sem problemas. 
 
-### 1.3.1 Teste da aplicação Cliente
+### 1.3.1 Teste/Execução da aplicação Cliente
 
 Para executar a aplicação o seguinte comando deve ser executato no terminal na pasta raiz da aplicação:
 
@@ -267,7 +267,7 @@ npm run debug
 
  Assim que o comando terminar, será apresentado uma mensagem com o seguinte enderço ip: `http://127.0.0.1:1234`, abra este endereço no _browser_ e você verá uma página azul com o alerta "Hello World".
 
-### 1.3.2 Teste da aplicação Servidora
+### 1.3.2 Teste/Execução da aplicação Servidora
 
 Para executar a aplicação o seguinte comando deve ser executato no terminal na pasta raiz da aplicação:
 
@@ -286,17 +286,29 @@ Server: Hello World!
 
 # 2. Conexão e criação do banco de dados
 
-No arquivo `./srv/database.ts`  
+Nossa aplicação sera feita utilizando o banco SQLite e é comum que a aplicação que utilizão este banco crie o arquivo de banco de dados as tabelas em sua primeira execução, em nosso caso criaremos as tabelas do banco de dados caso elas não existam assim que iniciarmos a aplicação servidora, além de criar um objeto de conexão que nos permitirá manipular o banco, para que façamos isso de forma organizada criaremos um arquivo `database.ts` dentro da pasta `./srv`, este arquivo tera como responsabilidade, criar o arquivo de banco de dados `databaset.ts` também na pasta `./srv` e caso as tabelas necessárias para a aplicação não existirem este arquivo também será responsável por cria-las, o arquivo a seguir contem cométarios para que seja possível entender o que cada comando representa:
+
+`./srv/database.ts`  
 ```ts
+// importa o drive de conexão da biblioteca sqlite3
 import { Database } from 'sqlite3';
+
+// importa o método `open` da biblioteca sqlite, esta biblioteca nos permite
+// trabalhar com bancos sqlite de maneira assíncrona
 import { open } from 'sqlite';
 
+// cria uma função assíncrona chamada init() e a exporta para que seja 
+// possível utiliza-la fora deste modulo 
 export async function init() {
+    // aguarda quea função `open`seja executada, onde será criado o arquivo de 
+    // banco de dados `srv/database.db` e retornará o objeto de conexão que
+    // nos permitirá manipular o banco de dados
     const db = await open({
         filename: 'srv/database.db',
         driver: Database,
     });
 
+    // cria a tabela pessoa caso ela não exista
     await db.exec(`
         CREATE TABLE IF NOT EXISTS pessoa (
             id        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -307,18 +319,31 @@ export async function init() {
         )
     `);
 
+    // a função init() retorna o obejto d e conexão com o banco de dados
     return db;
 }
 ```
 
+Para que possamos executar a função `init()` que criamos no `database.ts` precisamos importa-la no nosso arquivo de entrada do servidor, no nosso caso o arquivo `main.ts`:
+
 ./srv/main.ts
 ```ts
+// importa a função init e a apelida de initDatabase do arquivo `database.ts`
+// note que a extensão `.ts` é omitida aqui
 import { init as initDatabase } from "./database";
 
+// cria uma função assincrona chamada init() (não confundir com a init do arquivo database.ts)
+// esta função foi criada para que possamos manipular execuções assincornas utilizando as palavras
+// reservadas async e await, facilitando o entendimento do código
 async function init() {
+    // aguarda a execução da função init() do arquivo database.ts
     await initDatabase();
 }
 
+// executa a função init()
 init();
 ```
+
+Para testar o que foi desenvolvido até o momento execute o comando `npm run server`, assim que a execução terminar, um arquivo chamado `database.db` deve aparecer na pasta `./srv`, é possível _abri-lo_ utilizando qualquer programa cliente de SQLite, aqui eu sugiro o [DB Browser for SQLite](https://sqlitebrowser.org/).
+
 …
