@@ -284,7 +284,7 @@ A executção de comando deve imprimir no terminal o seguinte conteúdo:
 Server: Hello World!
 ```
 
-# [WIP] 2. Conexão e criação do banco de dados
+# 2. Conexão e criação do banco de dados
 
 Nossa aplicação sera feita utilizando o banco SQLite e é comum que a aplicação que utilizão este banco crie o arquivo de banco de dados as tabelas em sua primeira execução, em nosso caso criaremos as tabelas do banco de dados caso elas não existam assim que iniciarmos a aplicação servidora, além de criar um objeto de conexão que nos permitirá manipular o banco, para que façamos isso de forma organizada criaremos um arquivo `database.ts` dentro da pasta `./srv`, este arquivo tera como responsabilidade, criar o arquivo de banco de dados `databaset.ts` também na pasta `./srv` e caso as tabelas necessárias para a aplicação não existirem este arquivo também será responsável por cria-las, o arquivo a seguir contem cométarios para que seja possível entender o que cada comando representa:
 
@@ -345,5 +345,7 @@ init();
 ```
 
 Para testar o que foi desenvolvido até o momento execute o comando `npm run server`, assim que a execução terminar, um arquivo chamado `database.db` deve aparecer na pasta `./srv`, é possível _abri-lo_ utilizando qualquer programa cliente de SQLite, aqui eu sugiro o [DB Browser for SQLite](https://sqlitebrowser.org/).
+
+# [WIP] 3. Fomulário de cadastro
 
 …
