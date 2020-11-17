@@ -159,7 +159,7 @@ Em nosso proejto utilizaremos HTML, SCSS e TS, então na pasra `src` e `srv` cri
 ./src/index.html
 ```html
 <!DOCTYPE html>
-  <html lang="en">
+  <html lang="pt-BR">
   <head>
     <meta charset="UTF-8">
     <title>CRUD</title>
@@ -349,6 +349,33 @@ Para testar o que foi desenvolvido até o momento execute o comando `npm run ser
 # [WIP] 3. Fomulário de cadastro
 
 
+./src/components/form/template.html
+```html
+<link rel="stylesheet" href="./template.scss">
+
+<form>
+    <div>
+        <label for="nome">Nome</label>
+        <input name="nome" id="nome">
+    </div>
+    <div>
+        <label for="sobrenome">Sobrenome</label>
+        <input name="sobrenome" id="sobrenome">
+    </div>
+    <div>
+        <label for="email">Email</label>
+        <input name="email" id="email">
+    </div>
+    <div>
+        <label for="telefone">Telefone</label>
+        <input name="telefone" id="telefone">
+    </div>
+    <div class="footer">
+        <button>salvar</button>
+    </div>
+</form>
+```
+
 ./src/components/form/template.scss
 ```scss
 * {
@@ -427,33 +454,6 @@ form {
 }
 ```
 
-./src/components/form/template.html
-```html
-<link rel="stylesheet" href="./template.scss">
-
-<form>
-    <div>
-        <label for="nome">Nome</label>
-        <input name="nome" id="nome">
-    </div>
-    <div>
-        <label for="sobrenome">Sobrenome</label>
-        <input name="sobrenome" id="sobrenome">
-    </div>
-    <div>
-        <label for="email">Email</label>
-        <input name="email" id="email">
-    </div>
-    <div>
-        <label for="telefone">Telefone</label>
-        <input name="telefone" id="telefone">
-    </div>
-    <div class="footer">
-        <button>salvar</button>
-    </div>
-</form>
-```
-
 ./src/components/d.ts
 ```ts
 declare module '*.html' {
@@ -501,5 +501,26 @@ class CrudModal extends HTMLElement {
 }
 
 customElements.define('crud-form', CrudModal);
+```
+
+./src/main.ts
+```ts
+import "./main.scss";
+import "./components/form"; // <- adicionado a importação do componente
+```
+
+./src/index.html
+```html
+<!DOCTYPE html>
+  <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <title>CRUD</title>
+  </head>
+  <body>
+    <script src="./main.ts"></script>
+    <crud-form></crud-form> <!-- adicionado componente no html -->
+  </body>
+</html>
 ```
 …
