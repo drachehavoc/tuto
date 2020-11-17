@@ -351,6 +351,19 @@ Para testar o que foi desenvolvido até o momento execute o comando `npm run ser
 Para manter nossa aplicação cliente organizada e permiter a reunitlização de código, faremos componetes para os elementos de interface gráfica, aqui criaremos um componente que ficará responsável por apresentar dados de pessoas na tela, além de enviar informações para nossa aplicação servidora que permita adicionar, salvar, alterar e excluir pessoas,
 para isso adicionaremos uma sub-pasta chamada `components` dentro da pasta `src`, e nesta pasta `components` adicionaremos uma sub-pasta chamada `form` que conterá três arquivos, `index.ts`, `template.html` e `template.scss`, além destes arquivos também criaremos `d.ts` dentro da pasta `./src/components`, este arquivo servirá apenas no momento de desenvolvimento para explicarmos como o `TypeScript` deve interpretar a importação de arquivos `.html`, logo mais falaremos mais sobre isso, no próximo tópico trataremos da criação dos arquivos de components.
 
+Após a criação destas pastas e arquivos a estrutura da pasta `src` deve ficar da seguinte maneira:
+
+- src
+  - components
+    - form
+      - index.ts
+      - template.html
+      - template.scss
+    - d.ts
+  - index.html
+  - main.scss
+  - main.ts
+
 ## 3.1 Criando componente de formuláio pessoa
 
 ./src/components/form/template.html
