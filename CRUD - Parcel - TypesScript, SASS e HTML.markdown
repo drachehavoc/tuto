@@ -197,14 +197,14 @@ console.log("Server: Hello World!");
 A estrutura final das pastas devem ficar da seguinte maneira:
 
 ```
-🗁 tuto_crud
+📁 tuto_crud
 ├▹🗀 node_module
 ├▹🗀 dist
-├▹🗁 src
+├▹📁 src
 │ ├▹🗎 index.html
 │ ├▹🗎 main.scss
 │ └▹🗎 main.ts
-├▹🗁 srv
+├▹📁 srv
 │  └▹🗎 main.ts
 ├▹🗎 package.json
 └▹🗎 tsconfig.json
@@ -355,9 +355,9 @@ para isso adicionaremos uma sub-pasta chamada `components` dentro da pasta `src`
 Após a criação destas pastas e arquivos a estrutura da pasta `src` deve ficar da seguinte maneira:
 
 ```
-🗁 src
-├▹🗁 components
-│ ├▹🗁form
+📁 src
+├▹📁 components
+│ ├▹📁form
 │ │ ├▹🗎 index.ts
 │ │ ├▹🗎 template.html
 │ │ └▹🗎 template.scss
