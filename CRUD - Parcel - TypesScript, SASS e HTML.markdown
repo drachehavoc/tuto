@@ -525,7 +525,7 @@ class CrudModal extends HTMLElement {
 customElements.define('crud-form', CrudModal);
 ```
 
-[WIP] ## 3.2 Adicionando componente de formulário pessoa ao projeto
+## [WIP] 3.2 Adicionando componente de formulário pessoa ao projeto
 
 ./src/main.ts
 ```ts
