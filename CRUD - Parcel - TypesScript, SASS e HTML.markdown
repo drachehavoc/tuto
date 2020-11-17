@@ -348,4 +348,158 @@ Para testar o que foi desenvolvido até o momento execute o comando `npm run ser
 
 # [WIP] 3. Fomulário de cadastro
 
+
+./src/components/form/template.scss
+```scss
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+form {
+    font-size: 1.5em;
+
+    > div {
+        position: relative;
+        height: 2em;
+        margin-top: 1.3em;
+
+        > label,
+        > input {
+            display: flex;
+            align-items: center;
+            padding: 0 0.5em;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            outline: none;
+        }
+
+        > label {
+            z-index: 1;
+            opacity: .3;
+            transition: 300ms;
+        }
+
+        > input {
+            border: 0 none;
+            border-bottom: 1px solid rgba(#000000, .5);
+            transition: 300ms;
+            font-size: inherit;
+            border-radius: 5px;
+
+            &:focus {
+                border-bottom: 2px solid rgba(#000000, 1);
+            }
+        }
+
+        &.editing,
+        &.not-empty {
+            label {
+                padding: 0;
+                opacity: 1;
+                transform: translateY(-1.85em) ;
+                font-size: 80%;
+            }
+        }
+
+        &.footer {
+            display: flex;
+            justify-content: flex-end;
+            
+            button {
+                cursor: pointer;
+                background-color: #FFFFFF;
+                border-radius: 5px;
+                border: 0 none;
+                border-bottom: 1px solid rgba(#000000, .5);
+                transition: 300ms;
+
+                &:hover {
+                    background: #EEEEEE;
+                }
+            }
+        }
+    }
+}
+```
+
+./src/components/form/template.html
+```html
+<link rel="stylesheet" href="./template.scss">
+
+<form>
+    <div>
+        <label for="nome">Nome</label>
+        <input name="nome" id="nome">
+    </div>
+    <div>
+        <label for="sobrenome">Sobrenome</label>
+        <input name="sobrenome" id="sobrenome">
+    </div>
+    <div>
+        <label for="email">Email</label>
+        <input name="email" id="email">
+    </div>
+    <div>
+        <label for="telefone">Telefone</label>
+        <input name="telefone" id="telefone">
+    </div>
+    <div class="footer">
+        <button>salvar</button>
+    </div>
+</form>
+```
+
+./src/components/d.ts
+```ts
+declare module '*.html' {
+    const value: string;
+    export default value
+}
+```
+
+./src/components/form/index.ts
+```ts
+import html from "./template.html";
+
+class CrudModal extends HTMLElement {
+    #root: ShadowRoot = this.attachShadow({ mode: 'open' });
+
+    constructor() {
+        super();
+        this.#root.innerHTML = html;
+        this.attachEvents();
+    }
+
+    private attachEvents() {
+        this.#root.querySelector('form')?.addEventListener('submit', ev => ev.preventDefault());
+
+        const inputs = this.#root.querySelector('form')?.querySelectorAll('input');
+        inputs?.forEach(input => {
+            input.addEventListener('focus', ev => this.onInputFocus(ev));
+            input.addEventListener('keydown', ev => this.onInputFocus(ev));
+            input.addEventListener('blur', ev => this.onInputBlurs(ev));
+        });
+    }
+
+    private onInputFocus(ev: Event) {
+        const target = <HTMLInputElement>ev.target;
+        target.closest('div')?.classList.remove('not-empty');
+        target.closest('div')?.classList.add('editing');
+    }
+
+    private onInputBlurs(ev: Event) {
+        const target = <HTMLInputElement>ev.target;
+        target.closest('div')?.classList.remove('editing');
+        if (target.value.trim())
+            target.closest('div')?.classList.add('not-empty');
+    }
+}
+
+customElements.define('crud-form', CrudModal);
+```
 …
