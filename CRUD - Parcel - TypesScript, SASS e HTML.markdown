@@ -62,9 +62,15 @@ O arquivo gerado terá uma estrutura semelhante ao listado aqui:
 }
 ```
 
-### 1.2.1 Pacotes para desenvolvimento: Parcel e ts-node
+### 1.2.1 Pacotes para desenvolvimento: Parcel, TypeScript e ts-node
 
 Neste projeto utilizaremos o empacotador `Parcel`, ele será responsável por criar os arquivos para distribuição do projeto como por exemplo compilando arquivos TypeScript e SCSS para Javascript e CSS para que possam serem interpretados pelo browser, como este pacote será utilizado somente no momento do desenvolvimento, instalaremos o pacote da seguinte maneira, pelo terminal na pasta raiz do projeto executaresmos o seguinte comando:
+
+```shell
+npm install parcel --save-dev
+```
+
+Também será necessário instalar o pacote `TypeScript`, ele será respossável por compilar os arquivos `.ts` para `.js` [WIP]
 
 ```shell
 npm install parcel --save-dev
