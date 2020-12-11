@@ -571,3 +571,345 @@ crud-form {
 ```
 
 …
+
+
+---
+
+# Cadastro de Pessoas
+
+…
+
+## Servidor - API RESTFul
+
+…
+
+### Pré-requisitos
+ 
+…
+ 
+#### Conhecimentos necessários
+ 
+- Conhecimento básico de programação
+- [Conhecimento básico do protocolo HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP)
+  - requisição e resposta
+  - Status Code / _códigos de respostas_ / _respostas_ informativas
+    - 20X, 30X, 40X
+ 
+#### Softwares necessários
+ 
+- [NodeJs (e NPM)](https://nodejs.org/)
+- [DB Browser for SQLite](https://sqlitebrowser.org/) 
+  - *ou outro cliente de banco de dados para SQLite*
+- [VSCode](https://code.visualstudio.com/)
+  - plugin: [OpenAPI (Swagger) Editor](https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi)
+ 
+### Estrutura do Projeto
+ 
+… crie uma pasta vazia chamada Server e abra ela no VSCode (arraste a pasta para dentro do VSCode) …
+ 
+#### Comandos de terminal NPM e NPX
+ 
+O NPM (Node Package Manager) é responsável por controlar os pacotes que serão usados em nosso projeto, bem como o arquivo `package.json` que é o arquivo onde as informações de projetos `NodeJS` são mantidos.
+
+Já o NPX tem a premissa de executar comandos de terminal sem que sejam necessários ter intalado uma aplicação localmente.
+
+segue alguns exemplo de comandos e explicações que utilizaremos em nosso projeto:
+ 
+- npm init -y
+  - _este comando é responsável por criar o arquivo `package.json`, o parâmetro `-y` indica que a resposta para todas as eventuais perguntas durante a criação do arquivo será respondida com `sim`, caso queira criar o arquivo `package.json` de maneira personalizada, remova este parâmetro._
+- npm install _nome_dos_pacotes_
+  - _este comando é responsável por baixar pacotes a partir da base do NPM e salvá-los na pasta `node_modules`, além de baixar eventuais pacotes interdependentes dos que solicitamos instalação, para controle destes pacotes extras é criado um segundo arquivo `package-lock.json`._
+  - _cada pacote baixado é o adiciona à lista de dependências do arquivo `package.json` assim como sua respectiva versão, na chave `dependeces` do arquivo, caso seja adicionado o parâmetro `--save-dev` estes pacotes são adicionada na lista de dependências de desenvolvimento, o que significa que para a versão de distribuição estes pacotes não são necessários, a chave para esta lista no arquivo `package.json` é `devDependences`._
+  - _O node capaz de recriar todas as dependências a partir do arquivo `package.json`, por isso em uma eventual distribuição do projeto, não é necessário o compartilhamento da pasta `node_modules` nem do arquivo `package-lock.json`, pois executando o comando `npm install` sem especificar nome de módulos, o node irá procurar no arquivo `package.json` todos os módulos a serem instalados, recriando assim a pasta `node_modules` e o arquivo `package-lock.json`._
+- npx _nome_do_pacote_
+  - _este comando irá baixar o pacote e executa-lo, assim que sua execução termine, o pacote é excluido._
+ 
+#### Inicialização do Projeto (arquivo package.json)
+ 
+…
+ 
+```shell
+npm init -y
+```
+ 
+#### Instalação de dependências para execução da aplicação
+ 
+…
+ 
+```shell
+npm install express sqlite3 sqlite
+```
+ 
+#### Instalação de dependências para desenvolvimento da aplicação
+ 
+…
+ 
+```shell
+npm install --save-dev typescript ts-node
+```
+
+#### Criação do arquivo de configura do compilador TypeScript
+
+…
+
+```shell
+npx typescript --init
+```
+
+#### Criação manual de pastas e arquivos
+
+…
+
+```
+🗁 server
+├🗀 dist
+└🗁 src
+ ├▹🗎 main.ts
+ └▹🗎 database.ts
+```
+
+#### Conclusão (estrutura)
+
+…
+
+```
+🗁 server
+├🗀 dist
+├🗀 node_module
+├🗁 src
+│ ├▹🗎 database.ts
+│ └▹🗎 main.ts
+├▹🗎 package-lock.json
+├▹🗎 package.json
+└▹🗎 tsconfig.json
+```
+
+### Preparando para compilaçõe e execução
+
+…
+
+`tsconfig.json`
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",    // <-- alterado
+    "module": "commonjs",
+    "sourceMap": true,     // <-- alterado
+    "outDir": "./dist",    // <-- alterado
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
+```
+
+…
+
+`packaje.json`
+```json
+{
+  …
+  "scripts": {
+    "build": "tsc",                                        // <-- alterado
+    "debug": "ts-node-script src/main.ts",                 // <-- alterado
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  …
+}
+```
+
+### Teste da estrutura do projeto
+
+…
+
+`src\main.ts`
+```typescript
+console.log("Olá mundo!");
+```
+
+…
+
+```shell
+npm run build
+```
+
+…
+
+```shell
+npm run debug
+```
+
+### Criação de documentação OpenApi
+
+…
+
+`openapi.yaml`
+```yaml
+openapi: "3.0.3"
+
+info:
+  title: Exemplo de API RESTFul
+  version: "0.1"
+
+servers:
+  - url: http://127.0.0.1:80
+
+paths:
+  /pessoa:
+    get:
+      summary: >-
+        buscar dados de todas as pessoas do banco de dados
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/pessoa"
+                      
+    post:
+      summary: >-
+        cria uma nova pessoa no banco de dados
+      requestBody:
+        required: true
+        content:
+          /json:
+            schema:
+              $ref: "#/components/schemas/pessoaInsert"
+      responses:
+        "200":
+          description: Ok
+
+  /pessoa/{id_pessoa}:
+    get:
+      summary: >-
+        busca dados de uma pessoa especifica do banco de dados
+      parameters:
+        - $ref: "#/components/parameters/pathIdPessoa"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pessoa"
+
+    put:
+      summary: >-
+        atualiza pessoa específica no banco de dados
+      parameters:
+        - $ref: "#/components/parameters/pathIdPessoa"
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: "#/components/schemas/pessoaInsert"
+      responses:
+        "200":
+          description: OK
+
+    delete:
+      summary: >-
+        exclui uma pessoa especifica do banco de dados
+      parameters:
+        - $ref: "#/components/parameters/pathIdPessoa"
+
+      responses:
+        "200":
+          description: Ok
+
+components:
+  parameters:
+    pathIdPessoa:
+      in: path
+      required: true
+      name: id_pessoa
+      schema:
+        type: integer
+
+  schemas:
+    pessoaInsert:
+      type: object
+      properties:
+        nome:
+          type: string
+        sobrenome:
+          type: string
+        apelido:
+          type: string
+
+    pessoa:
+      type: object
+      properties:
+        id: 
+            type: integer
+        nome:
+          type: string
+        sobrenome:
+          type: string
+        apelido:
+          type: string
+```
+
+### Criação do banco de Dados
+
+…
+
+`src\database.ts`
+```typescript
+// importa o drive de conexão da biblioteca sqlite3
+import { Database } from 'sqlite3';
+
+// importa o método `open` da biblioteca sqlite, esta biblioteca nos permite
+// trabalhar com bancos sqlite de maneira assíncrona
+import { open } from 'sqlite';
+
+// cria uma função assíncrona chamada init() e a exporta para que seja 
+// possível utiliza-la fora deste modulo 
+export async function init() {
+    // aguarda quea função `open`seja executada, onde será criado o arquivo de 
+    // banco de dados `srv/database.db` e retornará o objeto de conexão que
+    // nos permitirá manipular o banco de dados
+    const db = await open({
+        filename: './database.db',
+        driver: Database,
+    });
+
+    // cria a tabela pessoa caso ela não exista
+    await db.exec(`
+        CREATE TABLE IF NOT EXISTS pessoa (
+            id        INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome      TEXT NOT NULL,
+            sobrenome TEXT NOT NULL,
+            email     TEXT NOT NULL UNIQUE,
+            telefone  TEXT NOT NULL UNIQUE
+        )
+    `);
+
+    // a função init() retorna o obejto d e conexão com o banco de dados
+    return db;
+}
+```
+
+…
+
+`src\main.ts`
+```typescript
+// importa a função init e a apelida de initDatabase do arquivo `database.ts`
+// note que a extensão `.ts` é omitida aqui
+import { init as initDatabase } from "./database";
+
+// cria uma função assincrona chamada init() (não confundir com a init do arquivo database.ts)
+// esta função foi criada para que possamos manipular execuções assincornas utilizando as palavras
+// reservadas async e await, facilitando o entendimento do código
+async function init() {
+    // aguarda a execução da função init() do arquivo database.ts
+    await initDatabase();
+}
+
+// executa a função init()
+init();
+```
