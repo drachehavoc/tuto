@@ -689,7 +689,7 @@ npx typescript --init
 …
 
 `tsconfig.json`
-```jsonp
+```json5
 {
   "compilerOptions": {
     "target": "ES2020",    // <-- alterado
@@ -707,7 +707,7 @@ npx typescript --init
 …
 
 `packaje.json`
-```jsonp
+```json5
 {
   …
   "scripts": {
