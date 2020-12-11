@@ -689,13 +689,13 @@ npx typescript --init
 …
 
 `tsconfig.json`
-```json5
+```json
 {
   "compilerOptions": {
-    "target": "ES2020",    // <-- alterado
+    "target": "ES2020",    <-- alterado
     "module": "commonjs",
-    "sourceMap": true,     // <-- alterado
-    "outDir": "./dist",    // <-- alterado
+    "sourceMap": true,     <-- alterado
+    "outDir": "./dist",    <-- alterado
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
