@@ -2,10 +2,14 @@
  
 …
 
+## 1. Servidor - RESTFul api
+
+…
+
 ### Pré-requisitos
  
 > [Introdução Express/Node](https://developer.mozilla.org/pt-BR/docs/Learn/Server-side/Express_Nodejs/Introdu%C3%A7%C3%A3o): 
-> caso tenha pouco conhecimento sobre NodeJs e Express, sugiro a leitura deste artigo do NPM
+> caso tenha pouco conhecimento sobre NodeJs e Express, sugiro a leitura deste artigo do site _MDN Web Docs_.
 
 Aqui veremos o que é necessário para que seja possível o desenvolvimento deste tutorial, caso não tenha conhecimento prévio dos itens listados abaixo é extremamente indicado que leia sobre o assunto, porém não é necessário que entenda o assunto a fundo cada um dos temas, é apenas necessário que saiba o básico para a execução do tutorial:
 
@@ -283,82 +287,7 @@ node dist/main.js
  
 Se estiver tudo _ok_ você verá a mensagem `Olá mundo!` no terminal.
 
-### Arquivo para teste da API
- 
-Estamos quase iniciando o desenvolvimento de nossa API, mas antes disso temos que criar artifícios para que possamos testá-la, existem muitas alternativas para que nossos testes de requisição à possam serem realizados, existem aplicações como o `Insomnia.rest` e `Postman` que podem fazer o serviço, bem como temos o `OpenApi/Swagger` que também pode auxiliar neste sentido, porém nossa abordagem será em desenvolver uma pequena página HTML e Javascript que utilizaremos para efetuar estes testes, neste momento não entraremos nos detalhes de como esse script funciona, pois utilizaremos eles novamente no desenvolvimento da `aplicação cliente`, ai sim detalharemos o funcionamento de cada uma destas funções.
-
-Crie um arquivo chamado `teste-api.html` (de preferencia fora da estrutura do projeto) e adicione o seguite código:
-
-_teste-api.html_
-```html
-<html>
-  <head>
-      <title>Teste API</title>
-  </head>
-  <body>
-      Abra o console do browser para executar os testes.
-      <script>
-          // ENDEREÇO LOCAL ONDE A API SERÁ EXECUTADA
-          const host = "http://localhost:8081";
-
-          // SOLICITA AO SERVIDOR:
-          // LISTAGEM DE DADOS DE TODAS AS PESSOAS
-          async function buscarPessoas() {
-              const configReq = { method: "get" };
-              const req = await fetch(host+"/pessoa")
-              const res = await req.json();
-              return res;
-          }
-
-          // SOLICITA AO SERVIDOR:
-          // INSERÇÃO DE NOVA PESSOA
-          async function adicionarPessoa(dadosDePessoa) {
-              const configReq = {
-                  method: "post",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(dadosDePessoa)
-              };
-              const req = await fetch(host+"/pessoa", configReq);
-              const res = await req.json();
-              return res;
-          }
-
-          // SOLICITA AO SERVIDOR:
-          // LISTAGEN DE DADOS DE UMA PESSOA ESPECÍFICA
-          async function buscarPessoa(id) {
-              const configReq = { method: "get" };
-              const req = await fetch(host + "/pessoa/" + id)
-              const res = await req.json();
-              return res;
-          }
-
-          // SOLICITA AO SERVIDOR:
-          // ALTERAÇÂO DE DADOS DE UMA PESSOA ESPECÍFICA
-          async function alterarPessoa(id, dadosDePessoa) {
-              const configReq = {
-                  method: "put",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(dadosDePessoa)
-              };
-              const req = await fetch(host + "/pessoa/" + id, configReq);
-              const res = await req.json();
-              return res;
-          }
-
-          // SOLICITA AO SERVIDOR:
-          // EXCLUISÃO DE DADIS DE UMA PESSOA ESPECÍFICA 
-          async function excluirPessoa(id) {
-              const configReq = { method: "delete" };
-              const req = await fetch(host + "/pessoa/" + id, configReq);
-              const res = await req.json();
-              return res;
-          }
-      </script>
-  </body>
-</html>
-```
-
-### Rotas de acesso HTTP ao Servidor 
+### Criando rotas de acesso ao Servidor 
 
 Criaremos neste momento a capacidade do nosso servidor a responder requisições HTTP, mais específicamente criaremos duas rotas de acesso sendo a primeira, `/pessoa`, `GET` e `POST`, e a segunda rota será `/pessoa/:id` que responderá os métodos HTTP `GET`, `PUT` e `DELETE`.
 
@@ -588,6 +517,7 @@ app.delete('/pessoa/:id',
 
 //
 // INICIA ESPERA DE REQUISIÇÃO NA PORTA 8081
+// E IMPRIME A MENSAGEM `running...` NO TERMINAL
 //
 
 app.listen(8081, () => console.log("running..."));
@@ -596,7 +526,173 @@ app.listen(8081, () => console.log("running..."));
 #### Testando as requisições HTTP
 
 …
+
+#### Arquivo para teste do servidor
  
+Será necessário criar artifícios para que possamos testar o que fizemos até o momento, existem muitas alternativas para que nossos testes de requisição possam ser realizados, existem aplicações como o `Insomnia.rest` e `Postman` que são desenvolvidos para isso, bem como temos o `OpenApi/Swagger` que também pode auxiliar nesta tarefa, porém nossa abordagem consistirá em desenvolver uma pequena página com HTML e Javascript, neste momento não entraremos nos detalhes de como esta funciona, pois utilizaremos ela novamente no desenvolvimento da `aplicação cliente`, ai sim detalharemos o funcionamento de cada uma das funções que desenvolvemos aqui.
+ 
+Crie um arquivo chamado `teste-api.html` (de preferência fora da estrutura do projeto) e adicione o seguinte código:
+
+_teste-api.html_
+```html
+<html>
+  <head>
+      <title>Teste API</title>
+  </head>
+  <body>
+      Abra o console do browser para executar os testes.
+      <script>
+          // ENDEREÇO LOCAL ONDE A API SERÁ EXECUTADA
+          const host = "http://localhost:8081";
+
+          // SOLICITA AO SERVIDOR:
+          // LISTAGEM DE DADOS DE TODAS AS PESSOAS
+          async function buscarPessoas() {
+              const configReq = { method: "get" };
+              const req = await fetch(host+"/pessoa")
+              const res = await req.json();
+              return res;
+          }
+
+          // SOLICITA AO SERVIDOR:
+          // INSERÇÃO DE NOVA PESSOA
+          async function adicionarPessoa(dadosDePessoa) {
+              const configReq = {
+                  method: "post",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(dadosDePessoa)
+              };
+              const req = await fetch(host+"/pessoa", configReq);
+              const res = await req.json();
+              return res;
+          }
+
+          // SOLICITA AO SERVIDOR:
+          // LISTAGEN DE DADOS DE UMA PESSOA ESPECÍFICA
+          async function buscarPessoa(id) {
+              const configReq = { method: "get" };
+              const req = await fetch(host + "/pessoa/" + id)
+              const res = await req.json();
+              return res;
+          }
+
+          // SOLICITA AO SERVIDOR:
+          // ALTERAÇÂO DE DADOS DE UMA PESSOA ESPECÍFICA
+          async function alterarPessoa(id, dadosDePessoa) {
+              const configReq = {
+                  method: "put",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(dadosDePessoa)
+              };
+              const req = await fetch(host + "/pessoa/" + id, configReq);
+              const res = await req.json();
+              return res;
+          }
+
+          // SOLICITA AO SERVIDOR:
+          // EXCLUISÃO DE DADIS DE UMA PESSOA ESPECÍFICA 
+          async function excluirPessoa(id) {
+              const configReq = { method: "delete" };
+              const req = await fetch(host + "/pessoa/" + id, configReq);
+              const res = await req.json();
+              return res;
+          }
+      </script>
+  </body>
+</html>
+```
+
+#### Executando os testes
+
+Para que possamos executar os testes em nosso servidor é necessário iniciá-lo, no **terminal do VSCode** _ctrl+'_ digite o seguinte comando `npm run debug`, se tudo estiver _ok_ você verá a mensagem `running...` em seu terminal.
+
+Agora abra o arquivo _teste-api.html_ que criamos no passo anterior em seu _browser_ preferido.
+
+##### Testar a rota `GET` /pessoa - _listar todas as pessoas_
+
+Excute no console:
+
+```javascript
+await buscarPessoas();
+```
+
+o resultado deve ser o seguinte:
+
+```javascript
+{teste: "buscar dados de todas as pessoas pessoas"}
+```
+
+##### Testar a rota `POST` /pessoa - _adicionar uma pessoa_
+
+Excute no console:
+
+```javascript
+await adicionarPessoa({nome: "Daniel", sobrenome: "de Andrade Varela", apelido: "Varela"});
+```
+
+o resultado deve ser o seguinte:
+
+```javascript
+{teste: "adicionar dados de pessoa no banco de dados", vindoDoCliente: {…}}
+```
+
+> note que  `vindoDoCliente> {...}` é exatamente o que foi enviado para o servidor, para poder ler o retorno clique em `{...}`.
+
+##### Testar a rota `GET` /pessoa/:id - _listar informação de uma pessoa específica_
+
+Excute no console:
+
+```javascript
+await buscarPessoa(43);
+```
+
+o resultado deve ser o seguinte:
+
+```javascript
+{id: "43", teste: "buscar dados de uma pessoa específica"}
+```
+
+> note que o valor da chave `id` é exatamente o que foi enviado para o servidor.
+
+##### Testar a rota `PUT` /pessoa/:id - _adicionar uma pessoa_
+
+Excute no console:
+
+```javascript
+await alterarPessoa(43, {nome: "Daniel", sobrenome: "de Andrade Varela", apelido: "Varela"});
+```
+
+o resultado deve ser o seguinte:
+
+```javascript
+{id: "43", teste: "atualiza dados de uma pessoa específica", vindoDoCliente: {…}}
+```
+> note que o valor da chave `id` é exatamente o que foi enviado para o servidor.
+
+> note que  `vindoDoCliente> {...}` é exatamente o que foi enviado para o servidor, para poder ler o retorno clique em `{...}`.
+
+##### Testar a rota `DELETE` /pessoa/:id - _listar informação de uma pessoa específica_
+
+Excute no console:
+
+```javascript
+await excluirPessoa(43);
+```
+
+o resultado deve ser o seguinte:
+
+```javascript
+{id: "43", teste: "exclui dados de uma pessoa específica"}
+```
+
+> note que o valor da chave `id` é exatamente o que foi enviado para o servidor.
+
+#### ZZZZZ […]
+
+É possível notar que o `browser` (aqui agindo como cliente), está fazendo requisições ao servidor que desenvolvemos, note que as respostas são consequência das constantes `responseData` que criamos no arquivo `src/main.ts`, dentro de cada uma das rotas, e que nas rotas `POST /pessoa` e `PUT /pessoa/:id` o cliente envia informações pelo corpo da requisição HTTP e o servidor as devolve no corpo da resposta HTTP, mais especificamente dentro da chave `vindoDoCliente`; além disso é possível notar que nas rotas `GET /pessoa/:id`, `PUT /pessoa/:id` e `DELETE /pessoa/:id`, o valor `:id` recebido na rota (pela `URL`) é adicionado na chave `id` da resposta do servidor, em resumo podemos notar que é possível enviar informações tanto pela `URL` da requisição HTTP como pelo corpo da requisição, porém o corpo é utilizado em métodos `POST` e `PUT` ou seja, métodos que de fato necessitam enviar informações mais complexas para que o servidor execute alguma ação específica.
+
+> **`DICA`**: Altere os valores das variáveis, tanto das requisições como no arquivo `src/main.ts` para testar e buscar um melhor entendimento de como as `requisições` e `resposta` funcionam.
+
 ### Criação do banco de Dados
  
 …
@@ -637,22 +733,105 @@ export async function init() {
 }
 ```
  
-…
+#### Juntando as partes
+
+Para que possamos executar a função do arquivo `src/database.ts` em nosso arquivo `src/main.ts`, precisamos primeiro importa-la, isso é possível ser feito com o seguinte comando `import { init } from "./database";`, porém a função que criamos no arquivo `src/database.ts` é assíncrona e portanto para que possamos utilizar a palavra reservada `await` que permite que esperemos o término da execução da função, será necessário que a chamada da função assíncrona seja feita dentro de outra função assíncrona, que chamaremos de `init`, mesmo nome que utilizamos no arquivo `src/database`, criando assim um conflito de nomes, para que possamos resolver este conflito iremos apelidar a função `init` importada do arquivo `src/database.ts`, para isso vamos alterar a linha de importação de `import { init } from "./database";` para `import { init as initDatabase } from "./database";`.
+
+Todos os métodos que dependerão do banco de dados serão movidos para dentro da função `init` que acabamos de criar; Para ficar fácil o entendimento do que foi alterado no arquivo `src/main.ts`, as linhas que não necessitam serem movidas foram marcadas com o comentário `// *`, já as que necessitam serem movidas para dentro da função `init`, foram marcadas com o comentário `// **` e as linhas que foram adicionadas foram comentadas com a sua devida explicação.
  
 _src/main.ts_
 ```typescript
-// importa a função init e a apelida de initDatabase do arquivo `database.ts`
-// note que a extensão `.ts` é omitida aqui
+// importa a função init e a apelida de initDatabase do 
+// arquivo `database.ts`, note que a extensão `.ts` é omitida aqui
 import { init as initDatabase } from "./database";
+
+// *
+import express from "express";
+
+// *
+import bodyParser from "body-parser";
+
+// *
+const app = express();
+
+// *
+app.use( function (request, response, next) {
+    response.header('Access-Control-Allow-Origin', '*');                   
+    response.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    response.header('Access-Control-Allow-Headers', 'Content-Type');       
+    next();
+  }
+);
+
+// *
+app.use(bodyParser.json()); 
  
 // cria uma função assíncrona chamada init() (não confundir com a init do arquivo database.ts)
 // esta função foi criada para que possamos manipular execuções assíncronas utilizando as palavras
 // reservadas async e await, facilitando o entendimento do código
 async function init() {
-    // aguarda a execução da função init() do arquivo database.ts
-    await initDatabase();
+    // aguarda a execução da função `init()` do arquivo `database.ts`
+    // e armazena o retorno da função na constante `db`
+    const db = await initDatabase();
+
+    // **
+    app.get('/pessoa', function (request, response) {                    
+          const responseData = {
+            teste: "buscar dados de todas as pessoas pessoas"
+          };
+          response.json(responseData);
+      }
+    );
+
+    // **
+    app.post('/pessoa', function (request, response) {
+        const responseData = {
+          teste: "adicionar dados de pessoa no banco de dados",
+          vindoDoCliente: request.body
+        };
+        response.json(responseData);
+      }
+    ); 
+
+    // **
+    app.get('/pessoa/:id', function (request, response) {
+        const responseData = {
+            id: request.params.id,
+            teste: "buscar dados de uma pessoa específica"
+        };
+        response.json(responseData);
+      }
+    );
+
+    // **
+    app.put('/pessoa/:id', function (request, response) {
+        const responseData = {
+          id: request.params.id,
+          teste: "atualiza dados de uma pessoa específica",
+         vindoDoCliente: request.body
+        };
+        response.json(responseData);
+      }
+    );
+
+    // **
+    app.delete('/pessoa/:id', function (request, response) {
+        const responseData = {
+          id: request.params.id,
+          teste: "exclui dados de uma pessoa específica",
+        };
+        response.json(responseData);
+      }
+    );
+
+    // *
+    app.listen(8081, () => console.log("running..."));
 }
  
 // executa a função init()
 init();
 ```
+
+## 2. Cliente - Browser/Navegador
+
+…
