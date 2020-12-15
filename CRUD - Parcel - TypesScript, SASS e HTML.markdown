@@ -360,85 +360,242 @@ _teste-api.html_
 
 ### Rotas de acesso HTTP ao Servidor 
 
-…
+Criaremos neste momento a capacidade do nosso servidor a responder requisições HTTP, mais específicamente criaremos duas rotas de acesso sendo a primeira, `/pessoa`, `GET` e `POST`, e a segunda rota será `/pessoa/:id` que responderá os métodos HTTP `GET`, `PUT` e `DELETE`.
+
+Segue descrição de quais são as atribuições de cada uma dessas rotas assim que fizermos conexão com o banco de dados:
+
+- /pessoa
+  - `GET` - responsável por listar todos os dados de todas as pessoas no banco de dados.
+  - `POST` - responsável por criar um nova pessoa no banco de dados.
+- /pessoa/:id
+  - `GET` - responsável por listar somente os dados de uma pessoa específica, encontrada pelo valor contido em `:id`.
+  - `PUT` - responsável por atualizar os dados de uma pessoa específica, encontrada pelo valor contido em `:id`.
+  - `DELETE` - responsável por excluir somente os dados de uma pessoa específica, encontrada pelo valor contido em `:id`.
+
+Criaremos neste momento a capacidade do nosso servidor a responder requisições HTTP, mais específicamente criaremos duas rotas de acesso sendo a primeira, `/pessoa`, `GET` e `POST`, e a segunda rota será `/pessoa/:id` que responderá os métodos HTTP `GET`, `PUT` e `DELETE`.
+ 
+Segue descrição de quais são as atribuições de cada uma dessas rotas assim que fizermos conexão com o banco de dados:
+ 
+- /pessoa
+  - `GET` - responsável por listar todos os dados de todas as pessoas no banco de dados.
+  - `POST` - responsável por criar uma nova pessoa no banco de dados.
+- /pessoa/:id
+  - `GET` - responsável por listar somente os dados de uma pessoa específica, encontrada pelo valor contido em `:id`.
+  - `PUT` - responsável por atualizar os dados de uma pessoa específica, encontrada pelo valor contido em `:id`.
+  - `DELETE` - responsável por excluir somente os dados de uma pessoa específica, encontrada pelo valor contido em `:id`.
+ 
+O arquivo a seguir ainda não é capaz de comunicar-se com o banco de dados, mas nos permitirá testar se o servidor é capaz de responder as requisições HTTP que o cliente fará, o arquivo está comentado linha-a-linha para que seja possível compreender seu funcionamento, nos próximos passos daremos a capacidade de nosso servidor comunicar-se com o banco de dados, assim efetivamente criando, alterando, listando e excluindo informações em nossa base de dados.
+ 
+Abra o arquivo `src/main.ts` e substitua seu conteúdo pelo seguinte:
 
 _src/main.ts_
 ```typescript
+//
 // IMPORTA A BIBLIOTECA EXPRESS
 // PARA CONTROLE DE REQUISEÇÃO HTTP
+//
+
 import express from "express";
 
+//
 // IMPORTA A BIBLIOTECA BODY-PARSER
 // PARA FACILITAR A LEITURA DO CORPO HTTP 
 // DA REQUISIÇÃO RECEBIDA PELO CLIENTE
-import boodyParser from "body-parser";
+//
 
+import bodyParser from "body-parser";
+
+//
 // CRIA OBJETO QUE IRÁ CONTROLAR AS
 // REQUISIÇÕES HTTP DA APLICAÇÃO
+//
+
 const app = express();
 
+//
 // ADICIONA AO CABEÇALHO DE TODAS AS RESPOSTAS DAS
 // REQUISIÇÕES HTTP, INFORMAÇÕES QUE PERMITEM O ACESSO
 // POR QUALQUER ORIGEM AOS MÉTODOS [GET,PUT,POST,DELETE]
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
+//
 
+// adiciona função a ser executada antes de qualquer requisição HTTP
+app.use(
+  // função que será executada antes da função de qualquer
+  //função definida para a `rota` e `método HTTP` atual
+  function (request, response, next) {
+    // define no cabeçalho de resposta que as requisições podem ser feitas a partir de qualquer domínio (*)
+    response.header('Access-Control-Allow-Origin', '*');                   
+    // define no cabeçalho de resposta que os métodos GET, PUT, POST, DELETE são permitidos  
+    response.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    // define no cabeçalho de resposta que é permitido a chave Content-Type no cabeçalho de requisição
+    response.header('Access-Control-Allow-Headers', 'Content-Type');       
+    // segue o fluxo para execução
+    next();
+  }
+);
+
+//
 // INICIA A TRADUÇÃO DO CORPO HTTP RECEBIDO
 // PELO CLIENTE EM QUAISQUER UMA DAS REQUISIÇÕES
-app.use(boodyParser.json()); 
+//
 
-// RESPONDE SOLICITAÇÃO DO CIENTE:
+// adiciona função de tratamento do corpo da requisição HTTP recebida
+// para que seja executada antes de qualquer função definida para a `rota` 
+// e `método HTTP` atual
+app.use(bodyParser.json()); 
+
+//
+// RESPONDE SOLICITAÇÃO DO CLIENTE:
 // LISTAGEM DE DADOS DE TODAS AS PESSOAS
-app.get('/pessoa', (req, res) => res.json({
-    teste: "buscar dados de todas as pessoas pessoas"
-}));
+//
 
+// espera requisições `GET` na rota `/pessoa`
+app.get('/pessoa', 
+  // função que o servidor executará quando receber a requisição nesta rota
+  // o parâmetro `request`, é um objeto que nos ajuda a entender os dados contidos nas requisições HTTP
+  // o parâmetro `response`  é um objeto que nos ajuda a responder as requisições HTTP
+  function (request, response) {                    
+    // cria o objeto que utilizaremos para responder a requisição HTTP, enviaremos os dados contidos 
+    // neste objeto no corpo da resposta HTTP para que seja possível verifica se o servidor está 
+    // recebendo as requisições corretamente, bem como se está respondendo corretamente
+      const responseData = {
+        // adiciona a chave `teste` ao objeto para verificar se o 
+        // servidor consegue responder corretamente as esta requisição
+        teste: "buscar dados de todas as pessoas pessoas"
+      };
+      // responde para o cliente em formato JSON
+      // o objeto criado anteriormente 
+      response.json(responseData);
+  }
+);
+
+//
 // RESPONDE SOLICITAÇÃO DO CIENTE:
 // INSERÇÃO DE NOVA PESSOA
-app.post('/pessoa', (req, res) => {
-    res.json({
-        id: req.params.id,
-        teste: "adicionar dados de pessoa no banco de dados",
-        vindoDoCliente: req.body
-    });
-});
+//
 
+// espera requisições `POST` na rota `/pessoa`
+app.post('/pessoa', 
+  // função que o servidor executará quando receber a requisição nesta rota
+  // o parâmetro `request`, é um objeto que nos ajuda a entender os dados contidos nas requisições HTTP
+  // o parâmetro `response`  é um objeto que nos ajuda a responder as requisições HTTP
+  function (request, response) {
+    // cria o objeto que utilizaremos para responder a requisição HTTP, enviaremos os dados contidos 
+    // neste objeto no corpo da resposta HTTP para que seja possível verifica se o servidor está 
+    // recebendo as requisições corretamente, bem como se está respondendo corretamente
+    const responseData = {
+      // adiciona a chave `teste` ao objeto para verificar se o 
+      // servidor consegue responder corretamente as esta requisição
+      teste: "adicionar dados de pessoa no banco de dados",
+      // adiciona a chave `vindoDoCliente` ao objeto para que o servidor responda o que 
+      // recebeu no corpo da requisição HTTP, para que assim seja possível verificar-mos 
+      // se o servidor está recebendo os dados corretamente
+      vindoDoCliente: request.body
+    };
+    // responde para o cliente em formato JSON
+    // o objeto criado anteriormente 
+    response.json(responseData);
+  }
+); 
+
+//
 // RESPONDE SOLICITAÇÃO DO CIENTE:
 // LISTAGEN DE DADOS DE UMA PESSOA ESPECÍFICA
-app.get('/pessoa/:id', (req, res) => {
-    res.json({
-        id: req.params.id,
-        teste: "buscar dados de uma pessoa específica",
-        vindoDoCliente: req.body
-    });
-});
+//
 
+// espera requisições `GET` na rota `/pessoa/:id`
+app.get('/pessoa/:id', 
+  // função que o servidor executará quando receber a requisição nesta rota
+  // o parâmetro `request`, é um objeto que nos ajuda a entender os dados contidos nas requisições HTTP
+  // o parâmetro `response`  é um objeto que nos ajuda a responder as requisições HTTP
+  function (request, response) {
+    // cria o objeto que utilizaremos para responder a requisição HTTP, enviaremos os dados contidos 
+    // neste objeto no corpo da resposta HTTP para que seja possível verifica se o servidor está 
+    // recebendo as requisições corretamente, bem como se está respondendo corretamente
+    const responseData = {
+      // adiciona a chave id ao objeto para que seja possível verifica se 
+      // o servidor está recebendo corretamente a chave `:id` pela rota atual
+        id: request.params.id,
+        // adiciona a chave `teste` ao objeto para verificar se o 
+        // servidor consegue responder corretamente as esta requisição
+        teste: "buscar dados de uma pessoa específica"
+    };
+    // responde para o cliente em formato JSON
+    // o objeto criado anteriormente 
+    response.json(responseData);
+  }
+);
+
+//
 // RESPONDE SOLICITAÇÃO DO CIENTE:
 // ALTERAÇÂO DE DADOS DE UMA PESSOA ESPECÍFICA
-app.put('/pessoa/:id', (req, res) => {
-    res.json({
-        id: req.params.id,
-        teste: "atualiza dados de uma pessoa específica",
-        vindoDoCliente: req.body
-    });
-});
+//
 
+// espera requisições `PUT` na rota `/pessoa/:id`
+app.put('/pessoa/:id', 
+  // função que o servidor executará quando receber a requisição nesta rota
+  // o parâmetro `request`, é um objeto que nos ajuda a entender os dados contidos nas requisições HTTP
+  // o parâmetro `response`  é um objeto que nos ajuda a responder as requisições HTTP
+  function (request, response) {
+    // cria o objeto que utilizaremos para responder a requisição HTTP, enviaremos os dados contidos 
+    // neste objeto no corpo da resposta HTTP para que seja possível verifica se o servidor está 
+    // recebendo as requisições corretamente, bem como se está respondendo corretamente
+    const responseData = {
+      // adiciona a chave id ao objeto para que seja possível verifica se 
+      // o servidor está recebendo corretamente a chave `:id` pela rota atual
+      id: request.params.id,
+      // adiciona a chave `teste` ao objeto para verificar se o 
+      // servidor consegue responder corretamente as esta requisição
+      teste: "atualiza dados de uma pessoa específica",
+      // adiciona a chave `vindoDoCliente` ao objeto para que o servidor responda o que 
+      // recebeu no corpo da requisição HTTP, para que assim seja possível verificar-mos 
+      // se o servidor está recebendo os dados corretamente
+      vindoDoCliente: request.body
+    };
+    // responde para o cliente em formato JSON
+    // o objeto criado anteriormente 
+    response.json(responseData);
+  }
+);
+
+//
 // RESPONDE SOLICITAÇÃO DO CIENTE:
 // EXCLUISÃO DE DADIS DE UMA PESSOA ESPECÍFICA 
-app.delete('/pessoa/:id', (req, res) => {
-    res.json({
-        id: req.params.id,
-        teste: "exclui dados de uma pessoa específica",
-    });
-});
+//
 
+// espera requisições `DELETE` na rota `/pessoa/:id`
+app.delete('/pessoa/:id', 
+  // função que o servidor executará quando receber a requisição nesta rota
+  // o parâmetro `request`, é um objeto que nos ajuda a entender os dados contidos nas requisições HTTP
+  // o parâmetro `response`  é um objeto que nos ajuda a responder as requisições HTTP
+  function (request, response) {
+    // cria o objeto que utilizaremos para responder a requisição HTTP, enviaremos os dados contidos 
+    // neste objeto no corpo da resposta HTTP para que seja possível verifica se o servidor está 
+    // recebendo as requisições corretamente, bem como se está respondendo corretamente
+    const responseData = {
+      // adiciona a chave id ao objeto para que seja possível verifica se 
+      // o servidor está recebendo corretamente a chave `:id` pela rota atual
+      id: request.params.id,
+      // adiciona a chave `teste` ao objeto para verificar se o 
+      // servidor consegue responder corretamente as esta requisição
+      teste: "exclui dados de uma pessoa específica",
+    };
+    // responde para o cliente em formato JSON
+    // o objeto criado anteriormente 
+    response.json(responseData);
+  }
+);
+
+//
 // INICIA ESPERA DE REQUISIÇÃO NA PORTA 8081
+//
+
 app.listen(8081, () => console.log("running..."));
 ```
+
+#### Testando as requisições HTTP
+
+…
  
 ### Criação do banco de Dados
  
