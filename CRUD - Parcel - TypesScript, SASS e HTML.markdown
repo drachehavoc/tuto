@@ -608,7 +608,7 @@ Para que possamos executar os testes em nosso servidor é necessário iniciá-lo
 
 Agora abra o arquivo `teste-api.html` que criamos no passo anterior em seu _browser_ preferido.
 
-##### Testar a rota `GET` /pessoa - _listar todas as pessoas_
+##### Testar a rota `GET /pessoa` - _listar todas as pessoas_
 
 Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
@@ -622,7 +622,7 @@ o resultado deve ser o seguinte:
 {teste: "buscar dados de todas as pessoas pessoas"}
 ```
 
-##### Testar a rota `POST` /pessoa - _adicionar uma pessoa_
+##### Testar a rota `POST /pessoa` - _adicionar uma pessoa_
 
 Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
@@ -638,7 +638,7 @@ o resultado deve ser o seguinte:
 
 > note que  `vindoDoCliente> {...}` é exatamente o que foi enviado para o servidor, para poder ler o retorno clique em `{...}`.
 
-##### Testar a rota `GET` /pessoa/:id - _listar informação de uma pessoa específica_
+##### Testar a rota `GET /pessoa/:id` - _listar informação de uma pessoa específica_
 
 Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
@@ -654,7 +654,7 @@ o resultado deve ser o seguinte:
 
 > note que o valor da chave `id` é exatamente o que foi enviado para o servidor.
 
-##### Testar a rota `PUT` /pessoa/:id - _adicionar uma pessoa_
+##### Testar a rota `PUT /pessoa/:id` - _adicionar uma pessoa_
 
 Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
@@ -671,7 +671,7 @@ o resultado deve ser o seguinte:
 
 > note que  `vindoDoCliente> {...}` é exatamente o que foi enviado para o servidor, para poder ler o retorno clique em `{...}`.
 
-##### Testar a rota `DELETE` /pessoa/:id - _listar informação de uma pessoa específica_
+##### Testar a rota `DELETE /pessoa/:id` - _listar informação de uma pessoa específica_
 
 Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
