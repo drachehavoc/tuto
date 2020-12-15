@@ -606,11 +606,11 @@ _teste-api.html_
 
 Para que possamos executar os testes em nosso servidor é necessário iniciá-lo, no **terminal do VSCode** _ctrl+'_ digite o seguinte comando `npm run debug`, se tudo estiver _ok_ você verá a mensagem `running...` em seu terminal.
 
-Agora abra o arquivo _teste-api.html_ que criamos no passo anterior em seu _browser_ preferido.
+Agora abra o arquivo `teste-api.html` que criamos no passo anterior em seu _browser_ preferido.
 
 ##### Testar a rota `GET` /pessoa - _listar todas as pessoas_
 
-Excute no console:
+Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
 ```javascript
 await buscarPessoas();
@@ -624,7 +624,7 @@ o resultado deve ser o seguinte:
 
 ##### Testar a rota `POST` /pessoa - _adicionar uma pessoa_
 
-Excute no console:
+Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
 ```javascript
 await adicionarPessoa({nome: "Daniel", sobrenome: "de Andrade Varela", apelido: "Varela"});
@@ -640,7 +640,7 @@ o resultado deve ser o seguinte:
 
 ##### Testar a rota `GET` /pessoa/:id - _listar informação de uma pessoa específica_
 
-Excute no console:
+Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
 ```javascript
 await buscarPessoa(43);
@@ -656,7 +656,7 @@ o resultado deve ser o seguinte:
 
 ##### Testar a rota `PUT` /pessoa/:id - _adicionar uma pessoa_
 
-Excute no console:
+Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
 ```javascript
 await alterarPessoa(43, {nome: "Daniel", sobrenome: "de Andrade Varela", apelido: "Varela"});
@@ -673,7 +673,7 @@ o resultado deve ser o seguinte:
 
 ##### Testar a rota `DELETE` /pessoa/:id - _listar informação de uma pessoa específica_
 
-Excute no console:
+Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
 ```javascript
 await excluirPessoa(43);
@@ -691,7 +691,7 @@ o resultado deve ser o seguinte:
 
 É possível notar que o `browser` (aqui agindo como cliente), está fazendo requisições ao servidor que desenvolvemos, note que as respostas são consequência das constantes `responseData` que criamos no arquivo `src/main.ts`, dentro de cada uma das rotas, e que nas rotas `POST /pessoa` e `PUT /pessoa/:id` o cliente envia informações pelo corpo da requisição HTTP e o servidor as devolve no corpo da resposta HTTP, mais especificamente dentro da chave `vindoDoCliente`; além disso é possível notar que nas rotas `GET /pessoa/:id`, `PUT /pessoa/:id` e `DELETE /pessoa/:id`, o valor `:id` recebido na rota (pela `URL`) é adicionado na chave `id` da resposta do servidor, em resumo podemos notar que é possível enviar informações tanto pela `URL` da requisição HTTP como pelo corpo da requisição, porém o corpo é utilizado em métodos `POST` e `PUT` ou seja, métodos que de fato necessitam enviar informações mais complexas para que o servidor execute alguma ação específica.
 
-> **`DICA`**: Altere os valores das variáveis, tanto das requisições como no arquivo `src/main.ts` para testar e buscar um melhor entendimento de como as `requisições` e `resposta` funcionam.
+> **`DICA`**: Altere os valores das variáveis, tanto das requisições como no arquivo `src/main.ts` para testar e buscar um melhor entendimento de como as `requisições` e `resposta` funcionam em nosso projeto.
 
 ### Criação do banco de Dados
  
@@ -824,7 +824,7 @@ async function init() {
       }
     );
 
-    // *
+    // **
     app.listen(8081, () => console.log("running..."));
 }
  
