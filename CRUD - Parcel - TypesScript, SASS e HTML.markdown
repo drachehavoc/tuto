@@ -1,618 +1,42 @@
-# 1. Pré-requisitos
-
-## 1.1 Instalação NodeJS e NPM
-
-Para esse projeto precisaremos do NodeJS e do NPM, caso não conheça essas tecnologias, deixarei linkado aqui alguns sites para maiores informações
-
-- [Sobre o NodeJS](https://nodejs.org/pt-br/about/)
-- [Sobre o NPM](https://docs.npmjs.com/about-npm)
-
-### 1.1.1 Windows/MacOS
-Instale o NodeJS + NPM, acessese [https://nodejs.org/en/download/]() e siga as instruções de instalação.
-
-### 1.1.2 Linux/Windows/MacOs via Package Manager
-caso esteja esteja fazendo a instalação em uma distribuição linux acesse [https://nodejs.org/en/download/package-manager/]() e siga as instruções para sua distribuição, certifique-se de ter instalado o **NPM** também.
-
-### 1.2.3 Verificação de instalação
-
-Para verificar se o NodeJS esta instalado corretamente abra seu terminal e digite o seguinte comando:
-
-```shell
-node --version
-```
-
-Se tudo ocorreu bem na instalação isso deve apresentar a versão do NodeJS instalado atualmente.
-
-Para verificar se o **NPM** também está instalado corretamente execute o seguinte comando:
-
-```shell
-npm --version
-```
-
-assim como no caso do comando anterior apresentava a versão do NodeJS instalado, este deve mostrar a versão do NPM instalado no momento, caso a instalação tenha sido bem sucedida.
-
-## 1.2 Preparando a estrutura de pastas e pacotes
-
-Crie uma pasta com o nome que preferir, o nome escolhido para este tutorial foi `tuto_crud` (evite a utilização de caracteres especiais), dentro desta pasta criaremos uma subpasta chamada `src`, abreviação de _source_, é aqui onde colocaremos todos os fontes de nosso projeto, também criaremos uma subpasta chamada `dis` abreviação para _distributable_ é nesta pasta onde nossos arquivos prontos para serem distribuidos ficaram.
-
-Além destas duas sub-pastas também criaremos uma terceira chamada `srv`, avreviação para _server_, é nesta pasta que colocaremos os arquivos do servidor de nossa aplicação. 
-
-O próximo passo é criar o arquivo `package.json`, este arquivo é responsável por manter informações importantes sobre o projeto, como comandos para empacotamento e quais pacotes de terceiro serão utilizados etc. para criar este arquivo iremos utilizar o **NPM**, abra seu terminal e navegue até a pasta do projeto e então digite o seguinte comando:
-
-```shell
-npm init -y
-```
-
-Este comando criará um arquivo chamado `package.json` sem fazer nenhuma pergunta ao usuário, para ter a possíbilidade de criar o arquivo já com dados customizados, execute o mesmo comando porém sem o parâmetro `-y`.
-
-O arquivo gerado terá uma estrutura semelhante ao listado aqui:
-
-```json
-{
-  "name": "tuto_crud",
-  "version": "1.0.0",
-  "description": "tutorial crud",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "Daniel de A. Varela",
-  "license": "ISC"
-}
-```
-
-### 1.2.1 Pacotes para desenvolvimento: 
-
-l, TypeScript e ts-node
-
-Neste projeto utilizaremos o empacotador `Parcel`, ele será responsável por criar os arquivos para distribuição do projeto como por exemplo compilando arquivos TypeScript e SCSS para Javascript e CSS para que possam serem interpretados pelo browser, como este pacote será utilizado somente no momento do desenvolvimento, instalaremos o pacote da seguinte maneira, pelo terminal na pasta raiz do projeto executaresmos o seguinte comando:
-
-```shell
-npm install parcel --save-dev
-```
-
-Também será necessário instalar o pacote `TypeScript`, ele será respossável por compilar os arquivos `.ts` para `.js` [WIP]
-
-```shell
-npm install typescript --save-dev
-```
-
-Assim como o Parcel também instalaremos o modulo `ts-node`, este será responsavel por permitir exectarmos os arquivos `.ts` sem a necessidade de compila-los para `.js`, no lado servidor, para intalrmos o `ts-node`, na pasta raiz do projeto executatemos o seguinte comando:
-
-```shell
-npm install --save-dev ts-node
-```
-
-Todos os comandos de instalação de pacotes irá demorar um pouco, pois o NPM irá baixar estes pacotes dos servidores oficiais, após a primeira instalação de qualquer pacote uma nova pasta será criada com o nome `node_modules` onde ficaram todas as bibliotecas que utilizaremos no desenvolvimento da aplicação, o arquivo `package.json` irá ser atualizado, adicionando o trecho onde temos a lista de `dependencias de desenvolvimento`, ou seja os pacotes que serão utilizados somente durante o desenvolvimento:
-
-```json
-{
-  …
-  "devDependencies": {
-      "parcel": "^1.12.4",
-      "ts-node": "^9.0.0"
-  }
-  …
-}
-```
-
-### 1.2.2 Pacotes Express e SQLite
-
-Outros dois pacotes que utilizaremos é o `sqlite3` e o `express`, um responsável pela conexão com nosso banco de dados e outro responsável por manipular o acesso via HTTP ao nosso projeto, além das biliotecas já citadas, tabém instaleremos o pacote `sqlite` que nos permitirar fazer acesso ao banco de dados de maneira assincrona e com maior super as APIs modernas do Jasvascript/TypeScrit, para instalar estes pacotes de uma única vez, utilizaremos o seguinte comando:
-
-```shell
-npm install sqlite sqlite3 express
-```
-
-Note que desta vez não utilizamos o parâmetro `--save-dev`, pois estes pacotes serão necessários para o funcionamento da aplicação após a versão distribuição.
-
-Como a aplicação depende desses pacotes para funcionar mesmo depois de empacotada, o arquivo `package.json` irá ser atualizado com a seguinte sessão:
-
-```json
-{
-  …
-  "dependencies": {
-    "express": "^4.17.1",
-    "sqlite": "^4.0.17",
-    "sqlite3": "^5.0.0"
-  }
-  …
-}
-```
-
-### 1.2.3 Arquivo de configuração de compilação TypsScript
-
-Precisamos criar também o arquivo de configuração que informa como os arquivos `.ts` devem ser compilados para isso executaremos o seguinte comando na pasta raiz do nosso projeto:
-
-```shell
-npx tsc --init
-```
-
-Este comando cria-rá um arquivo chamado `tsconfig.json`, resposável por informar como os arquivos `.ts` devem ser compilados para `.js`, portanto neste arquivo mudaremos o a chave `target` de `"es5"` para `"ES2019"`, para que possamos assim utilizar APIs mais modernas do Javascript, o arquivo `tsconfig.json` vai deve ficar parecido com o seguinte:
-
-```json
-{
-  "compilerOptions": {
-    …
-    "target": "ES2019",
-    "module": "commonjs",
-    …
-    "strict": true,
-    …
-    "esModuleInterop": true,
-    …
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
-}
-```
-
-### 1.2.4 Como recriar a pasta node_module
-
-A pasta `node_modules` pode ser excluida e recriada, pois o arquivo `package.json` possui toda a lista de pacotes necessários para o funcionamento e desenvolvimento da aplicação, o comando para recriar a pasta `node_module` é o seguinte:
-
-```shell
-npm install
-```
-
-este comando ira baixar novamente todos os modulos listados no arquivo `package.json`.
-
-### 1.2.5 Arquivos de projeto: HTML, SCSS e TS
-
-Em nosso proejto utilizaremos HTML, SCSS e TS, então na pasra `src` e `srv` criaremos os seguintes arquivos com os seguintes conteúdos:
-
-#### 1.2.5.1 Pasta src (Cliente)
-
-./src/index.html
-```html
-<!DOCTYPE html>
-  <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8">
-    <title>CRUD</title>
-  </head>
-  
-  <body>
-    <script src="./main.ts"></script>
-  </body>
-</html>
-```
-
-./src/main.ts
-```ts
-import "./main.scss";
-
-alert("Hello World!");
-```
-
-./src/main.scss
-```scss
-body {
-    background: lightgreen;
-}
-```
-
-#### 1.2.5.2 Pasta srv (Servidor)
-
-./srv/main.ts
-```ts
-console.log("Server: Hello World!");
-```
-
-### 1.2.5 Estrutura final das pastas
-
-A estrutura final das pastas devem ficar da seguinte maneira:
-
-```
-🗁 tuto_crud
-├🗀 node_module
-├🗀 dist
-├🗁 src
-│ ├▹🗎 index.html
-│ ├▹🗎 main.scss
-│ └▹🗎 main.ts
-├🗁 srv
-│  └▹🗎 main.ts
-├▹🗎 package.json
-└▹🗎 tsconfig.json
-```
-
-## 1.3 Preparando aplicação para execução
-
-Para que possamos testar nosso projeto adicionaremos ao arquivo `package.json` o comando para depuação e teste de nossa aplicação, então adicione dentro da chave `scripts` os seguintes comandos 
-
-```json
-{
-  …
-  "scripts": {
-    "debug": "parcel src/index.html",
-    "server": "ts-node-script srv/main.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  …
-}
-```
-
-O arquivo `package.json` final ficará parecido com o seguinte:
-
-```json
-{
-  "name": "tuto_crud",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "debug": "parcel src/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "parcel": "^1.12.4",
-    "typescript": "^4.0.5"
-  },
-  "dependencies": {
-    "express": "^4.17.1",
-    "sqlite": "^4.0.15"
-  }
-}
-```
-
-## 1.3 Teste/Execução do ambiente de desenvolvimento
-
-Agora com nossa _ambiente de desenvolvimento_ configurado, vamos testar se tudo esta funcionando, se a aplicação cliente esta sendo empacotada corretamente e se conseguimos executar os arquivos da nossa aplicação servidora sem problemas. 
-
-### 1.3.1 Teste/Execução da aplicação Cliente
-
-Para executar a aplicação o seguinte comando deve ser executato no terminal na pasta raiz da aplicação:
-
-```shell
-npm run debug
-```
-
- Na primeira execução esse comando deve demorar um pouco, pois serão instalados as dependencias, como o TypeScrip que terá a função de transformar os arquivos .ts em arquivos .js e o SASS que terá a responsabilidade de tranformar os arquivos .scss em .css, para que seja possível do navegador interpretar.
-
- Assim que o comando terminar, será apresentado uma mensagem com o seguinte enderço ip: `http://127.0.0.1:1234`, abra este endereço no _browser_ e você verá uma página azul com o alerta "Hello World".
-
-### 1.3.2 Teste/Execução da aplicação Servidora
-
-Para executar a aplicação o seguinte comando deve ser executato no terminal na pasta raiz da aplicação:
-
-```shell
-npm run server
-```
-
-A executção de comando deve imprimir no terminal o seguinte conteúdo:
-
-```shell
-> tuto_crud@1.0.0 server …tuto_crud
-> ts-node srv/main.ts
-
-Server: Hello World!
-```
-
-# 2. Conexão e criação do banco de dados
-
-Nossa aplicação sera feita utilizando o banco SQLite e é comum que a aplicação que utilizão este banco crie o arquivo de banco de dados as tabelas em sua primeira execução, em nosso caso criaremos as tabelas do banco de dados caso elas não existam assim que iniciarmos a aplicação servidora, além de criar um objeto de conexão que nos permitirá manipular o banco, para que façamos isso de forma organizada criaremos um arquivo `database.ts` dentro da pasta `./srv`, este arquivo tera como responsabilidade, criar o arquivo de banco de dados `databaset.ts` também na pasta `./srv` e caso as tabelas necessárias para a aplicação não existirem este arquivo também será responsável por cria-las, o arquivo a seguir contem cométarios para que seja possível entender o que cada comando representa:
-
-`./srv/database.ts`  
-```ts
-// importa o drive de conexão da biblioteca sqlite3
-import { Database } from 'sqlite3';
-
-// importa o método `open` da biblioteca sqlite, esta biblioteca nos permite
-// trabalhar com bancos sqlite de maneira assíncrona
-import { open } from 'sqlite';
-
-// cria uma função assíncrona chamada init() e a exporta para que seja 
-// possível utiliza-la fora deste modulo 
-export async function init() {
-    // aguarda quea função `open`seja executada, onde será criado o arquivo de 
-    // banco de dados `srv/database.db` e retornará o objeto de conexão que
-    // nos permitirá manipular o banco de dados
-    const db = await open({
-        filename: 'srv/database.db',
-        driver: Database,
-    });
-
-    // cria a tabela pessoa caso ela não exista
-    await db.exec(`
-        CREATE TABLE IF NOT EXISTS pessoa (
-            id        INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome      TEXT NOT NULL,
-            sobrenome TEXT NOT NULL,
-            email     TEXT NOT NULL UNIQUE,
-            telefone  TEXT NOT NULL UNIQUE
-        )
-    `);
-
-    // a função init() retorna o obejto d e conexão com o banco de dados
-    return db;
-}
-```
-
-Para que possamos executar a função `init()` que criamos no `database.ts` precisamos importa-la no nosso arquivo de entrada do servidor, no nosso caso o arquivo `main.ts`:
-
-./srv/main.ts
-```ts
-// importa a função init e a apelida de initDatabase do arquivo `database.ts`
-// note que a extensão `.ts` é omitida aqui
-import { init as initDatabase } from "./database";
-
-// cria uma função assincrona chamada init() (não confundir com a init do arquivo database.ts)
-// esta função foi criada para que possamos manipular execuções assincornas utilizando as palavras
-// reservadas async e await, facilitando o entendimento do código
-async function init() {
-    // aguarda a execução da função init() do arquivo database.ts
-    await initDatabase();
-}
-
-// executa a função init()
-init();
-```
-
-Para testar o que foi desenvolvido até o momento execute o comando `npm run server`, assim que a execução terminar, um arquivo chamado `database.db` deve aparecer na pasta `./srv`, é possível _abri-lo_ utilizando qualquer programa cliente de SQLite, aqui eu sugiro o [DB Browser for SQLite](https://sqlitebrowser.org/).
-
-# 3. Fomulário de cadastro
-  
-Para manter nossa aplicação cliente organizada e permiter a reunitlização de código, faremos componetes para os elementos de interface gráfica, aqui criaremos um componente que ficará responsável por apresentar dados de pessoas na tela, além de enviar informações para nossa aplicação servidora que permita adicionar, salvar, alterar e excluir pessoas,
-para isso adicionaremos uma sub-pasta chamada `components` dentro da pasta `src`, e nesta pasta `components` adicionaremos uma sub-pasta chamada `form` que conterá três arquivos `index.ts`, `template.html` e `template.scss`, além destes arquivos também criaremos `d.ts` dentro da pasta `components`, este arquivo servirá apenas no momento de desenvolvimento para explicarmos como o `TypeScript/Parcel` deve interpretar a importação de arquivos `.html`, logo falaremos mais sobre isso, no próximo tópico trataremos da criação dos arquivos de components.
-
-Após a criação destas pastas e arquivos a estrutura da pasta `src` deve ficar da seguinte maneira:
-
-```
-🗁 src
-├🗁 components
-│ ├🗁form
-│ │ ├▹🗎 index.ts
-│ │ ├▹🗎 template.html
-│ │ └▹🗎 template.scss
-│ └▹🗎 d.ts
-├▹🗎 index.html
-├▹🗎 main.scss
-└▹🗎 main.ts
-```
-
-## [WIP] 3.1 Criando componente de formulário pessoa
-
-./src/components/form/template.html
-```html
-<link rel="stylesheet" href="./template.scss">
-
-<form>
-    <div>
-        <label for="nome">Nome</label>
-        <input name="nome" id="nome">
-    </div>
-    <div>
-        <label for="sobrenome">Sobrenome</label>
-        <input name="sobrenome" id="sobrenome">
-    </div>
-    <div>
-        <label for="email">Email</label>
-        <input name="email" id="email">
-    </div>
-    <div>
-        <label for="telefone">Telefone</label>
-        <input name="telefone" id="telefone">
-    </div>
-    <div class="footer">
-        <button>salvar</button>
-    </div>
-</form>
-```
-
-./src/components/form/template.scss
-```scss
-* {
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-:host {
-    display: inline-block;
-    width: 100%;
-}
-
-form {
-    font-size: 1.5em;
-
-    > div {
-        position: relative;
-        height: 2em;
-        margin-top: 1.3em;
-
-        > label,
-        > input {
-            display: flex;
-            align-items: center;
-            padding: 0 0.5em;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-            outline: none;
-        }
-
-        > label {
-            z-index: 1;
-            opacity: .3;
-            transition: 300ms;
-        }
-
-        > input {
-            border: 0 none;
-            border-bottom: 1px solid rgba(#000000, .5);
-            transition: 300ms;
-            font-size: inherit;
-            border-radius: 5px;
-
-            &:focus {
-                border-bottom: 2px solid rgba(#000000, 1);
-            }
-        }
-
-        &.editing,
-        &.not-empty {
-            label {
-                padding: 0;
-                opacity: 1;
-                transform: translateY(-1.85em) ;
-                font-size: 80%;
-            }
-        }
-
-        &.footer {
-            display: flex;
-            justify-content: flex-end;
-            
-            button {
-                cursor: pointer;
-                background-color: #FFFFFF;
-                border-radius: 5px;
-                border: 0 none;
-                border-bottom: 1px solid rgba(#000000, .5);
-                transition: 300ms;
-
-                &:hover {
-                    background: #EEEEEE;
-                }
-            }
-        }
-    }
-}
-```
-
-./src/components/d.ts
-```ts
-declare module '*.html' {
-    const value: string;
-    export default value
-}
-```
-
-./src/components/form/index.ts
-```ts
-import html from "./template.html";
-
-class CrudModal extends HTMLElement {
-    #root: ShadowRoot = this.attachShadow({ mode: 'open' });
-
-    constructor() {
-        super();
-        this.#root.innerHTML = html;
-        this.attachEvents();
-    }
-
-    private attachEvents() {
-        this.#root.querySelector('form')?.addEventListener('submit', ev => ev.preventDefault());
-
-        const inputs = this.#root.querySelector('form')?.querySelectorAll('input');
-        inputs?.forEach(input => {
-            input.addEventListener('focus', ev => this.onInputFocus(ev));
-            input.addEventListener('keydown', ev => this.onInputFocus(ev));
-            input.addEventListener('blur', ev => this.onInputBlurs(ev));
-        });
-    }
-
-    private onInputFocus(ev: Event) {
-        const target = <HTMLInputElement>ev.target;
-        target.closest('div')?.classList.remove('not-empty');
-        target.closest('div')?.classList.add('editing');
-    }
-
-    private onInputBlurs(ev: Event) {
-        const target = <HTMLInputElement>ev.target;
-        target.closest('div')?.classList.remove('editing');
-        if (target.value.trim())
-            target.closest('div')?.classList.add('not-empty');
-    }
-}
-
-customElements.define('crud-form', CrudModal);
-```
-
-## [WIP] 3.2 Adicionando componente de formulário pessoa ao projeto
-
-./src/main.ts
-```ts
-import "./main.scss";
-import "./components/form"; // <- adicionado a importação do componente
-```
-
-./src/index.html
-```html
-<!DOCTYPE html>
-  <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8">
-    <title>CRUD</title>
-  </head>
-  <body>
-    <script src="./main.ts"></script>
-    <crud-form></crud-form> <!-- adicionado componente no html -->
-  </body>
-</html>
-```
-
-./src/main.scss
-```scss
-body {
-    background: lightgreen;
-}
-
-crud-form {
-    max-width: 500px; // <- adicionado largura máxima para os componentes de formulários
-}
-```
-
-…
-
-
----
-
 # Cadastro de Pessoas
-
-…
-
-## Servidor - API RESTFul
-
+ 
 …
 
 ### Pré-requisitos
  
-…
- 
-#### Conhecimentos necessários
- 
-- Conhecimento básico de programação
-- [Conhecimento básico do protocolo HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP)
-  - requisição e resposta
-  - Status Code / _códigos de respostas_ / _respostas_ informativas
-    - 20X, 30X, 40X
- 
-#### Softwares necessários
- 
-- [NodeJs (e NPM)](https://nodejs.org/)
-- [DB Browser for SQLite](https://sqlitebrowser.org/) 
-  - *ou outro cliente de banco de dados para SQLite*
+> [Introdução Express/Node](https://developer.mozilla.org/pt-BR/docs/Learn/Server-side/Express_Nodejs/Introdu%C3%A7%C3%A3o): 
+> caso tenha pouco conhecimento sobre NodeJs e Express, sugiro a leitura deste artigo do NPM
+
+Aqui veremos o que é necessário para que seja possível o desenvolvimento deste tutorial, caso não tenha conhecimento prévio dos itens listados abaixo é extremamente indicado que leia sobre o assunto, porém não é necessário que entenda o assunto a fundo cada um dos temas, é apenas necessário que saiba o básico para a execução do tutorial:
+
+- Conhecimento básico sobre o protocolo HTTP
+  - Fluxo de Comunicação
+  - Códigos de respostas
+  - Métodos de requisição
+- REST e RESTFul
+  - Conceitos básicos
+- Programação Básica em Javascript e/ou Typescript
+- Estrutura de arquivos JSON
+
+Também será necessário a instalação dos softwares a seguir, certifique que todos estejam instalados e funcionando:
+
+- [NodeJS e NPM](https://nodejs.org/)
+  - É possível entender um pouco mais sobre o que é o NodeJS [na página oficial _sobre_](https://nodejs.org/pt-br/about/), também é possível entender um pouco mais sobre o NPM [na página oficial _sobre_](https://docs.npmjs.com/about-npm).
 - [VSCode](https://code.visualstudio.com/)
-  - plugin: [OpenAPI (Swagger) Editor](https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi)
+  - Neste tutorial utilizaremos o VSCode como editor, é possível conhecer um pouco mais sobre o VSCode [na página oficial _sobre_](https://code.visualstudio.com/docs).
+- [DB Browser for SQLite](https://sqlitebrowser.org/) - *ou outro cliente para SQLite*
+  - Para testar e visualizar o banco de dados que criaremos no decorrer deste tutorial, utilizaremos o cliente de banco de dados SQLite _DB Browser for SQLite_, é possível conhecer mais sobre este cliente [na página oficial _sobre_](https://sqlitebrowser.org/about/).
  
-### Estrutura do Projeto
+### Estrutura do Projeto 
  
-… crie uma pasta vazia chamada Server e abra ela no VSCode (arraste a pasta para dentro do VSCode) …
+Para iniciarmos o desenvolvimento crie uma pasta vazia chamada `cadastro-pessoa` e dentro desta pasta crie uma subpasta chamada `server`, esta será a pasta onde criaremos a API de nossa aplicação, após a criação abra a pasta `server` no VSCode (arraste a pasta `server` para dentro do VSCode).
  
 #### Comandos de terminal NPM e NPX
  
 O NPM (Node Package Manager) é responsável por controlar os pacotes que serão usados em nosso projeto, bem como o arquivo `package.json` que é o arquivo onde as informações de projetos `NodeJS` são mantidos.
-
-Já o NPX tem a premissa de executar comandos de terminal sem que sejam necessários ter intalado uma aplicação localmente.
-
+ 
+Já o NPX tem a premissa de executar comandos de terminal sem que sejam necessários ter instalado a aplicação (que executará o comando) localmente, em resumo o NPX baixa o pacote que deseja executar o comando no terminal e assim que a execução do comando termina ele apaga este pacote.
+ 
 segue alguns exemplo de comandos e explicações que utilizaremos em nosso projeto:
  
 - npm init -y
@@ -620,82 +44,175 @@ segue alguns exemplo de comandos e explicações que utilizaremos em nosso proje
 - npm install _nome_dos_pacotes_
   - _este comando é responsável por baixar pacotes a partir da base do NPM e salvá-los na pasta `node_modules`, além de baixar eventuais pacotes interdependentes dos que solicitamos instalação, para controle destes pacotes extras é criado um segundo arquivo `package-lock.json`._
   - _cada pacote baixado é o adiciona à lista de dependências do arquivo `package.json` assim como sua respectiva versão, na chave `dependeces` do arquivo, caso seja adicionado o parâmetro `--save-dev` estes pacotes são adicionada na lista de dependências de desenvolvimento, o que significa que para a versão de distribuição estes pacotes não são necessários, a chave para esta lista no arquivo `package.json` é `devDependences`._
-  - _O node capaz de recriar todas as dependências a partir do arquivo `package.json`, por isso em uma eventual distribuição do projeto, não é necessário o compartilhamento da pasta `node_modules` nem do arquivo `package-lock.json`, pois executando o comando `npm install` sem especificar nome de módulos, o node irá procurar no arquivo `package.json` todos os módulos a serem instalados, recriando assim a pasta `node_modules` e o arquivo `package-lock.json`._
+  - _O NPM é capaz de recriar todas as dependências a partir do arquivo `package.json`, por isso em uma eventual distribuição do projeto, não é necessário o compartilhamento da pasta `node_modules` nem do arquivo `package-lock.json`, pois executando o comando `npm install` sem especificar nome de módulos, o node irá procurar no arquivo `package.json` todos os módulos a serem instalados, recriando assim a pasta `node_modules` e o arquivo `package-lock.json`._
+- npm run _chave_do_script_
+  - _este comando executa um dos comandos listados na chave `scripts` do arquivo `package.json`, vale ressaltar que `npm run` executa comandos no contexto local do `npm`, sendo possível executar comandos de módulos que foram instalados localmente_.
 - npx _nome_do_pacote_
-  - _este comando irá baixar o pacote e executa-lo, assim que sua execução termine, o pacote é excluido._
+  - _este comando irá baixar o pacote e executá-lo, assim que sua execução terminar o pacote é excluído._
  
 #### Inicialização do Projeto (arquivo package.json)
  
-…
+Para criarmos o arquivo `package.json` iremos utilizar o `NPM`, este arquivo é responsável por manter informações importantes sobre o projeto, como comandos para empacotamento e execução, quais pacotes de terceiro serão utilizados, além de nome do autor, versão do projeto etc. abra o **terminal do VSCode** _ctrl+'_ e digite o seguinte comando:
  
 ```shell
 npm init -y
 ```
+
+Este comando criará um arquivo chamado `package.json` sem fazer nenhuma pergunta, para ter a possibilidade de criar o arquivo já com dados customizados, execute o mesmo comando porém sem o parâmetro `-y` (este parâmetro significa, responda _yes_ para todas perguntas).
+
+O arquivo gerado terá uma estrutura semelhante a esta:
+
+_package.json_
+```json
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "tutorial - desenvolvimento de uma API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Daniel de A. Varela",
+  "license": "Apache-2.0"
+}
+```
+
+Neste momento não alteraremos o arquivo `package.json` gerado, mas logo mais o configuraremos com as especificidades de nosso projeto.
  
 #### Instalação de dependências para execução da aplicação
  
-…
+Aqui instalaremos bibliotecas essenciais para a execução de nossa aplicação, ou seja, sem elas nossa aplicação não pode ser executada, instalaremos o framework `Express`, que será utilizado para manipulação das requisições HTTP de nossa aplicação, também instalaremos a biblioteca `body-parser` para facilitar a leitura dos dados enviados no corpo de nossas requisições HTTP, para efetuar a instalação dessas bibliotecas, abra o **terminal do VSCode** _ctrl+'_ e digite o seguinte comando:
+
+```shell
+npm install express body-parser
+```
+
+Para acesso e manipulação do banco de dados utilizaremos duas bibliotecas, a primeira é a `sqlite3`, que servirá de _driver_ para conexão com o banco de dados, e para que seja possível fazer requisições assíncronas ao banco utilizaremos a biblioteca `sqlite`. No **terminal do VSCode** _ctrl+'_ digite o seguinte comando para instalarmos estas bibliotecas:
  
 ```shell
-npm install express sqlite3 sqlite
+npm install sqlite3 sqlite
 ```
- 
+
+Após o término da instalação dos módulos é possível notar que o arquivo `package.json` foi acrescido com a seguinte entrada, isso descreve quais pacotes são essenciais para a execução da aplicação que estamos desenvolvendo:
+
+_package.json_
+```json
+{
+  …
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "body-parser": "*",
+    "sqlite": "*",
+    "sqlite3": "*"
+  }
+  …
+}
+```
+
+> Abaixo temos uma versão do arquivo `package.json` mostrando as chaves que foram adicionadas, note que esta é uma representação parcial do arquivo, `…` representa a parte removida na representação.
+
 #### Instalação de dependências para desenvolvimento da aplicação
  
-…
+Aqui instalaremos as bibliotecas necessárias para o desenvolvimento da aplicação, estas não precisam fazer parte da _versão de produção_ do sistema, note que adicionamos o parâmetro `--save-dev` no comando de instalação, isto se dá justamente para informar que estas bibliotecas são necessárias somente para o desenvolvimento.
  
+Instalaremos a biblioteca `typescript` para que possamos compilar a _versão de produção_, esta biblioteca será responsável por converter os arquivos `.ts` para arquivos `.js` além de criar arquivos `.js.map` para que seja possível vincular eventuais erros ocorridos durante a execução dos arquivos `.js` com os códigos dos arquivos `.ts`. 
+
+Instalaremos também a biblioteca `ts-node`, esta nos permitirá executar a aplicação sem que seja necessário a criação dos arquivos `.js` e `.js.map`, isso poupará tempo durante o desenvolvimento.
+
 ```shell
 npm install --save-dev typescript ts-node
 ```
 
-#### Criação do arquivo de configura do compilador TypeScript
+Outra biblioteca importante para o desenvolvimento é a `@types/express`, como o desenvolvimento desta aplicação é baseada em **TypeScript** as bibliotecas essencialmente desenvolvidas em **Javascript** não possuem tipos e notação de objetos, classes etc, então arquivos de tipos são necessários para que o **VSCode** consiga _autocompletar_, para a instalção desta biblioteca digite o seguinte comando no **terminal do VSCode** _ctrl+'_:
 
-…
+```shell
+npm install --save-dev @types/express
+```
 
+Após a instalação dos módulos é possível notar que o arquivo `package.json` foi acrescido com a seguinte entrada, isso descreve quais pacotes são essenciais para o desenvolvimento da aplicação:
+
+_packaje.json_
+```json
+{
+  …
+  "devDependencies": {
+    "@types/express": "*",
+    "ts-node": "*",
+    "typescript": "*"
+  }
+  …
+}
+```
+
+> Abaixo temos uma versão do arquivo `package.json` mostrando as chaves que foram adicionadas, note que esta é uma representação parcial do arquivo, `…` representa a parte removida na representação.
+
+#### Criação do arquivo de configuração do compilador TypeScript (arquivo tsconfig.json)
+ 
+Para que seja possível informar ao `typescript` e ao `ts-node` como compilar e/ou interpretar os arquivos `.ts` é necessário a criação de um arquivo `tsconfig.json`; A fim de facilitar este passo, utilizaremos o **NPX**, no **terminal do VSCode** digite o seguinte comando:  
+ 
 ```shell
 npx typescript --init
 ```
 
+Neste momento não alteraremos o arquivo `tsconfig.json` gerado, mas logo mais o configuraremos com as especificidades de nosso projeto.
+ 
 #### Criação manual de pastas e arquivos
-
-…
-
-```
+ 
+Além de todos os arquivos gerados automaticamente será necessário criar pastas e arquivos manualmente, então dentro da estrutura atual de nosso projeto adicione os arquivos e pastas listado abaixo:
+ 
+```shell
 🗁 server
-├🗀 dist
-└🗁 src
- ├▹🗎 main.ts
- └▹🗎 database.ts
+├▹🗀 dist             <---pasta onde os arquivo compilados serão armazenados
+└▹🗁 src              <---pasta com os códigos fontes
+  ├▹🗎 main.ts         <---arquivo de entrada da aplicação
+  └▹🗎 database.ts     <---arquivo responsável pela conexão com o banco de dados
+
 ```
 
+Nesta estrutura o único item opcional é a pasta `./dist`, pois a mesma será criada automaticamente quando utilizarmos o `typescript` para compilar os arquivos `.ts`.
+ 
 #### Conclusão (estrutura)
-
-…
-
-```
+ 
+Ao término desse processo, nossa estrutura de arquivos deve ser parecida com a abaixo apresentada, note que a pasta `node_module` e `dist` estão fechadas, não sendo assim listadas na representação abaixo: 
+ 
+```shell
 🗁 server
 ├🗀 dist
 ├🗀 node_module
 ├🗁 src
 │ ├▹🗎 database.ts
 │ └▹🗎 main.ts
+├▹🗎 openapi.yaml
 ├▹🗎 package-lock.json
 ├▹🗎 package.json
 └▹🗎 tsconfig.json
 ```
+ 
+### Preparando para compilação e execução
+ 
+Neste tópico alteraremos os arquivos de configuração para que se _encaixe_ nas necessidades específicas de nosso projeto. 
+ 
+#### TypeScript (tsconfig.json)
 
-### Preparando para compilaçõe e execução
+Iniciaremos configurando o arquivo `tsconfig.json`, este arquivo como dito anteriormente, tem a responsabilidade de configurar como o `typescript` e `ts-node` irá interpretar e/ou executar os arquivos `.ts`, segue as chaves que devem ser alteradas com as devidas descrições de motivo de alteração:
 
-…
+- `target` - alterar para `ES2020`
+  - _aqui definimos que os arquivos `.js` gerados devem ser feitos para a versão `ES20202` do `Javascript`_.
+- `sourceMap` - descomentar e definir o valor como `true`
+  - _aqui informamos que o typescript deve gerar arquivos `.js.map`, para que seja possível rastrear os erros ocorridos nos arquivos `.js` nos arquivos `.ts`_
+- `outDir` - descomentar e definir o valor para `./dis`
+  - _aqui definimos que ao compilar os arquivos `.ts`, os mesmos devem ser salvos na pasta `./dist` (esta será a pasta que contém os arquivos da aplicação que serão distribuídos como versão produção)_.
 
-`tsconfig.json`
+_tsconfig.json_
 ```json
 {
   "compilerOptions": {
-    "target": "ES2020",    <-- alterado
+    "target": "ES2020",    <---alterado
     "module": "commonjs",
-    "sourceMap": true,     <-- alterado
-    "outDir": "./dist",    <-- alterado
+    "sourceMap": true,     <---alterado
+    "outDir": "./dist",    <---alterado
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -704,180 +221,249 @@ npx typescript --init
 }
 ```
 
-…
+> Abaixo temos uma versão do arquivo `tsconfig.json` mostrando as chaves que foram alteradas, note que os comentários foram removidos e que o texto `<---alterado` é somente para demonstrar onde foram feitas as alterações e não devem estar presentes no arquivo real. 
 
-`packaje.json`
-```json5
+
+#### Scripts de testes e Execuções (package.json)
+
+Para que seja possível executar e testar a aplicação em desenvolvimento, criaremos dois scripts no arquivo `package.json`, dentro da chave `scripts` adicionaremos a entrada `"build": "tsc"`, este comando é responsável por iniciar o processo de compilação do `typescript`, a segunda entrada que deve ser adicionada é a seguinte `"debug": "ts-node-script src/main.ts"`, este comando será responsável por executar nosso projeto no momento de desenvolvimento e testes. 
+ 
+_packaje.json_
+```json
 {
   …
   "scripts": {
-    "build": "tsc",                                        // <-- alterado
-    "debug": "ts-node-script src/main.ts",                 // <-- alterado
+    "build": "tsc",                                        <---adicionado
+    "debug": "ts-node-script src/main.ts",                 <---adicionado
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   …
 }
 ```
 
+> Abaixo temos uma versão do arquivo `package.json` mostrando as chaves que foram adicionadas, note que esta é uma representação parcial do arquivo, `…` representa a parte removida na representação, note também e que o texto `<---adicionado` é somente para demonstrar onde foram feitas as alterações e não devem estar presentes no arquivo real. 
+
+No tópico seguinte será demonstrado com executar esses scripts.
+ 
 ### Teste da estrutura do projeto
-
-…
-
-`src\main.ts`
+ 
+Para que possamos testar os `scripts` e configurações que fizemos no passo anterior, teremos que atualizar o arquivo `src/main.ts`, adicionaremos `console.log("Olá mundo!");` no início do arquivo, salvaremos para que possamos executar o comando de teste.
+ 
+_src/main.ts_
 ```typescript
 console.log("Olá mundo!");
 ```
-
-…
-
-```shell
-npm run build
-```
-
-…
-
+ 
+Agora podemos executar o comando de testes, abra o **terminal do VSCode** _ctrl+'_ e execute o seguinte comando:
+ 
 ```shell
 npm run debug
 ```
+ 
+Se tudo estiver _ok_ você deve ver o seguinte resultado no terminal:
+ 
+```
+> server@1.0.0 debug C:\cadastro-de-pessoa\server
+> ts-node-script src/main.ts
+ 
+Olá mundo!
+```
+ 
+Podemos testar se a compilação para a versão final está ocorrendo sem problemas para isso, abra o **terminal do VSCode** _ctrl+'_ e execute:
+ 
+```shell
+npm run build
+```
+ 
+Se tudo estiver _ok_ você deve ver os arquivos criados na pasta `./dist`, para verificar se a compilação foi bem sucedida execute o seguinte comando:
+ 
+```shell
+node dist/main.js
+```
+ 
+Se estiver tudo _ok_ você verá a mensagem `Olá mundo!` no terminal.
 
-### Criação de documentação OpenApi
+### Arquivo para teste da API
+ 
+Estamos quase iniciando o desenvolvimento de nossa API, mas antes disso temos que criar artifícios para que possamos testá-la, existem muitas alternativas para que nossos testes de requisição à possam serem realizados, existem aplicações como o `Insomnia.rest` e `Postman` que podem fazer o serviço, bem como temos o `OpenApi/Swagger` que também pode auxiliar neste sentido, porém nossa abordagem será em desenvolver uma pequena página HTML e Javascript que utilizaremos para efetuar estes testes, neste momento não entraremos nos detalhes de como esse script funciona, pois utilizaremos eles novamente no desenvolvimento da `aplicação cliente`, ai sim detalharemos o funcionamento de cada uma destas funções.
 
-…
+Crie um arquivo chamado `teste-api.html` (de preferencia fora da estrutura do projeto) e adicione o seguite código:
 
-`openapi.yaml`
-```yaml
-openapi: "3.0.3"
+_teste-api.html_
+```html
+<html>
+  <head>
+      <title>Teste API</title>
+  </head>
+  <body>
+      Abra o console do browser para executar os testes.
+      <script>
+          // ENDEREÇO LOCAL ONDE A API SERÁ EXECUTADA
+          const host = "http://localhost:8081";
 
-info:
-  title: Exemplo de API RESTFul
-  version: "0.1"
+          // SOLICITA AO SERVIDOR:
+          // LISTAGEM DE DADOS DE TODAS AS PESSOAS
+          async function buscarPessoas() {
+              const configReq = { method: "get" };
+              const req = await fetch(host+"/pessoa")
+              const res = await req.json();
+              return res;
+          }
 
-servers:
-  - url: http://127.0.0.1:80
+          // SOLICITA AO SERVIDOR:
+          // INSERÇÃO DE NOVA PESSOA
+          async function adicionarPessoa(dadosDePessoa) {
+              const configReq = {
+                  method: "post",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(dadosDePessoa)
+              };
+              const req = await fetch(host+"/pessoa", configReq);
+              const res = await req.json();
+              return res;
+          }
 
-paths:
-  /pessoa:
-    get:
-      summary: >-
-        buscar dados de todas as pessoas do banco de dados
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/pessoa"
-                      
-    post:
-      summary: >-
-        cria uma nova pessoa no banco de dados
-      requestBody:
-        required: true
-        content:
-          /json:
-            schema:
-              $ref: "#/components/schemas/pessoaInsert"
-      responses:
-        "200":
-          description: Ok
+          // SOLICITA AO SERVIDOR:
+          // LISTAGEN DE DADOS DE UMA PESSOA ESPECÍFICA
+          async function buscarPessoa(id) {
+              const configReq = { method: "get" };
+              const req = await fetch(host + "/pessoa/" + id)
+              const res = await req.json();
+              return res;
+          }
 
-  /pessoa/{id_pessoa}:
-    get:
-      summary: >-
-        busca dados de uma pessoa especifica do banco de dados
-      parameters:
-        - $ref: "#/components/parameters/pathIdPessoa"
-      responses:
-        "200":
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/pessoa"
+          // SOLICITA AO SERVIDOR:
+          // ALTERAÇÂO DE DADOS DE UMA PESSOA ESPECÍFICA
+          async function alterarPessoa(id, dadosDePessoa) {
+              const configReq = {
+                  method: "put",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(dadosDePessoa)
+              };
+              const req = await fetch(host + "/pessoa/" + id, configReq);
+              const res = await req.json();
+              return res;
+          }
 
-    put:
-      summary: >-
-        atualiza pessoa específica no banco de dados
-      parameters:
-        - $ref: "#/components/parameters/pathIdPessoa"
-      requestBody:
-        content:
-          application/json:
-            schema:
-                $ref: "#/components/schemas/pessoaInsert"
-      responses:
-        "200":
-          description: OK
-
-    delete:
-      summary: >-
-        exclui uma pessoa especifica do banco de dados
-      parameters:
-        - $ref: "#/components/parameters/pathIdPessoa"
-
-      responses:
-        "200":
-          description: Ok
-
-components:
-  parameters:
-    pathIdPessoa:
-      in: path
-      required: true
-      name: id_pessoa
-      schema:
-        type: integer
-
-  schemas:
-    pessoaInsert:
-      type: object
-      properties:
-        nome:
-          type: string
-        sobrenome:
-          type: string
-        apelido:
-          type: string
-
-    pessoa:
-      type: object
-      properties:
-        id: 
-            type: integer
-        nome:
-          type: string
-        sobrenome:
-          type: string
-        apelido:
-          type: string
+          // SOLICITA AO SERVIDOR:
+          // EXCLUISÃO DE DADIS DE UMA PESSOA ESPECÍFICA 
+          async function excluirPessoa(id) {
+              const configReq = { method: "delete" };
+              const req = await fetch(host + "/pessoa/" + id, configReq);
+              const res = await req.json();
+              return res;
+          }
+      </script>
+  </body>
+</html>
 ```
 
-### Criação do banco de Dados
+### Rotas de acesso HTTP ao Servidor 
 
 …
 
-`src\database.ts`
+_src/main.ts_
+```typescript
+// IMPORTA A BIBLIOTECA EXPRESS
+// PARA CONTROLE DE REQUISEÇÃO HTTP
+import express from "express";
+
+// IMPORTA A BIBLIOTECA BODY-PARSER
+// PARA FACILITAR A LEITURA DO CORPO HTTP 
+// DA REQUISIÇÃO RECEBIDA PELO CLIENTE
+import boodyParser from "body-parser";
+
+// CRIA OBJETO QUE IRÁ CONTROLAR AS
+// REQUISIÇÕES HTTP DA APLICAÇÃO
+const app = express();
+
+// ADICIONA AO CABEÇALHO DE TODAS AS RESPOSTAS DAS
+// REQUISIÇÕES HTTP, INFORMAÇÕES QUE PERMITEM O ACESSO
+// POR QUALQUER ORIGEM AOS MÉTODOS [GET,PUT,POST,DELETE]
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
+// INICIA A TRADUÇÃO DO CORPO HTTP RECEBIDO
+// PELO CLIENTE EM QUAISQUER UMA DAS REQUISIÇÕES
+app.use(boodyParser.json()); 
+
+// RESPONDE SOLICITAÇÃO DO CIENTE:
+// LISTAGEM DE DADOS DE TODAS AS PESSOAS
+app.get('/pessoa', (req, res) => res.json({
+    teste: "buscar dados de todas as pessoas pessoas"
+}));
+
+// RESPONDE SOLICITAÇÃO DO CIENTE:
+// INSERÇÃO DE NOVA PESSOA
+app.post('/pessoa', (req, res) => {
+    res.json({
+        id: req.params.id,
+        teste: "adicionar dados de pessoa no banco de dados",
+        vindoDoCliente: req.body
+    });
+});
+
+// RESPONDE SOLICITAÇÃO DO CIENTE:
+// LISTAGEN DE DADOS DE UMA PESSOA ESPECÍFICA
+app.get('/pessoa/:id', (req, res) => {
+    res.json({
+        id: req.params.id,
+        teste: "buscar dados de uma pessoa específica",
+        vindoDoCliente: req.body
+    });
+});
+
+// RESPONDE SOLICITAÇÃO DO CIENTE:
+// ALTERAÇÂO DE DADOS DE UMA PESSOA ESPECÍFICA
+app.put('/pessoa/:id', (req, res) => {
+    res.json({
+        id: req.params.id,
+        teste: "atualiza dados de uma pessoa específica",
+        vindoDoCliente: req.body
+    });
+});
+
+// RESPONDE SOLICITAÇÃO DO CIENTE:
+// EXCLUISÃO DE DADIS DE UMA PESSOA ESPECÍFICA 
+app.delete('/pessoa/:id', (req, res) => {
+    res.json({
+        id: req.params.id,
+        teste: "exclui dados de uma pessoa específica",
+    });
+});
+
+// INICIA ESPERA DE REQUISIÇÃO NA PORTA 8081
+app.listen(8081, () => console.log("running..."));
+```
+ 
+### Criação do banco de Dados
+ 
+…
+ 
+_src/database.ts_
 ```typescript
 // importa o drive de conexão da biblioteca sqlite3
 import { Database } from 'sqlite3';
-
+ 
 // importa o método `open` da biblioteca sqlite, esta biblioteca nos permite
 // trabalhar com bancos sqlite de maneira assíncrona
 import { open } from 'sqlite';
-
+ 
 // cria uma função assíncrona chamada init() e a exporta para que seja 
-// possível utiliza-la fora deste modulo 
+// possível utilizá-la fora deste módulo 
 export async function init() {
-    // aguarda quea função `open`seja executada, onde será criado o arquivo de 
+    // aguarda que a função `open`seja executada, onde será criado o arquivo de 
     // banco de dados `srv/database.db` e retornará o objeto de conexão que
     // nos permitirá manipular o banco de dados
     const db = await open({
         filename: './database.db',
         driver: Database,
     });
-
+ 
     // cria a tabela pessoa caso ela não exista
     await db.exec(`
         CREATE TABLE IF NOT EXISTS pessoa (
@@ -888,28 +474,28 @@ export async function init() {
             telefone  TEXT NOT NULL UNIQUE
         )
     `);
-
-    // a função init() retorna o obejto d e conexão com o banco de dados
+ 
+    // a função init() retorna o objeto d e conexão com o banco de dados
     return db;
 }
 ```
-
+ 
 …
-
-`src\main.ts`
+ 
+_src/main.ts_
 ```typescript
 // importa a função init e a apelida de initDatabase do arquivo `database.ts`
 // note que a extensão `.ts` é omitida aqui
 import { init as initDatabase } from "./database";
-
-// cria uma função assincrona chamada init() (não confundir com a init do arquivo database.ts)
-// esta função foi criada para que possamos manipular execuções assincornas utilizando as palavras
+ 
+// cria uma função assíncrona chamada init() (não confundir com a init do arquivo database.ts)
+// esta função foi criada para que possamos manipular execuções assíncronas utilizando as palavras
 // reservadas async e await, facilitando o entendimento do código
 async function init() {
     // aguarda a execução da função init() do arquivo database.ts
     await initDatabase();
 }
-
+ 
 // executa a função init()
 init();
 ```
