@@ -9,15 +9,23 @@
 ### Pré-requisitos
  
 > [Introdução Express/Node](https://developer.mozilla.org/pt-BR/docs/Learn/Server-side/Express_Nodejs/Introdu%C3%A7%C3%A3o): 
-> caso tenha pouco conhecimento sobre NodeJs e Express, sugiro a leitura deste artigo do site _MDN Web Docs_.
+> caso tenha pouco conhecimento sobre NodeJs e Express, sugiro a leitura deste 
+> artigo do site _MDN Web Docs_.
 
 Aqui veremos o que é necessário para que seja possível o desenvolvimento deste tutorial, caso não tenha conhecimento prévio dos itens listados abaixo é extremamente indicado que leia sobre o assunto, porém não é necessário que entenda o assunto a fundo cada um dos temas, é apenas necessário que saiba o básico para a execução do tutorial:
 
-- Conhecimento básico sobre o protocolo HTTP
+- Conhecimento básico de banco de dados:
+  - DDL - Criação de tabelas
+  - SQL
+    - insert - inserção de dados
+    - update - alteração de dados
+    - select - busca e seleção de dados 
+    - delete - exclusão de dados
+- Conhecimento básico sobre o protocolo HTTP:
   - Fluxo de Comunicação
   - Códigos de respostas
   - Métodos de requisição
-- REST e RESTFul
+- REST e RESTFul:
   - Conceitos básicos
 - Programação Básica em Javascript e/ou Typescript
 - Estrutura de arquivos JSON
@@ -327,204 +335,213 @@ Abra o arquivo `src/main.ts` e substitua seu conteúdo pelo seguinte:
 _src/main.ts_
 ```typescript
 //
-// IMPORTA A BIBLIOTECA EXPRESS
-// PARA CONTROLE DE REQUISEÇÃO HTTP
+// IMPORTA A BIBLIOTECA EXPRESS PARA CONTROLE DE REQUISEÇÃO HTTP.
 //
 
 import express from "express";
 
 //
-// IMPORTA A BIBLIOTECA BODY-PARSER
-// PARA FACILITAR A LEITURA DO CORPO HTTP 
-// DA REQUISIÇÃO RECEBIDA PELO CLIENTE
+// IMPORTA A BIBLIOTECA BODY-PARSER PARA FACILITAR A LEITURA DO CORPO HTTP  DA 
+// REQUISIÇÃO RECEBIDA PELO CLIENTE.
 //
 
 import bodyParser from "body-parser";
 
 //
-// CRIA OBJETO QUE IRÁ CONTROLAR AS
-// REQUISIÇÕES HTTP DA APLICAÇÃO
+// CRIA OBJETO QUE IRÁ CONTROLAR AS REQUISIÇÕES HTTP DA APLICAÇÃO.
 //
 
 const app = express();
 
 //
-// ADICIONA AO CABEÇALHO DE TODAS AS RESPOSTAS DAS
-// REQUISIÇÕES HTTP, INFORMAÇÕES QUE PERMITEM O ACESSO
-// POR QUALQUER ORIGEM AOS MÉTODOS [GET,PUT,POST,DELETE]
+// ADICIONA AO CABEÇALHO DE TODAS AS RESPOSTAS DAS REQUISIÇÕES HTTP, INFORMAÇÕES 
+// QUE PERMITEM O ACESSO POR QUALQUER ORIGEM AOS MÉTODOS [GET,PUT,POST,DELETE].
 //
 
-// adiciona função a ser executada antes de qualquer requisição HTTP
+// adiciona função a ser executada antes de qualquer requisição HTTP.
 app.use(
-  // função que será executada antes da função de qualquer
-  //função definida para a `rota` e `método HTTP` atual
-  function (request, response, next) {
-    // define no cabeçalho de resposta que as requisições podem ser feitas a partir de qualquer domínio (*)
-    response.header('Access-Control-Allow-Origin', '*');                   
-    // define no cabeçalho de resposta que os métodos GET, PUT, POST, DELETE são permitidos  
-    response.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    // define no cabeçalho de resposta que é permitido a chave Content-Type no cabeçalho de requisição
-    response.header('Access-Control-Allow-Headers', 'Content-Type');       
-    // segue o fluxo para execução
-    next();
-  }
+    // função que será executada antes da função de qualquer função definida 
+    // para a `rota` e `método HTTP` que atualmente esta sendo requisitada.
+    function (request, response, next) {
+        // define no cabeçalho de resposta que as requisições podem ser feitas 
+        // a partir de qualquer domínio (*).
+        response.header('Access-Control-Allow-Origin', '*');
+        // define no cabeçalho de resposta que os métodos GET, PUT, POST, DELETE
+        // são permitidos.
+        response.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+        // define no cabeçalho de resposta que é permitido a chave Content-Type 
+        // no cabeçalho de requisição.
+        response.header('Access-Control-Allow-Headers', 'Content-Type');
+        // segue o fluxo para execução.
+        next();
+    }
 );
 
 //
-// INICIA A TRADUÇÃO DO CORPO HTTP RECEBIDO
-// PELO CLIENTE EM QUAISQUER UMA DAS REQUISIÇÕES
+// INICIA A TRADUÇÃO DO CORPO HTTP RECEBIDO PELO CLIENTE EM QUAISQUER UMA DAS 
+// REQUISIÇÕES.
 //
 
-// adiciona função de tratamento do corpo da requisição HTTP recebida
-// para que seja executada antes de qualquer função definida para a `rota` 
-// e `método HTTP` atual
-app.use(bodyParser.json()); 
+// adiciona função de `tratamento` do corpo da requisição HTTP recebida para que 
+// seja executada antes de qualquer função definida para a `rota`  e `método 
+// HTTP` atual.
+app.use(bodyParser.json());
 
 //
-// RESPONDE SOLICITAÇÃO DO CLIENTE:
-// LISTAGEM DE DADOS DE TODAS AS PESSOAS
+// RESPONDE SOLICITAÇÃO DO CLIENTE: LISTAGEM DE DADOS DE TODAS AS PESSOAS.
 //
 
 // espera requisições `GET` na rota `/pessoa`
-app.get('/pessoa', 
-  // função que o servidor executará quando receber a requisição nesta rota
-  // o parâmetro `request`, é um objeto que nos ajuda a entender os dados contidos nas requisições HTTP
-  // o parâmetro `response`  é um objeto que nos ajuda a responder as requisições HTTP
-  function (request, response) {                    
-    // cria o objeto que utilizaremos para responder a requisição HTTP, enviaremos os dados contidos 
-    // neste objeto no corpo da resposta HTTP para que seja possível verifica se o servidor está 
-    // recebendo as requisições corretamente, bem como se está respondendo corretamente
-      const responseData = {
-        // adiciona a chave `teste` ao objeto para verificar se o 
-        // servidor consegue responder corretamente as esta requisição
-        teste: "buscar dados de todas as pessoas pessoas"
-      };
-      // responde para o cliente em formato JSON
-      // o objeto criado anteriormente 
-      response.json(responseData);
-  }
+app.get('/pessoa',
+    // Função que o servidor executará quando receber a requisição nesta rota: 
+    // - o parâmetro `request` é um objeto que nos ajuda a entender os dados 
+    //   contidos nas requisições HTTP
+    // - o parâmetro `response`  é um objeto que nos ajuda a responder as 
+    //   requisições HTTP
+    function (request, response) {
+        // cria o objeto que utilizaremos para responder a requisição HTTP, 
+        // enviaremos os dados contidos neste objeto no corpo da resposta HTTP 
+        // para que seja possível verifica se o servidor está recebendo as 
+        // requisições corretamente, bem como se está respondendo corretamente.
+        const responseData = {
+            // adiciona a chave `teste` ao objeto para verificar se o servidor 
+            // consegue responder corretamente as esta requisição.
+            teste: "buscar dados de todas as pessoas pessoas"
+        };
+        // responde para o cliente em formato JSON o objeto criado anteriormente.
+        response.json(responseData);
+    }
 );
 
 //
-// RESPONDE SOLICITAÇÃO DO CIENTE:
-// INSERÇÃO DE NOVA PESSOA
+// RESPONDE SOLICITAÇÃO DO CIENTE: INSERÇÃO DE NOVA PESSOA.
 //
 
-// espera requisições `POST` na rota `/pessoa`
-app.post('/pessoa', 
-  // função que o servidor executará quando receber a requisição nesta rota
-  // o parâmetro `request`, é um objeto que nos ajuda a entender os dados contidos nas requisições HTTP
-  // o parâmetro `response`  é um objeto que nos ajuda a responder as requisições HTTP
-  function (request, response) {
-    // cria o objeto que utilizaremos para responder a requisição HTTP, enviaremos os dados contidos 
-    // neste objeto no corpo da resposta HTTP para que seja possível verifica se o servidor está 
-    // recebendo as requisições corretamente, bem como se está respondendo corretamente
-    const responseData = {
-      // adiciona a chave `teste` ao objeto para verificar se o 
-      // servidor consegue responder corretamente as esta requisição
-      teste: "adicionar dados de pessoa no banco de dados",
-      // adiciona a chave `vindoDoCliente` ao objeto para que o servidor responda o que 
-      // recebeu no corpo da requisição HTTP, para que assim seja possível verificar-mos 
-      // se o servidor está recebendo os dados corretamente
-      vindoDoCliente: request.body
-    };
-    // responde para o cliente em formato JSON
-    // o objeto criado anteriormente 
-    response.json(responseData);
-  }
-); 
-
-//
-// RESPONDE SOLICITAÇÃO DO CIENTE:
-// LISTAGEN DE DADOS DE UMA PESSOA ESPECÍFICA
-//
-
-// espera requisições `GET` na rota `/pessoa/:id`
-app.get('/pessoa/:id', 
-  // função que o servidor executará quando receber a requisição nesta rota
-  // o parâmetro `request`, é um objeto que nos ajuda a entender os dados contidos nas requisições HTTP
-  // o parâmetro `response`  é um objeto que nos ajuda a responder as requisições HTTP
-  function (request, response) {
-    // cria o objeto que utilizaremos para responder a requisição HTTP, enviaremos os dados contidos 
-    // neste objeto no corpo da resposta HTTP para que seja possível verifica se o servidor está 
-    // recebendo as requisições corretamente, bem como se está respondendo corretamente
-    const responseData = {
-      // adiciona a chave id ao objeto para que seja possível verifica se 
-      // o servidor está recebendo corretamente a chave `:id` pela rota atual
-        id: request.params.id,
-        // adiciona a chave `teste` ao objeto para verificar se o 
-        // servidor consegue responder corretamente as esta requisição
-        teste: "buscar dados de uma pessoa específica"
-    };
-    // responde para o cliente em formato JSON
-    // o objeto criado anteriormente 
-    response.json(responseData);
-  }
+// espera requisições `POST` na rota `/pessoa`.
+app.post('/pessoa',
+    // Função que o servidor executará quando receber a requisição nesta rota: 
+    // - o parâmetro `request` é um objeto que nos ajuda a entender os dados 
+    //   contidos nas requisições HTTP
+    // - o parâmetro `response`  é um objeto que nos ajuda a responder as 
+    //   requisições HTTP
+    function (request, response) {
+        // cria o objeto que utilizaremos para responder a requisição HTTP, 
+        // enviaremos os dados contidos neste objeto no corpo da resposta HTTP 
+        // para que seja possível verifica se o servidor está recebendo as 
+        // requisições corretamente, bem como se está respondendo corretamente.
+        const responseData = {
+            // adiciona a chave `teste` ao objeto para verificar se o servidor 
+            // consegue responder corretamente as esta requisição.
+            teste: "adicionar dados de pessoa no banco de dados",
+            // adiciona a chave `vindoDoCliente` ao objeto para que o servidor 
+            // responda o que recebeu no corpo da requisição HTTP, para que 
+            // assim seja possível verificar-mos se o servidor está recebendo os 
+            // dados corretamente.
+            vindoDoCliente: request.body
+        };
+        // responde para o cliente em formato JSON o objeto criado anteriormente.
+        response.json(responseData);
+    }
 );
 
 //
-// RESPONDE SOLICITAÇÃO DO CIENTE:
-// ALTERAÇÂO DE DADOS DE UMA PESSOA ESPECÍFICA
+// RESPONDE SOLICITAÇÃO DO CIENTE: LISTAGEN DE DADOS DE UMA PESSOA ESPECÍFICA.
 //
 
-// espera requisições `PUT` na rota `/pessoa/:id`
-app.put('/pessoa/:id', 
-  // função que o servidor executará quando receber a requisição nesta rota
-  // o parâmetro `request`, é um objeto que nos ajuda a entender os dados contidos nas requisições HTTP
-  // o parâmetro `response`  é um objeto que nos ajuda a responder as requisições HTTP
-  function (request, response) {
-    // cria o objeto que utilizaremos para responder a requisição HTTP, enviaremos os dados contidos 
-    // neste objeto no corpo da resposta HTTP para que seja possível verifica se o servidor está 
-    // recebendo as requisições corretamente, bem como se está respondendo corretamente
-    const responseData = {
-      // adiciona a chave id ao objeto para que seja possível verifica se 
-      // o servidor está recebendo corretamente a chave `:id` pela rota atual
-      id: request.params.id,
-      // adiciona a chave `teste` ao objeto para verificar se o 
-      // servidor consegue responder corretamente as esta requisição
-      teste: "atualiza dados de uma pessoa específica",
-      // adiciona a chave `vindoDoCliente` ao objeto para que o servidor responda o que 
-      // recebeu no corpo da requisição HTTP, para que assim seja possível verificar-mos 
-      // se o servidor está recebendo os dados corretamente
-      vindoDoCliente: request.body
-    };
-    // responde para o cliente em formato JSON
-    // o objeto criado anteriormente 
-    response.json(responseData);
-  }
+// espera requisições `GET` na rota `/pessoa/:id`.
+app.get('/pessoa/:id',
+    // Função que o servidor executará quando receber a requisição nesta rota: 
+    // - o parâmetro `request` é um objeto que nos ajuda a entender os dados 
+    //   contidos nas requisições HTTP
+    // - o parâmetro `response`  é um objeto que nos ajuda a responder as 
+    //   requisições HTTP
+    function (request, response) {
+        // cria o objeto que utilizaremos para responder a requisição HTTP, 
+        // enviaremos os dados contidos neste objeto no corpo da resposta HTTP 
+        // para que seja possível verifica se o servidor está recebendo as 
+        // requisições corretamente, bem como se está respondendo corretamente.
+        const responseData = {
+            // adiciona a chave id ao objeto para que seja possível verifica se 
+            // o servidor está recebendo corretamente a chave `:id` pela rota 
+            // atual.
+            id: request.params.id,
+            // adiciona a chave `teste` ao objeto para verificar se o 
+            // servidor consegue responder corretamente as esta requisição.
+            teste: "buscar dados de uma pessoa específica"
+        };
+        // responde para o cliente em formato JSONo objeto criado anteriormente.
+        response.json(responseData);
+    }
 );
 
 //
-// RESPONDE SOLICITAÇÃO DO CIENTE:
-// EXCLUISÃO DE DADIS DE UMA PESSOA ESPECÍFICA 
+// RESPONDE SOLICITAÇÃO DO CIENTE: ALTERAÇÂO DE DADOS DE UMA PESSOA ESPECÍFICA.
 //
 
-// espera requisições `DELETE` na rota `/pessoa/:id`
-app.delete('/pessoa/:id', 
-  // função que o servidor executará quando receber a requisição nesta rota
-  // o parâmetro `request`, é um objeto que nos ajuda a entender os dados contidos nas requisições HTTP
-  // o parâmetro `response`  é um objeto que nos ajuda a responder as requisições HTTP
-  function (request, response) {
-    // cria o objeto que utilizaremos para responder a requisição HTTP, enviaremos os dados contidos 
-    // neste objeto no corpo da resposta HTTP para que seja possível verifica se o servidor está 
-    // recebendo as requisições corretamente, bem como se está respondendo corretamente
-    const responseData = {
-      // adiciona a chave id ao objeto para que seja possível verifica se 
-      // o servidor está recebendo corretamente a chave `:id` pela rota atual
-      id: request.params.id,
-      // adiciona a chave `teste` ao objeto para verificar se o 
-      // servidor consegue responder corretamente as esta requisição
-      teste: "exclui dados de uma pessoa específica",
-    };
-    // responde para o cliente em formato JSON
-    // o objeto criado anteriormente 
-    response.json(responseData);
-  }
+// espera requisições `PUT` na rota `/pessoa/:id`.
+app.put('/pessoa/:id',
+    // Função que o servidor executará quando receber a requisição nesta rota: 
+    // - o parâmetro `request` é um objeto que nos ajuda a entender os dados 
+    //   contidos nas requisições HTTP
+    // - o parâmetro `response`  é um objeto que nos ajuda a responder as 
+    //   requisições HTTP
+    function (request, response) {
+        // cria o objeto que utilizaremos para responder a requisição HTTP, 
+        // enviaremos os dados contidos neste objeto no corpo da resposta HTTP 
+        // para que seja possível verifica se o servidor está recebendo as 
+        // requisições corretamente, bem como se está respondendo corretamente.
+        const responseData = {
+            // adiciona a chave id ao objeto para que seja possível verifica se 
+            // o servidor está recebendo corretamente a chave `:id` pela rota 
+            // atual.
+            id: request.params.id,
+            // adiciona a chave `teste` ao objeto para verificar se o servidor 
+            // consegue responder corretamente as esta requisição.
+            teste: "atualiza dados de uma pessoa específica",
+            // adiciona a chave `vindoDoCliente` ao objeto para que o servidor 
+            // responda o que recebeu no corpo da requisição HTTP, para que 
+            // assim seja possível verificar-mos se o servidor está recebendo os 
+            // dados corretamente.
+            vindoDoCliente: request.body
+        };
+        // responde para o cliente em formato JSON o objeto criado anteriormente.
+        response.json(responseData);
+    }
 );
 
 //
-// INICIA ESPERA DE REQUISIÇÃO NA PORTA 8081
-// E IMPRIME A MENSAGEM `running...` NO TERMINAL
+// RESPONDE SOLICITAÇÃO DO CIENTE: EXCLUISÃO DE DADIS DE UMA PESSOA ESPECÍFICA.
+//
+
+// espera requisições `DELETE` na rota `/pessoa/:id`.
+app.delete('/pessoa/:id',
+    // Função que o servidor executará quando receber a requisição nesta rota: 
+    // - o parâmetro `request` é um objeto que nos ajuda a entender os dados 
+    //   contidos nas requisições HTTP
+    // - o parâmetro `response`  é um objeto que nos ajuda a responder as 
+    //   requisições HTTP
+    function (request, response) {
+        // cria o objeto que utilizaremos para responder a requisição HTTP, 
+        // enviaremos os dados contidos neste objeto no corpo da resposta HTTP 
+        // para que seja possível verifica se o servidor está recebendo as 
+        // requisições corretamente, bem como se está respondendo corretamente.
+        const responseData = {
+            // adiciona a chave id ao objeto para que seja possível verifica se 
+            // o servidor está recebendo corretamente a chave `:id` pela rota 
+            // atual.
+            id: request.params.id,
+            // adiciona a chave `teste` ao objeto para verificar se o servidor 
+            // consegue responder corretamente as esta requisição.
+            teste: "exclui dados de uma pessoa específica",
+        };
+        // responde para o cliente em formato JSON o objeto criado anteriormente.
+        response.json(responseData);
+    }
+);
+
+//
+// INICIA ESPERA DE REQUISIÇÃO NA PORTA 8081 E IMPRIME A MENSAGEM `running...` 
+// NO TERMINAL.
 //
 
 app.listen(8081, () => console.log("running..."));
@@ -547,13 +564,19 @@ _teste-api.html_
       <title>Teste API</title>
   </head>
   <body>
-      Abra o console do browser para executar os testes.
+      Abra o console do browser para executar os testes:
+      <pre>
+        await buscarPessoas();
+        await adicionarPessoa({nome: "Daniel", sobrenome: "de Andrade Varela", apelido: "Varela"});
+        await buscarPessoa(43);
+        await alterarPessoa(43, {nome: "Daniel", sobrenome: "de Andrade Varela", apelido: "Varela"});
+        await excluirPessoa(43);
+      </pre>
       <script>
-          // ENDEREÇO LOCAL ONDE A API SERÁ EXECUTADA
+          // ENDEREÇO LOCAL ONDE A API SERÁ EXECUTADA.
           const host = "http://localhost:8081";
 
-          // SOLICITA AO SERVIDOR:
-          // LISTAGEM DE DADOS DE TODAS AS PESSOAS
+          // SOLICITA AO SERVIDOR: LISTAGEM DE DADOS DE TODAS AS PESSOAS.
           async function buscarPessoas() {
               const configReq = { method: "get" };
               const req = await fetch(host+"/pessoa")
@@ -561,8 +584,7 @@ _teste-api.html_
               return res;
           }
 
-          // SOLICITA AO SERVIDOR:
-          // INSERÇÃO DE NOVA PESSOA
+          // SOLICITA AO SERVIDOR: INSERÇÃO DE NOVA PESSOA.
           async function adicionarPessoa(dadosDePessoa) {
               const configReq = {
                   method: "post",
@@ -574,8 +596,7 @@ _teste-api.html_
               return res;
           }
 
-          // SOLICITA AO SERVIDOR:
-          // LISTAGEN DE DADOS DE UMA PESSOA ESPECÍFICA
+          // SOLICITA AO SERVIDOR: LISTAGEN DE DADOS DE UMA PESSOA ESPECÍFICA.
           async function buscarPessoa(id) {
               const configReq = { method: "get" };
               const req = await fetch(host + "/pessoa/" + id)
@@ -583,8 +604,7 @@ _teste-api.html_
               return res;
           }
 
-          // SOLICITA AO SERVIDOR:
-          // ALTERAÇÂO DE DADOS DE UMA PESSOA ESPECÍFICA
+          // SOLICITA AO SERVIDOR: ALTERAÇÂO DE DADOS DE UMA PESSOA ESPECÍFICA.
           async function alterarPessoa(id, dadosDePessoa) {
               const configReq = {
                   method: "put",
@@ -596,8 +616,7 @@ _teste-api.html_
               return res;
           }
 
-          // SOLICITA AO SERVIDOR:
-          // EXCLUISÃO DE DADIS DE UMA PESSOA ESPECÍFICA 
+          // SOLICITA AO SERVIDOR: EXCLUISÃO DE DADIS DE UMA PESSOA ESPECÍFICA.
           async function excluirPessoa(id) {
               const configReq = { method: "delete" };
               const req = await fetch(host + "/pessoa/" + id, configReq);
@@ -706,35 +725,35 @@ O resultado deve ser o seguinte:
  
 _src/database.ts_
 ```typescript
-// importa o drive de conexão da biblioteca sqlite3
+// IMPORTA O DRIVE DE CONEXÃO DA BIBLIOTECA SQLITE3.
 import { Database } from 'sqlite3';
  
-// importa o método `open` da biblioteca sqlite, esta biblioteca nos permite
-// trabalhar com bancos sqlite de maneira assíncrona
+// IMPORTA O MÉTODO `OPEN` DA BIBLIOTECA SQLITE, ESTA BIBLIOTECA NOS PERMITE
+// TRABALHAR COM BANCOS SQLITE DE MANEIRA ASSÍNCRONA.
 import { open } from 'sqlite';
  
-// cria uma função assíncrona chamada init() e a exporta para que seja 
-// possível utilizá-la fora deste módulo 
+// CRIA UMA FUNÇÃO ASSÍNCRONA CHAMADA INIT() E A EXPORTA PARA QUE SEJA POSSÍVEL 
+// UTILIZÁ-LA FORA DESTE MÓDULO.
 export async function init() {
-    // aguarda que a função `open`seja executada, onde será criado o arquivo de 
-    // banco de dados `srv/database.db` e retornará o objeto de conexão que
-    // nos permitirá manipular o banco de dados
+    // AGUARDA QUE A FUNÇÃO `OPEN`SEJA EXECUTADA, ONDE SERÁ CRIADO O ARQUIVO DE 
+    // BANCO DE DADOS `SRV/DATABASE.DB` E RETORNARÁ O OBJETO DE CONEXÃO QUE
+    // NOS PERMITIRÁ MANIPULAR O BANCO DE DADOS.
     const db = await open({
         filename: './database.db',
         driver: Database,
     });
  
-    // cria a tabela pessoa caso ela não exista
+    // CRIA A TABELA PESSOA CASO ELA NÃO EXISTA.
     await db.exec(`
         CREATE TABLE IF NOT EXISTS pessoa (
             id        INTEGER PRIMARY KEY AUTOINCREMENT,
             nome      TEXT NOT NULL,
             sobrenome TEXT NOT NULL,
-            apelido   TEXT NOT NULL
+            apelido   TEXT NOT NULL UNIQUE
         )
     `);
  
-    // a função init() retorna o objeto d e conexão com o banco de dados
+    // A FUNÇÃO INIT() RETORNA O OBJETO D E CONEXÃO COM O BANCO DE DADOS.
     return db;
 }
 ```
@@ -747,9 +766,8 @@ Todos os métodos que dependerão do banco de dados serão movidos para dentro d
  
 _src/main.ts_
 ```typescript
-// IMPORTA A FUNÇÃO INIT E A APELIDA DE INITDATABASE 
-// DO ARQUIVO `DATABASE.TS`, NOTE QUE A EXTENSÃO `.TS` 
-// É OMITIDA AQUI
+// IMPORTA A FUNÇÃO INIT E A APELIDA DE INITDATABASE DO ARQUIVO `DATABASE.TS`, 
+// NOTE QUE A EXTENSÃO `.TS` É OMITIDA AQUI.
 import { init as initDatabase } from "./database";
 
 // *
@@ -762,44 +780,41 @@ import bodyParser from "body-parser";
 const app = express();
 
 // *
-app.use( function (request, response, next) {
-    response.header('Access-Control-Allow-Origin', '*');                   
+app.use(function (request, response, next) {
+    response.header('Access-Control-Allow-Origin', '*');
     response.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    response.header('Access-Control-Allow-Headers', 'Content-Type');       
+    response.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
-  }
-);
+});
 
 // *
-app.use(bodyParser.json()); 
- 
+app.use(bodyParser.json());
+
 // CRIA UMA FUNÇÃO ASSÍNCRONA CHAMADA INIT() (NÃO CONFUNDIR COM A INIT DO 
 // ARQUIVO DATABASE.TS) ESTA FUNÇÃO FOI CRIADA PARA QUE POSSAMOS MANIPULAR 
-// EXECUÇÕES ASSÍNCRONAS UTILIZANDO AS PALAVRAS RESERVADAS ASYNC E AWAIT, 
-// FACILITANDO O ENTENDIMENTO DO CÓDIGO
+// EXECUÇÕES ASSÍNCRONAS UTILIZANDO AS PALAVRAS RESERVADAS ASYNC E AWAIT 
+// FACILITANDO O ENTENDIMENTO DO CÓDIGO.
 async function init() {
-    // AGUARDA A EXECUÇÃO DA FUNÇÃO `INIT()` DO ARQUIVO `DATABASE.TS`
-    // E ARMAZENA O RETORNO DA FUNÇÃO NA CONSTANTE `DB`
+    // AGUARDA A EXECUÇÃO DA FUNÇÃO `INIT()` DO ARQUIVO `DATABASE.TS` E ARMAZENA 
+    // O RETORNO DA FUNÇÃO NA CONSTANTE `DB`.
     const db = await initDatabase();
 
     // **
-    app.get('/pessoa', function (request, response) {                    
-          const responseData = {
+    app.get('/pessoa', function (request, response) {
+        const responseData = {
             teste: "buscar dados de todas as pessoas pessoas"
-          };
-          response.json(responseData);
-      }
-    );
+        };
+        response.json(responseData);
+    });
 
     // **
     app.post('/pessoa', function (request, response) {
         const responseData = {
-          teste: "adicionar dados de pessoa no banco de dados",
-          vindoDoCliente: request.body
+            teste: "adicionar dados de pessoa no banco de dados",
+            vindoDoCliente: request.body
         };
         response.json(responseData);
-      }
-    ); 
+    });
 
     // **
     app.get('/pessoa/:id', function (request, response) {
@@ -808,35 +823,32 @@ async function init() {
             teste: "buscar dados de uma pessoa específica"
         };
         response.json(responseData);
-      }
-    );
+    });
 
     // **
     app.put('/pessoa/:id', function (request, response) {
         const responseData = {
-          id: request.params.id,
-          teste: "atualiza dados de uma pessoa específica",
-         vindoDoCliente: request.body
+            id: request.params.id,
+            teste: "atualiza dados de uma pessoa específica",
+            vindoDoCliente: request.body
         };
         response.json(responseData);
-      }
-    );
+    });
 
     // **
     app.delete('/pessoa/:id', function (request, response) {
         const responseData = {
-          id: request.params.id,
-          teste: "exclui dados de uma pessoa específica",
+            id: request.params.id,
+            teste: "exclui dados de uma pessoa específica",
         };
         response.json(responseData);
-      }
-    );
+    });
 
     // **
     app.listen(8081, () => console.log("running..."));
 }
- 
-// EXECUTA A FUNÇÃO INIT()
+
+// EXECUTA A FUNÇÃO INIT() DESTE ARQUIVO.
 init();
 ```
 
@@ -845,6 +857,406 @@ init();
 Execute o comando `npm run debug` no **terminal do VSCode** _ctrl+'_ para iniciar o servidor, caso esteja tudo _ok_ você verá a mensagem `running...` em seu terminal e o arquivo `database.db` aparecerá na pasta raiz de do projeto, abra este arquivo utilizando o **DB Browser** para verificar se a estrutura da tabela foi criada corretamente, caso queira é possível adicionar, alterar, listar e remover dados direto na tabela utilizando o **DB Browser**.
 
 ### Manipulação do banco de dados pela API
+
+Estamos chegando na reta final do desenvolvimento da API, o que nos falta fazer é acrescentar a capacidade para que as rotas executem suas referidas ações no banco de dados, os passos a seguir mostram os trechos de códigos que iremos alterar explicando linha-a-linha que será alterado, com isso exemplificando como se dá o acesso ao banco de dados.
+
+#### Função de `busca ao banco de dados` para a rota `GET /pessoa` do servidor - `app.get('/pessoa', function (request, response) { … }`
+
+```typescript
+// DEFINE A ROTA `GET /pessoa`.
+app.get('/pessoa', 
+    // ADICIONADO A PALAVRA RESERVADA ASYNC ANTES DA DECLARAÇÃO DA FUNÇÃO QUE É 
+    // EXECUTADA QUANDO ESTA ROTA É REQUISITADA PELO CLIENTE, SERÁ NECESSÁRIO 
+    // ESPERAR A RESPOSTA DO BANCO DE DADOS PARA QUE A EXECUÇÃO DA FUNÇÃO POSSA 
+    // PROSSEGUIR, POR ISSO A ADIÇÃO DA PALAVRA ASYNC.
+    async function (request, response) {
+        // AQUI É EXECUTADO O MÉTODO `all` DO OBJETO DE CONEXÃO COM BANCO DE 
+        // DADOS `db` E SEU VALOR DE RETORNO É GUARDADO NA CONSTANTE `responseData`;
+        // ESTE MÉTODO EXECUTA UMA SELEÇÃO NO BANCO DE DADOS E RETORNA UM ARRAY 
+        // CONTENDO TODAS AS LINHAS ENCONTRADAS, COMO PODE PERCEBER SEU PRIMEIRO 
+        // PARÂMETRO É UMA STRING CONTENDO O SQL A SER EXECUTADO.
+        //
+        // AQUI O PRIMEIRO PARÂMETRO É UM SQL SELECT GENÉRICO QUE RETORNARÁ 
+        // TODOS OS ITENS DA TABELA.
+        const responseData = await db.all("SELECT * FROM pessoa");
+        // RESPONDE A REQUISIÇÃO HTTP COMO UM JSON QUE CONTÉM OS VALORES 
+        // ENCONTRADOS NO BANCO DE DADOS, NOTE QUE NÃO DEFINIMOS O HTTP STATUS 
+        // CODE, POR PADRÃO O HTTP STATUS CODE É `200 Ok`.
+        response.json(responseData);
+    }
+);
+```
+ 
+#### Função de `inserção ao banco de dados` para a rota `POST /pessoa` do servidor - `app.post('/pessoa', function (request, response) { … }`
+ 
+```typescript
+// DEFINE A ROTA `POST /pessoa`.
+app.post('/pessoa', 
+    // ADICIONADO A PALAVRA RESERVADA ASYNC ANTES DA DECLARAÇÃO DA FUNÇÃO QUE É 
+    // EXECUTADA QUANDO ESTA ROTA É REQUISITADA PELO CLIENTE, SERÁ NECESSÁRIO 
+    // ESPERAR A RESPOSTA DO BANCO DE DADOS PARA QUE A EXECUÇÃO DA FUNÇÃO POSSA 
+    // PROSSEGUIR, POR ISSO A ADIÇÃO DA PALAVRA ASYNC.
+    async function (request, response) {
+        // VERIFICA SE NO CORPO DO TEXTO NÃO TEM AS CHAVES `nome`, `sobrenome` E 
+        // `apelido`.
+        if (!request.body.nome || !request.body.sobrenome || !request.body.apelido) {
+            // CASO NÃO EXISTA UMA DAS CHAVES, O SERVIDOR RETORNA O `HTTP STATUS 
+            // CODE`, `422` INFORMANDO QUE A ENTIDADE RECEBIDA NÃO PODE SER 
+            // PROCESSADA.
+            response.status(422); // Unprocessable Entity
+            // RETORNA NO CORPO DA RESPOSTA UM OBJETO COM A CHAVE `error` QUE 
+            // EXPLICA DE FORMA VERBOSA O ERRO OCORRIDO.
+            response.json({ error: "dados incompletos." });
+            // PARA A EXECUÇÃO DA FUNÇÃO NESTE MOMENTO, POIS SEM ESSAS 
+            // INFORMAÇÕES NÃO HÁ MOTIVOS DE CONTINUAR A EXECUÇÃO.
+            return;
+        }
+ 
+        // INICIA BLOCO DE TENTATIVA, ISSO SIGNIFICA QUE SE ALGUM DOS COMANDOS 
+        // DEFINIDOS DENTRO DELE RETORNAR (throw) A EXECUÇÃO DO BLOCO É 
+        // INTERROMPIDO E O FLUXO PASSA PARA O BLOCO`catch` PASSANDO COMO 
+        // PARÂMETRO VALOR RETORNADO PELA LINHA QUE APRESENTOU O ERRO.
+        try {
+            // AQUI É EXECUTADO O MÉTODO `run` DO OBJETO DE CONEXÃO COM BANCO DE 
+            // DADOS `db` E O RESULTADO DE SUA EXECUÇÃO É ARMAZENADO NA CONSTANTE 
+            // `responseData`; ESTE MÉTODO EXECUTA QUALQUER TIPO DE SQL E RETORNA
+            // INFORMAÇÕES COMO A QUANTIDADE DE LINHAS AFETADAS, NOTE QUE O PRIMEIRO 
+            // PARÂMETRO É UM SQL, PORÉM OS VALORES NÃO SÃO 
+            // CONCATENADOS NO PARÂMETRO, EM CONTRAPARTIDA SÃO UTILIZADOS 
+            // GANCHOS INICIADOS POR `:` QUE NA EXECUÇÃO SERÁ SOBRESCRITO PELOS
+            // VALORES DOS OBJETOS DO SEGUNDO PARÂMETRO, PERMITINDO ASSIM QUE A
+            // FUNÇÃO POSSA PREVENIR SQL INJECTION.
+            //
+            // AQUI O PRIMEIRO PARÂMETRO É UM SQL DE INSERÇÃO DE DADOS NA TABELA 
+            // `pessoa` E O SEGUNDO É UM OBJETO COM OS VALORES A SEREM 
+            // SUBSTITUÍDOS PELAS  NCORAS DA STRING SQL DO PRIMEIRO PARÂMETRO.
+            const responseData = await db.run(
+                "INSERT INTO pessoa(nome, sobrenome, apelido) VALUES(:nome, :sobrenome, :apelido)",
+                {
+                    ":nome": request.body.nome,
+                    ":sobrenome": request.body.sobrenome,
+                    ":apelido": request.body.apelido
+                }
+            );
+            // RETORNA NO CORPO DA RESPOSTA UM OBJETO INFORMAÇÕES DE QUANTAS
+            // LINHAS FORAM AFETADAS, NOTE QUE NÃO DEFINIMOS O HTTP STATUS CODE,
+            // POR PADRÃO O HTTP STATUS CODE É `200 Ok`.
+            response.json(responseData);
+        } 
+        // CASO UM ERRO ACONTEÇA NO BLOCO TRY, O FLUXO DE EXECUÇÃO VEM PARA O
+        // BLOCO CATCH RECEBENDO COMO PARÂMETRO O ERRO OCORRIDO
+        catch (e) {
+            // CASO UM ERRO ACONTEÇA, O SERVIDOR RETORNA O `HTTP STATUS CODE`, 
+            // `500` INFORMANDO QUE UM ERRO DE PROGRAMAÇÃO OCORREU.
+            response.status(500); // Internal Server Error
+            // RETORNA NO CORPO DA RESPOSTA UM OBJETO COM A CHAVE `error` QUE 
+            // EXPLICA DE FORMA VERBOSA O ERRO OCORRIDO, E TAMBÉM UMA CHAVE 
+            // `detail` QUE RETORNA EXATAMENTE O OBJETO DE ERRO RECEBIDO PELO 
+            // BLOCO CATCH.
+            response.json({ error: "database error", detail: e });
+        }
+    }
+);
+```
+ 
+#### Função de `busca no banco de dados` para a rota `GET /pessoa/:id` do servidor - `app.get('/pessoa/:id', function (request, response) { … }`
+ 
+```typescript
+// DEFINE A ROTA `GET /pessoa/:id`.
+app.get('/pessoa/:id', 
+    // ADICIONADO A PALAVRA RESERVADA ASYNC ANTES DA DECLARAÇÃO DA FUNÇÃO QUE É 
+    // EXECUTADA QUANDO ESTA ROTA É REQUISITADA PELO CLIENTE, SERÁ NECESSÁRIO 
+    // ESPERAR A RESPOSTA DO BANCO DE DADOS PARA QUE A EXECUÇÃO DA FUNÇÃO POSSA 
+    // PROSSEGUIR, POR ISSO A ADIÇÃO DA PALAVRA ASYNC.
+    async function (request, response) {
+        // AQUI É EXECUTADO O MÉTODO `get` DO OBJETO DE CONEXÃO COM BANCO DE 
+        // DADOS `db` E SEU VALOR DE RETORNO É GUARDADO NA CONSTANTE `responseData`;
+        // ESTE MÉTODO EXECUTA UMA SELEÇÃO NO BANCO DE DADOS E RETORNA UM OBJETO 
+        // CONTENDO TODOS OS DADOS DE UMA PESSOA, COMO PODE PERCEBER SEU PRIMEIRO 
+        // PARÂMETRO É UMA STRING CONTENDO O SQL A SER EXECUTADO, E O `?` É UMA
+        //  NCORA NÃO NOMEADA.
+        //
+        // AQUI O PRIMEIRO PARÂMETRO É UM SQL SELECT COM UMA CLÁUSULA WHERE QUE 
+        // RETORNARÁ APENAS UM ITEM DA TABELA, O SEGUNDO PARÂMETRO É O VALOR A 
+        // SER SUBSTITUÍDO PELA  NCORA, AQUI FOI OPTADO POR UTILIZAR  NCORAS NÃO
+        // NOMEADAS `?` AO INVÉS DE  NCORAS NOMEADAS `:` POR TRATAR-SE DE APENAS
+        // UM VALOR A SER SUBSTITUÍDO NA STRING SQL DO PRIMEIRO PARÂMETRO.
+        const responseData = await db.get("SELECT * FROM pessoa WHERE id=? LIMIT 1", request.params.id);
+ 
+        // VERIFICA SE EXISTE ALGUM VALOR NA CONSTANTE `responseData`, CASO NÃO
+        // EXISTA É PORQUE O SELECT NÃO ENCONTROU UMA PESSOA COM O `id` INFORMADO.
+        if (responseData == undefined) {
+            // CASO O SELECT NÃO RETORNE VALORES, O SERVIDOR RETORNA O `HTTP 
+            // STATUS CODE 404` INFORMANDO QUE NÃO FOI ENCONTRADO O DADO 
+            // SOLICITADO.
+            response.status(404); // Not Found
+            // RETORNA NO CORPO DA RESPOSTA UM OBJETO COM A CHAVE `error` QUE 
+            // EXPLICA DE FORMA VERBOSA O ERRO OCORRIDO.
+            response.json({ error: "Pessoa não encontrada." });
+        } 
+        
+        // CASO CONTRÁRIO: QUANDO `responseData` NÃO FOR INDEFINIDO (VAZIO).
+        else {
+            // CASO O SELECT EXECUTADO ENCONTRE ALGUM VALOR, O SERVIDOR RETORNA
+            // O OBJETO CONTENDO AS INFORMAÇÕES DE PESSOA NO FORMATO JSON, NOTE 
+            // QUE NÃO DEFINIMOS O HTTP STATUS CODE, POR PADRÃO O HTTP STATUS 
+            // CODE É `200 Ok`.
+            response.json(responseData);
+        }
+    }
+);
+```
+ 
+#### Função de `alteração no banco` de dados para a rota `PUT /pessoa/:id` do servidor - `app.put('/pessoa/:id', function (request, response) { … }`
+ 
+```typescript
+// DEFINE A ROTA `PUT /pessoa/:id`.
+app.put('/pessoa/:id', 
+    // ADICIONADO A PALAVRA RESERVADA ASYNC ANTES DA DECLARAÇÃO DA FUNÇÃO QUE É 
+    // EXECUTADA QUANDO ESTA ROTA É REQUISITADA PELO CLIENTE, SERÁ NECESSÁRIO 
+    // ESPERAR A RESPOSTA DO BANCO DE DADOS PARA QUE A EXECUÇÃO DA FUNÇÃO POSSA 
+    // PROSSEGUIR, POR ISSO A ADIÇÃO DA PALAVRA ASYNC.
+    async function (request, response) {
+        // VERIFICA SE NO CORPO DO TEXTO NÃO TEM AS CHAVES `nome`, `sobrenome` E 
+        // `apelido`.
+        if (!request.body.nome || !request.body.sobrenome || !request.body.apelido) {
+            // CASO NÃO EXISTA UMA DAS CHAVES, O SERVIDOR RETORNA O `HTTP STATUS 
+            // CODE` `422` QUE INFORMA QUE A ENTIDADE RECEBIDA NÃO PODE SER 
+            // PROCESSADA.
+            response.status(422); // Unprocessable Entity
+            // RETORNA NO CORPO DA RESPOSTA UM OBJETO COM A CHAVE `error` QUE 
+            // EXPLICA DE FORMA VERBOSA O ERRO OCORRIDO.
+            response.json({ error: "dados incompletos." });
+            // PARA A EXECUÇÃO DA FUNÇÃO NESTE MOMENTO, POIS SEM ESSAS 
+            // INFORMAÇÕES NÃO HÁ MOTIVOS DE CONTINUAR A EXECUÇÃO.
+            return;
+        }
+ 
+        // INICIA BLOCO DE TENTATIVA, ISSO SIGNIFICA QUE SE ALGUM DOS COMANDOS 
+        // DEFINIDOS DENTRO DELE RETORNAR (throw) A EXECUÇÃO DO BLOCO É 
+        // INTERROMPIDO E O FLUXO PASSA PARA O BLOCO `catch` PASSANDO COMO 
+        // PARÂMETRO VALOR RETORNADO PELA LINHA QUE APRESENTOU O ERRO.
+        try {
+            // AQUI É EXECUTADO O MÉTODO `run` DO OBJETO DE CONEXÃO COM BANCO DE 
+            // DADOS `db` E O RESULTADO DE SUA EXECUÇÃO É ARMAZENADO NA CONSTANTE 
+            // `responseData`; ESTE MÉTODO EXECUTA QUALQUER TIPO DE SQL E RETORNA
+            // INFORMAÇÕES COMO A QUANTIDADE DE LINHAS AFETADAS, NOTE QUE O PRIMEIRO 
+            // PARÂMETRO É UM SQL, PORÉM OS VALORES NÃO SÃO 
+            // CONCATENADOS NO PARÂMETRO, EM CONTRAPARTIDA SÃO UTILIZADOS 
+            // GANCHOS INICIADOS POR `:` QUE NA EXECUÇÃO SERÁ SOBRESCRITO PELOS
+            // VALORES DOS OBJETOS DO SEGUNDO PARÂMETRO, PERMITINDO ASSIM QUE A
+            // FUNÇÃO POSSA PREVENIR SQL INJECTION.
+            //
+            // AQUI O PRIMEIRO PARÂMETRO É UM SQL DE ATUALIZAÇÃO DE DADOS NA 
+            // TABELA `pessoa` E O SEGUNDO É UM OBJETO COM OS VALORES A SEREM 
+            // SUBSTITUÍDOS PELAS  NCORAS DA STRING SQL DO PRIMEIRO PARÂMETRO.
+            const responseData = await db.run(
+                "UPDATE pessoa SET nome=:nome, sobrenome=:sobrenome, apelido=:apelido WHERE id=:id",
+                {
+                    ":id": request.params.id,
+                    ":nome": request.body.nome,
+                    ":sobrenome": request.body.sobrenome,
+                    ":apelido": request.body.apelido
+                }
+            );
+ 
+            // VERIFICA SE EXISTE ALGUM VALOR NA CONSTANTE `responseData`, CASO 
+            // NÃO EXISTA É PORQUE O SELECT NÃO ENCONTROU UMA PESSOA COM O `id` 
+            // INFORMADO.
+            if (responseData == undefined) {
+                // CASO O SELECT NÃO RETORNE VALORES, O SERVIDOR RETORNA O `HTTP 
+                // STATUS CODE 404` INFORMANDO QUE NÃO FOI ENCONTRADO O DADO 
+                // SOLICITADO.
+                response.status(404); // Not Found
+                // RETORNA NO CORPO DA RESPOSTA UM OBJETO COM A CHAVE `error` 
+                // QUE EXPLICA DE FORMA VERBOSA O ERRO OCORRIDO.
+                response.json({ error: "Pessoa não encontrada." });
+            } 
+            
+            // CASO CONTRÁRIO: QUANDO `responseData` NÃO FOR INDEFINIDO (VAZIO).
+            else {
+                // CASO O SELECT EXECUTADO ENCONTRE ALGUM VALOR, O SERVIDOR 
+                // RETORNA O OBJETO CONTENDO AS INFORMAÇÕES DE PESSOA NO FORMATO 
+                // JSON, NOTE QUE NÃO DEFINIMOS O HTTP STATUS CODE, POR PADRÃO O 
+                // HTTP STATUS CODE É `200 Ok`.
+                response.json(responseData);
+            }
+        }
+        
+        // CASO UM ERRO ACONTEÇA NO BLOCO TRY, O FLUXO DE EXECUÇÃO VEM PARA O
+        // BLOCO CATCH RECEBENDO COMO PARÂMETRO O ERRO OCORRIDO
+        catch (e) {
+            // CASO UM ERRO ACONTEÇA, O SERVIDOR RETORNA O `HTTP STATUS CODE`, 
+            // `500` INFORMANDO QUE UM ERRO DE PROGRAMAÇÃO OCORREU.
+            response.status(500); // Internal Server Error
+            // RETORNA NO CORPO DA RESPOSTA UM OBJETO COM A CHAVE `error` QUE 
+            // EXPLICA DE FORMA VERBOSA O ERRO OCORRIDO, E TAMBÉM UMA CHAVE 
+            // `detail` QUE RETORNA EXATAMENTE O OBJETO DE ERRO RECEBIDO PELO 
+            // BLOCO CATCH.
+            response.json({ error: "database error", detail: e });
+    }
+);
+```
+ 
+#### Função de `exclusão no banco de dados` para a rota `DELETE /pessoa/:id` do servidor -  `app.delete('/pessoa/:id', function (request, response) { … }`
+ 
+```typescript
+// DEFINE A ROTA `PUT /pessoa/:id`.
+app.delete('/pessoa/:id', 
+    // ADICIONADO A PALAVRA RESERVADA ASYNC ANTES DA DECLARAÇÃO DA FUNÇÃO QUE É 
+    // EXECUTADA QUANDO ESTA ROTA É REQUISITADA PELO CLIENTE, SERÁ NECESSÁRIO 
+    // ESPERAR A RESPOSTA DO BANCO DE DADOS PARA QUE A EXECUÇÃO DA FUNÇÃO POSSA 
+    // PROSSEGUIR, POR ISSO A ADIÇÃO DA PALAVRA ASYNC.
+    async function (request, response) {
+        // AQUI É EXECUTADO O MÉTODO `run` DO OBJETO DE CONEXÃO COM BANCO DE 
+        // DADOS `db` E O RESULTADO DE SUA EXECUÇÃO É ARMAZENADO NA CONSTANTE 
+        // `responseData`; ESTE MÉTODO EXECUTA QUALQUER TIPO DE SQL E RETORNA
+        // INFORMAÇÕES COMO A QUANTIDADE DE LINHAS AFETADAS, NOTE QUE O PRIMEIRO 
+        // PARÂMETRO É UM SQL, PORÉM OS VALORES NÃO SÃO CONCATENADOS NO 
+        // PARÂMETRO, EM CONTRAPARTIDA SÃO UTILIZADOS GANCHOS INICIADOS POR `:` 
+        // QUE NA EXECUÇÃO SERÁ SOBRESCRITO PELOS
+        // VALORES DOS OBJETOS DO SEGUNDO PARÂMETRO, PERMITINDO ASSIM QUE A
+        // FUNÇÃO POSSA  PREVENIR SQL INJECTION.
+        //
+        // AQUI O PRIMEIRO PARÂMETRO É UM SQL SELECT COM UMA CLÁUSULA WHERE QUE 
+        // RETORNARÁ APENAS UM ITEM DA TABELA, O SEGUNDO PARÂMETRO É O VALOR A 
+        // SER SUBSTITUÍDO PELA  NCORA, AQUI FOI OPTADO POR UTILIZAR  NCORAS NÃO
+        // NOMEADAS `?` AO INVÉS DE ANCORAS NOMEADAS `:` POR TRATAR-SE DE APENAS
+        // UM VALOR A SER SUBSTITUÍDO NA STRING SQL DO PRIMEIRO PARÂMETRO.
+        const responseData = await db.run("DELETE FROM pessoa WHERE id=? LIMIT 1", request.params.id);
+ 
+        // VERIFICA A QUANTIDADE DE LINHAS AFETADAS PELO DELETE, CASO O VALOR 
+        // SEJA 0 SIGNIFICA QUE NADA FOI EXCLUÍDO
+        if(responseData.changes == 0) {
+            // CASO O DELETE ALTERE NENHUMA LINHA, O SERVIDOR RETORNA O `HTTP 
+            // STATUS CODE 404` INFORMANDO QUE NÃO FOI ENCONTRADO O DADO 
+            // SOLICITADO.
+            response.status(404); // Not Found
+            // RETORNA NO CORPO DA RESPOSTA UM OBJETO COM A CHAVE `error` QUE 
+            // EXPLICA DE FORMA VERBOSA O ERRO OCORRIDO.
+            response.json({ error: "Pessoa não encontrada." });
+        } 
+        
+        // CASO CONTRÁRIO: QUANDO O NÚMERO DE LINHAS AFETADAS FOR MAIOR QUE 0.
+        else {
+            // CASO O DELETE ALTERE MAIS QUE 0 LINHAS, O SERVIDOR RETORNA O 
+            // OBJETO CONTENDO INFORMAÇÕES COMO O NÚMERO DE LINHAS AFETADAS, 
+            // NOTE QUE POR PADRÃO O HTTP STATUS CODE É `200 Ok`, POR ISSO NÃO 
+            // FOI PRECISO ALTERAR O HTTP STATUS CODE.
+            response.json(responseData);
+        }
+    }
+);
+```
+
+#### Resultado final
+
+…
+
+```typescript
+import { init as initDatabase } from "./database";
+import express from "express";
+import bodyParser from "body-parser";
+
+const app = express();
+
+app.use(function (request, response, next) {
+    response.header('Access-Control-Allow-Origin', '*');
+    response.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    response.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
+app.use(bodyParser.json());
+
+async function init() {
+    const db = await initDatabase();
+
+    app.get('/pessoa', async function (request, response) {
+        const responseData = await db.all("SELECT * FROM pessoa")
+        response.json(responseData);
+    });
+
+    app.post('/pessoa', async function (request, response) {
+        if (!request.body.nome || !request.body.sobrenome || !request.body.apelido) {
+            response.status(422); // Unprocessable Entity
+            response.json({ error: "dados incompletos." });
+            return;
+        }
+
+        try {
+            const responseData = await db.run(
+                "INSERT INTO pessoa(nome, sobrenome, apelido) VALUES(:nome, :sobrenome, :apelido)",
+                {
+                    ":nome": request.body.nome,
+                    ":sobrenome": request.body.sobrenome,
+                    ":apelido": request.body.apelido
+                }
+            );
+            response.json(responseData);
+        } catch (e) {
+            response.status(500); // Internal Server Error
+            response.json({ error: "Erro de Banco de Dados.", detail: e });
+        }
+    });
+
+    app.get('/pessoa/:id', async function (request, response) {
+        const responseData = await db.get("SELECT * FROM pessoa WHERE id=?", request.params.id);
+        if (responseData == undefined) {
+            response.status(404); // Not Found
+            response.json({ error: "Pessoa não encontrada." });
+        } else {
+            response.json(responseData);
+        }
+    });
+
+    app.put('/pessoa/:id', async function (request, response) {
+        if (!request.body.nome || !request.body.sobrenome || !request.body.apelido) {
+            response.status(422); // Unprocessable Entity
+            response.json({ error: "dados incompletos." });
+            return;
+        }
+
+        try {
+            const responseData = await db.run(
+                "UPDATE pessoa SET nome=:nome, sobrenome=:sobrenome, apelido=:apelido WHERE id=:id",
+                {
+                    ":id": request.params.id,
+                    ":nome": request.body.nome,
+                    ":sobrenome": request.body.sobrenome,
+                    ":apelido": request.body.apelido
+                }
+            );
+
+            if(responseData.changes == 0) {
+                response.status(404);
+                response.json({ error: "pessoa não encontrada" });
+            } else {
+                response.json(responseData);
+            }
+        } catch (e) {
+            response.status(500); // Internal Server Error
+            response.json({ error: "Erro de Banco de Dados.", detail: e });
+        }
+    });
+
+    app.delete('/pessoa/:id', async function (request, response) {
+        const responseData = await db.run("DELETE FROM pessoa WHERE id=?", request.params.id);
+        if(responseData.changes == 0) {
+            response.status(404);
+            response.json({ error: "pessoa não encontrada" });
+        } else {
+            response.json(responseData);
+        }
+    });
+
+    app.listen(8081, () => console.log("running..."));
+}
+
+init();
+```
+
+### Teste final
 
 …
 
