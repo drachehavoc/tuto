@@ -34,6 +34,13 @@ Também será necessário a instalação dos softwares a seguir, certifique que 
 ### Estrutura do Projeto 
  
 Para iniciarmos o desenvolvimento crie uma pasta vazia chamada `cadastro-pessoa` e dentro desta pasta crie uma subpasta chamada `server`, esta será a pasta onde criaremos a API de nossa aplicação, após a criação abra a pasta `server` no VSCode (arraste a pasta `server` para dentro do VSCode).
+
+A estrutura inicial do projeto deve ficar parecido com a seguir, note que a pasta que deve ser aberta no **VSCode** é a `server` e não a pasta `cadastro-pessoa`.
+ 
+```shell
+🗁 cadastro-pessoa
+ └▹🗀 server          <---arraste esta pasta para o VSCode
+```
  
 #### Comandos de terminal NPM e NPX
  
@@ -610,13 +617,13 @@ Agora abra o arquivo `teste-api.html` que criamos no passo anterior em seu _brow
 
 ##### Testar a rota `GET /pessoa` - _listar todas as pessoas_
 
-Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
+Execute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
 ```javascript
 await buscarPessoas();
 ```
 
-o resultado deve ser o seguinte:
+O resultado deve ser o seguinte:
 
 ```javascript
 {teste: "buscar dados de todas as pessoas pessoas"}
@@ -624,13 +631,13 @@ o resultado deve ser o seguinte:
 
 ##### Testar a rota `POST /pessoa` - _adicionar uma pessoa_
 
-Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
+Execute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
 ```javascript
 await adicionarPessoa({nome: "Daniel", sobrenome: "de Andrade Varela", apelido: "Varela"});
 ```
 
-o resultado deve ser o seguinte:
+O resultado deve ser o seguinte:
 
 ```javascript
 {teste: "adicionar dados de pessoa no banco de dados", vindoDoCliente: {…}}
@@ -638,15 +645,15 @@ o resultado deve ser o seguinte:
 
 > note que  `vindoDoCliente> {...}` é exatamente o que foi enviado para o servidor, para poder ler o retorno clique em `{...}`.
 
-##### Testar a rota `GET /pessoa/:id` - _listar informação de uma pessoa específica_
+##### Testar a rota `GET /pessoa/:id` - _listar informações de uma pessoa específica_
 
-Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
+Execute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
 ```javascript
 await buscarPessoa(43);
 ```
 
-o resultado deve ser o seguinte:
+O resultado deve ser o seguinte:
 
 ```javascript
 {id: "43", teste: "buscar dados de uma pessoa específica"}
@@ -656,13 +663,13 @@ o resultado deve ser o seguinte:
 
 ##### Testar a rota `PUT /pessoa/:id` - _adicionar uma pessoa_
 
-Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
+Execute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
 ```javascript
 await alterarPessoa(43, {nome: "Daniel", sobrenome: "de Andrade Varela", apelido: "Varela"});
 ```
 
-o resultado deve ser o seguinte:
+O resultado deve ser o seguinte:
 
 ```javascript
 {id: "43", teste: "atualiza dados de uma pessoa específica", vindoDoCliente: {…}}
@@ -673,13 +680,13 @@ o resultado deve ser o seguinte:
 
 ##### Testar a rota `DELETE /pessoa/:id` - _listar informação de uma pessoa específica_
 
-Excute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
+Execute o seguinte comando no console do seu browser com a página `teste-api.html` aberta:
 
 ```javascript
 await excluirPessoa(43);
 ```
 
-o resultado deve ser o seguinte:
+O resultado deve ser o seguinte:
 
 ```javascript
 {id: "43", teste: "exclui dados de uma pessoa específica"}
@@ -723,8 +730,7 @@ export async function init() {
             id        INTEGER PRIMARY KEY AUTOINCREMENT,
             nome      TEXT NOT NULL,
             sobrenome TEXT NOT NULL,
-            email     TEXT NOT NULL UNIQUE,
-            telefone  TEXT NOT NULL UNIQUE
+            apelido   TEXT NOT NULL
         )
     `);
  
@@ -741,8 +747,9 @@ Todos os métodos que dependerão do banco de dados serão movidos para dentro d
  
 _src/main.ts_
 ```typescript
-// importa a função init e a apelida de initDatabase do 
-// arquivo `database.ts`, note que a extensão `.ts` é omitida aqui
+// IMPORTA A FUNÇÃO INIT E A APELIDA DE INITDATABASE 
+// DO ARQUIVO `DATABASE.TS`, NOTE QUE A EXTENSÃO `.TS` 
+// É OMITIDA AQUI
 import { init as initDatabase } from "./database";
 
 // *
@@ -766,12 +773,13 @@ app.use( function (request, response, next) {
 // *
 app.use(bodyParser.json()); 
  
-// cria uma função assíncrona chamada init() (não confundir com a init do arquivo database.ts)
-// esta função foi criada para que possamos manipular execuções assíncronas utilizando as palavras
-// reservadas async e await, facilitando o entendimento do código
+// CRIA UMA FUNÇÃO ASSÍNCRONA CHAMADA INIT() (NÃO CONFUNDIR COM A INIT DO 
+// ARQUIVO DATABASE.TS) ESTA FUNÇÃO FOI CRIADA PARA QUE POSSAMOS MANIPULAR 
+// EXECUÇÕES ASSÍNCRONAS UTILIZANDO AS PALAVRAS RESERVADAS ASYNC E AWAIT, 
+// FACILITANDO O ENTENDIMENTO DO CÓDIGO
 async function init() {
-    // aguarda a execução da função `init()` do arquivo `database.ts`
-    // e armazena o retorno da função na constante `db`
+    // AGUARDA A EXECUÇÃO DA FUNÇÃO `INIT()` DO ARQUIVO `DATABASE.TS`
+    // E ARMAZENA O RETORNO DA FUNÇÃO NA CONSTANTE `DB`
     const db = await initDatabase();
 
     // **
@@ -828,9 +836,17 @@ async function init() {
     app.listen(8081, () => console.log("running..."));
 }
  
-// executa a função init()
+// EXECUTA A FUNÇÃO INIT()
 init();
 ```
+
+##### Testando se a conexão foi bem sucedida
+
+Execute o comando `npm run debug` no **terminal do VSCode** _ctrl+'_ para iniciar o servidor, caso esteja tudo _ok_ você verá a mensagem `running...` em seu terminal e o arquivo `database.db` aparecerá na pasta raiz de do projeto, abra este arquivo utilizando o **DB Browser** para verificar se a estrutura da tabela foi criada corretamente, caso queira é possível adicionar, alterar, listar e remover dados direto na tabela utilizando o **DB Browser**.
+
+### Manipulação do banco de dados pela API
+
+…
 
 ## 2. Cliente - Browser/Navegador
 
