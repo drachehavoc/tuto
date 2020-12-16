@@ -1089,6 +1089,7 @@ app.put('/pessoa/:id',
             // `detail` QUE RETORNA EXATAMENTE O OBJETO DE ERRO RECEBIDO PELO 
             // BLOCO CATCH.
             response.json({ error: "database error", detail: e });
+        }
     }
 );
 ```
@@ -1114,7 +1115,7 @@ app.delete('/pessoa/:id',
         // SER SUBSTITUÍDO PELA ÂNCORA, AQUI FOI OPTADO POR UTILIZAR ÃNCORAS NÃO
         // NOMEADAS `?` AO INVÉS DE ANCORAS NOMEADAS `:` POR TRATAR-SE DE APENAS
         // UM VALOR A SER SUBSTITUÍDO NA STRING SQL DO PRIMEIRO PARÂMETRO.
-        const responseData = await db.run("DELETE FROM pessoa WHERE id=? LIMIT 1", request.params.id);
+        const responseData = await db.run("DELETE FROM pessoa WHERE id=?", request.params.id);
  
         // VERIFICA A QUANTIDADE DE LINHAS AFETADAS PELO DELETE, CASO O VALOR 
         // SEJA 0 SIGNIFICA QUE NADA FOI EXCLUÍDO
@@ -1164,13 +1165,12 @@ async function init() {
     const db = await initDatabase();
 
     app.get('/pessoa', async function (request, response) {
-        const responseData = await db.all("SELECT * FROM pessoa")
+        const responseData = await db.all("SELECT * FROM pessoa");
         response.json(responseData);
     });
 
     app.post('/pessoa', async function (request, response) {
         if (!request.body.nome || !request.body.sobrenome || !request.body.apelido) {
-            response.status(422); // Unprocessable Entity
             response.json({ error: "dados incompletos." });
             return;
         }
@@ -1186,15 +1186,14 @@ async function init() {
             );
             response.json(responseData);
         } catch (e) {
-            response.status(500); // Internal Server Error
-            response.json({ error: "Erro de Banco de Dados.", detail: e });
+            response.json({ error: "database error", detail: e });
         }
     });
 
     app.get('/pessoa/:id', async function (request, response) {
-        const responseData = await db.get("SELECT * FROM pessoa WHERE id=?", request.params.id);
+        const responseData = await db.get("SELECT * FROM pessoa WHERE id=? LIMIT 1", request.params.id);
+
         if (responseData == undefined) {
-            response.status(404); // Not Found
             response.json({ error: "Pessoa não encontrada." });
         } else {
             response.json(responseData);
@@ -1203,7 +1202,6 @@ async function init() {
 
     app.put('/pessoa/:id', async function (request, response) {
         if (!request.body.nome || !request.body.sobrenome || !request.body.apelido) {
-            response.status(422); // Unprocessable Entity
             response.json({ error: "dados incompletos." });
             return;
         }
@@ -1219,23 +1217,20 @@ async function init() {
                 }
             );
 
-            if(responseData.changes == 0) {
-                response.status(404);
-                response.json({ error: "pessoa não encontrada" });
+            if (responseData == undefined) {
+                response.json({ error: "Pessoa não encontrada." });
             } else {
                 response.json(responseData);
             }
         } catch (e) {
-            response.status(500); // Internal Server Error
-            response.json({ error: "Erro de Banco de Dados.", detail: e });
+            response.json({ error: "database error", detail: e });
         }
     });
 
     app.delete('/pessoa/:id', async function (request, response) {
         const responseData = await db.run("DELETE FROM pessoa WHERE id=?", request.params.id);
-        if(responseData.changes == 0) {
-            response.status(404);
-            response.json({ error: "pessoa não encontrada" });
+        if (responseData.changes == 0) {
+            response.json({ error: "Pessoa não encontrada." });
         } else {
             response.json(responseData);
         }
