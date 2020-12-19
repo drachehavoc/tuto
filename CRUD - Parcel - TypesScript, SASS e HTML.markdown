@@ -1257,6 +1257,40 @@ npm install --save-dev parcel
 
 npm install --save-dev typescript
 
+npx typescript --init
+
+…
+
+_tsconfig.json_
+```json
+{
+    "compilerOptions": {
+      "target": "ES2020",
+      "module": "commonjs",
+      "sourceMap": true,
+      "rootDir": "./dist",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+    }
+}
+```
+
+…
+
+_package.json_
+```json
+{
+  …
+  "scripts": {
+    "build": "parcel build ./src/index.html",
+    "debug": "parcel ./src/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  …
+}
+```
 …
 
 _src/index.html_
@@ -1305,20 +1339,6 @@ body {
 │ └▹🗎 main.ts
 ├▹🗎 package.json
 └▹🗎 tsconfig.json
-```
-
-…
-
-```json
-{
-  …
-  "scripts": {
-    "build": "parcel build ./src/index.html",
-    "debug": "parcel ./src/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  …
-}
 ```
 
 ### Webcomponent
@@ -1391,6 +1411,136 @@ _src/main.ts_
 #### Input webcomponent
 
 …
+
+_src/webcomponents/input/component.html_
+```html
+<link rel="stylesheet" href="./component.scss">
+<main>
+    <span class="label">label</span>
+    <span class="value" contentEditable="true"></span>
+    <span class="line"></span>
+</main>
+```
+…
+
+_src/webcomponents/input/component.scss_
+```scss
+$size: 1.5em;
+
+* {
+    box-sizing: border-box;
+}
+
+main {
+    height: $size;
+    margin-top: $size;
+    position: relative;
+    border-bottom: 1px solid #CCCCCC; 
+    transition: .3s;
+
+    .line {
+        border-bottom: 1px solid;
+        display: inline-block;
+        transition: .3s;
+        width: 0%;
+        position: absolute;
+        bottom: 0;
+    }
+
+    .label,
+    .value {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        padding-left: .25em;
+    }
+    
+    .label {
+        transition: .3s;
+    }
+    
+    .value {
+        overflow: hidden;
+        white-space: nowrap;
+        outline: none;
+    }
+    
+    &.titled {
+        border-bottom: 1px solid transparent;
+
+        .label {
+            opacity: .8;
+            transform: translateY(-70%) translateX(-10%) scale(.8);
+        }
+
+        .line {
+            width: 100%;
+        }
+    }
+}
+```
+…
+
+_src/webcomponents/input/component.ts_
+```typescript
+import template from "./component.html";
+
+class CompInput extends HTMLElement {
+    private _root = this.attachShadow({ mode: "closed" });
+    private _elMain: HTMLElement;
+    private _elValue: HTMLSpanElement;
+    private _elLabel: HTMLSpanElement;
+    private _value: string = "";
+
+    static get observedAttributes() {
+        return ['value'];
+    }
+
+    constructor() {
+        super();
+        this._root.innerHTML = template;
+        this._elMain = <HTMLElement>this._root.querySelector('main');
+        this._elLabel = <HTMLSpanElement>this._elMain.querySelector('.label');
+        this._elValue = <HTMLSpanElement>this._elMain.querySelector('.value');
+    }
+
+    get value() {
+        return this._value;
+    }
+
+    set value(newValue: string) {
+        this.setAttribute('value', newValue);
+    }
+
+    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        if (name == 'value') {
+            this._value = newValue;
+            this._elValue.innerText = newValue;
+            this.checkIfValueIsEmpty()
+            return;
+        }
+    }
+
+    connectedCallback() {
+        this._elLabel.innerText = this._root.host.getAttribute("label") || "label";
+        this._elValue.addEventListener('focus', el => this._elMain.classList.add("titled"));
+        this._elValue.addEventListener('blur', el => this.checkIfValueIsEmpty());
+    }
+
+    private checkIfValueIsEmpty() {
+        if (this._elValue.innerText.trim() == "")
+            this._elMain.classList.remove("titled");
+        else
+            this._elMain.classList.add("titled");
+    }
+}
+
+customElements.define("x-input", CompInput);
+```
 
 
 #### Form webcomponent
