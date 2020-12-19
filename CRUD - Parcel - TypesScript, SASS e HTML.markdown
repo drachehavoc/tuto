@@ -203,7 +203,6 @@ Ao término desse processo, nossa estrutura de arquivos deve ser parecida com a 
 ├🗁 src
 │ ├▹🗎 database.ts
 │ └▹🗎 main.ts
-├▹🗎 openapi.yaml
 ├▹🗎 package-lock.json
 ├▹🗎 package.json
 └▹🗎 tsconfig.json
@@ -1249,3 +1248,169 @@ init();
 ## 2. Cliente - Browser/Navegador
 
 …
+
+### Estrutura do projeto
+
+npm init -y
+
+npm install --save-dev parcel
+
+npm install --save-dev typescript
+
+…
+
+_src/index.html_
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cadastro de Pessoas</title>
+    </head>
+    <body>
+        <script src="./main.ts"></script>
+    </body>
+</html>
+```
+
+…
+
+_src/main.ts_
+```typescript
+import "./main.scss";
+
+document.body.innerHTML = "Olá mundo do .ts ... ";
+```
+
+…
+
+_src/main.scss_
+```scss
+body {
+    &::before {
+        content: "Olá mundo do .scss ... ";
+    }
+}
+```
+
+…
+
+```shell
+🗁 server
+├🗀 dist
+├🗀 node_module
+├🗁 src
+│ ├▹🗎 index.html
+│ ├▹🗎 main.scss
+│ └▹🗎 main.ts
+├▹🗎 package.json
+└▹🗎 tsconfig.json
+```
+
+…
+
+```json
+{
+  …
+  "scripts": {
+    "build": "parcel build ./src/index.html",
+    "debug": "parcel ./src/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  …
+}
+```
+
+### Webcomponent
+
+…
+
+_src/webcomponents/input/component.html_
+```html
+<link rel="stylesheet" href="./component.scss">
+<div>eu sou o template do componente</div>
+```
+
+…
+
+_src/webcomponents/input/component.scss_
+```scss
+div {
+    color: pink;
+}
+```
+
+…
+
+_src/webcomponents/input/component.ts_
+```typescript
+class Input extends HTMLElement {
+    private _root = this.attachShadow({ mode: "closed" });
+
+    connectedCallback() {
+        this._root.innerHTML = "Olá, eu sou um webcomponent! ...";
+    }
+}
+
+customElements.define("x-input", Input);
+```
+
+_src/webcomponents/index.d.ts_
+```typescript
+declare module '*.html' {
+    const value: string;
+    export default value
+}
+```
+
+…
+
+_src/main.ts_
+```typescript
+import "./main.scss";
+import "./webcomponents/input/component"; // <--- adicionado
+```
+
+…
+
+_src/main.ts_
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cadastro de Pessoas</title>
+    </head>
+    <body>
+        <script src="./main.ts"></script>
+        <x-input></x-input>
+    </body>
+</html>
+```
+
+#### Input webcomponent
+
+…
+
+
+#### Form webcomponent
+
+…
+
+#### Estrutura final da pasta `src`
+
+```shell
+🗁 src
+ ├🗁 webcomponents
+ │ ├🗁 from
+ │ │ ├▹🗎 component.scss
+ │ │ ├▹🗎 component.html
+ │ │ └▹🗎 component.ts
+ │ └🗁 input
+ │   ├▹🗎 component.scss
+ │   ├▹🗎 component.html
+ │   └▹🗎 component.ts
+ ├▹🗎 index.html
+ ├▹🗎 main.scss
+ └▹🗎 main.ts
+```
