@@ -1483,13 +1483,14 @@ main {
     }
 }
 ```
+
 …
 
 _src/webcomponents/input/component.ts_
 ```typescript
 import template from "./component.html";
 
-class CompInput extends HTMLElement {
+export class HTMLXInput extends HTMLElement {
     private _root = this.attachShadow({ mode: "closed" });
     private _elMain: HTMLElement;
     private _elValue: HTMLSpanElement;
@@ -1509,7 +1510,7 @@ class CompInput extends HTMLElement {
     }
 
     get value() {
-        return this._value;
+        return this._elValue.innerText;
     }
 
     set value(newValue: string) {
@@ -1539,13 +1540,200 @@ class CompInput extends HTMLElement {
     }
 }
 
-customElements.define("x-input", CompInput);
+customElements.define("x-input", HTMLXInput);
 ```
 
 
 #### Form webcomponent
 
 …
+
+```html
+<link rel="stylesheet" href="./component.scss">
+<main>
+    <x-input id="nome" label="nome"></x-input>
+    <x-input id="sobrenome" label="sobrenome"></x-input>
+    <x-input id="apelido" label="apelido"></x-input>
+    <div class="button-bar">
+        <button class="delete">Excluir</button>
+        <button class="save">Salvar</button>
+    </div>
+</main>
+```
+
+```scss
+main {
+    .button-bar {
+        display: flex;
+        justify-content: flex-end;
+        
+        button {
+            $color: #3FAF4B;
+            background: $color;
+            border: 2px solid darken($color: $color, $amount: 4);
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            margin: 1em 0;
+            padding: .25em 1em;
+
+            &.delete {
+                $color: #EB1A30;
+                background: $color;
+                border: 2px solid darken($color: $color, $amount: 4);
+            }
+
+            &:disabled {
+                $color: #dddddd;
+                background: $color;
+                border: 2px solid darken($color: $color, $amount: 4);
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+```
+
+…
+
+```json
+{
+  …  
+  "browserslist": [
+    "since 2017-06"
+  ],
+  …
+}
+```
+
+```typescript
+import template from "./component.html";
+import { HTMLXInput } from "../input/component";
+
+export class HTMLXForm extends HTMLElement {
+    private _root = this.attachShadow({ mode: "closed" });
+    private _id?: number;
+    private _elNome: HTMLXInput;
+    private _elSobrenome: HTMLXInput;
+    private _elApelido: HTMLXInput;
+    private _elBtSave: HTMLButtonElement;
+    private _elBtDelete: HTMLButtonElement;
+
+    constructor() {
+        super();
+        //
+        this._root.innerHTML = template;
+        this._elNome = <HTMLXInput>this._root.querySelector("#nome");
+        this._elSobrenome = <HTMLXInput>this._root.querySelector("#sobrenome");
+        this._elApelido = <HTMLXInput>this._root.querySelector("#apelido");
+        this._elBtSave = <HTMLButtonElement>this._root.querySelector(".save");
+        this._elBtDelete = <HTMLButtonElement>this._root.querySelector(".delete");
+        //
+        this._elBtSave.addEventListener("click", ev => this._action(ev));
+        this._elBtDelete.addEventListener("click", ev => this._excluir(ev));
+    }
+
+    load(data: { id?: number, nome: string, sobrenome: string, apelido: string }) {
+        if (data.id) {
+            this._id = data.id;
+            this._elBtSave.innerText = "Alterar";
+            this._elBtDelete.classList.add("show");
+        }
+        this._elNome.value = data.nome;
+        this._elSobrenome.value = data.sobrenome;
+        this._elApelido.value = data.apelido;
+    }
+
+    private _action(ev: MouseEvent) {
+        if (this._id) {
+            this._alterar();
+        } else {
+            this._adicionar();
+        }
+    }
+
+    private async _adicionar() {
+        this._elBtSave.setAttribute('disabled', "true");
+
+        const data = {
+            nome: this._elNome.value,
+            sobrenome: this._elSobrenome.value,
+            apelido: this._elApelido.value
+        };
+
+        const configReq = {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        };
+
+        const req = await fetch("http://localhost:8081/pessoa", configReq);
+        const res = await req.json();
+
+        if (req.status == 200) {
+            this._id = res.lastID;
+            this._elBtSave.innerText = "Alterar";
+            this._elBtDelete.classList.add("show");
+        } else {
+            alert(res.error);
+        }
+
+        this._elBtSave.removeAttribute('disabled');
+    }
+
+    private async _alterar() {
+        this._elBtSave.setAttribute('disabled', "true");
+
+        const data = {
+            nome: this._elNome.value,
+            sobrenome: this._elSobrenome.value,
+            apelido: this._elApelido.value
+        };
+
+        const configReq = {
+            method: "put",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        };
+
+        const req = await fetch("http://localhost:8081/pessoa/" + this._id, configReq);
+        const res = await req.json();
+
+        if (req.status == 200) {
+            this._id = res.lastID;
+            this._elBtSave.innerText = "Alterar";
+            this._elBtDelete.classList.add("show");
+        } else {
+            alert(res.error);
+        }
+
+        this._elBtSave.removeAttribute('disabled');
+    }
+
+    private async _excluir(ev: MouseEvent) {
+        if (!this._id) {
+            this.remove();
+            return;
+        }
+
+        this._elBtSave.setAttribute('disabled', "true");
+
+        const configReq = { method: "delete" };
+        const req = await fetch("http://localhost:8081/pessoa/" + this._id, configReq);
+        const res = await req.json();
+
+        if (req.status == 200) {
+            this.remove();
+        } else {
+            alert(res.error);
+        }
+
+        this._elBtSave.removeAttribute('disabled');
+    }
+}
+
+customElements.define("x-form", HTMLXForm);
+```
 
 #### Estrutura final da pasta `src`
 
@@ -1563,4 +1751,61 @@ customElements.define("x-input", CompInput);
  ├▹🗎 index.html
  ├▹🗎 main.scss
  └▹🗎 main.ts
+```
+
+### ZZZZ
+
+_src/index.html_
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cadastro de Pessoas</title>
+    </head>
+    <body>
+        <script src="./main.ts"></script>
+        <main>
+            <button class="new-form">Novo Formulário</button>
+        </main>
+    </body>
+</html>
+```
+
+_src/main.scss_
+```scss
+main {
+    width: 100%;
+    min-width: 400px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+```
+
+_src/main.ts_
+```typescript
+import "./main.scss";
+import "./webcomponents/input/component";
+import "./webcomponents/form/component";
+import { HTMLXForm } from "./webcomponents/form/component";
+
+const elMain = <HTMLElement>document.querySelector('main');
+const elBtNewForm = <HTMLButtonElement>document.querySelector('.new-form');
+
+elBtNewForm.addEventListener('click', el => {
+    const form = <HTMLXForm>document.createElement("x-form");
+    elMain.insertBefore(form, elBtNewForm.nextElementSibling);
+});
+
+async function listarPessoas() {
+    const req = await fetch("http://localhost:8081/pessoa/");
+    const res = await req.json();
+    res.forEach((pessoa: { nome: string, sobrenome: string, apelido: string }) => {
+        const el = <HTMLXForm>document.createElement("x-form");
+        el.load(pessoa);
+        elMain.appendChild(el);
+    });
+}
+
+listarPessoas();
 ```
