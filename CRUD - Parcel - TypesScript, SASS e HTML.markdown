@@ -169,7 +169,7 @@ _packaje.json_
 
 #### Criação do arquivo de configuração do compilador TypeScript (arquivo tsconfig.json)
  
-Para que seja possível informar ao `typescript` e ao `ts-node` como compilar e/ou interpretar os arquivos `.ts` é necessário a criação de um arquivo `tsconfig.json`; A fim de facilitar este passo, utilizaremos o **NPX**, no **terminal do VSCode** digite o seguinte comando:  
+Para que seja possível informar ao `typescript` e ao `ts-node` como compilar e/ou interpretar os arquivos `.ts` é necessário a criação de um arquivo `tsconfig.json`; A fim de facilitar este passo utilizaremos o **NPX**, no **terminal do VSCode** digite o seguinte comando:  
  
 ```shell
 npx typescript --init
@@ -1249,17 +1249,68 @@ init();
 
 …
 
-### Estrutura do projeto
-
-npm init -y
-
-npm install --save-dev parcel
-
-npm install --save-dev typescript
-
-npx typescript --init
+### Pré-requisitos
 
 …
+
+### Estrutura do projeto
+
+Para iniciarmos o desenvolvimento abra a pasta `cadastro-pessoa`, que você criou anteriormente e dentro desta pasta crie uma subpasta chamada `client`, esta será a pasta onde criaremos o cliente de nossa aplicação, após a criação abra a pasta `client` no VSCode (arraste a pasta `client` para dentro do VSCode).
+
+A estrutura inicial do projeto deve ficar parecido com a seguir, note que a pasta que deve ser aberta no **VSCode** é a `client` e não a pasta `cadastro-pessoa`.
+ 
+```shell
+🗁 cadastro-pessoa
+ └▹🗀 client          <---arraste esta pasta para o VSCode
+```
+
+#### Inicialização do Projeto (arquivo package.json)
+
+Para criarmos o arquivo `package.json` iremos utilizar o `NPM`, este arquivo é responsável por manter informações importantes sobre o projeto, como comandos para empacotamento e execução, quais pacotes de terceiro serão utilizados, além de nome do autor, versão do projeto etc. abra o **terminal do VSCode** _ctrl+'_ e digite o seguinte comando:
+ 
+```shell
+npm init -y
+```
+
+Este comando criará um arquivo chamado `package.json` sem fazer nenhuma pergunta, para ter a possibilidade de criar o arquivo já com dados customizados, execute o mesmo comando porém sem o parâmetro `-y` (este parâmetro significa, responda _yes_ para todas perguntas).
+
+O arquivo gerado terá uma estrutura semelhante a esta:
+
+_package.json_
+```json
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "tutorial - desenvolvimento de cliente para a API de cadastro de pessoa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Daniel de A. Varela",
+  "license": "Apache-2.0"
+}
+```
+
+Neste momento não alteraremos o arquivo `package.json` gerado, mas logo mais o configuraremos com as especificidades de nosso projeto.
+
+#### Instalação de dependências para execução e compilação da aplicação
+
+Aqui instalaremos bibliotecas essenciais para a execução e compilação de nossa aplicação, instalaremos o bundler `Parcel`, que será utilizado para compilação, execução e/ou teste da aplicação cliente, também instalaremos a biblioteca `typescript` para que o `Parcel` possa compilar e executar arquivos `.ts`, nesse projeto também utilizaremos `SASS`, porém o `Parcel` é capaz de baixá-lo no momento da primeira execução da aplicação, para efetuar a instalação dessas bibliotecas, abra o **terminal do VSCode** _ctrl+'_ e digite o seguinte comando:
+
+```shell
+npm install --save-dev parcel typescript
+```
+
+#### Criação do arquivo de configuração do compilador TypeScript (arquivo tsconfig.json)
+ 
+Para que seja possível informar ao `typescript/parcel` como compilar e/ou interpretar os arquivos `.ts` é necessário a criação de um arquivo `tsconfig.json`; A fim de facilitar este passo utilizaremos o **NPX**, no **terminal do VSCode** digite o seguinte comando:  
+ 
+```shell
+npx typescript --init
+```
+
+Assim como no projeto da API precisamos configurar o arquivo `tsconfig.json` para as especificidades de nosso projeto, neste caso nosso arquivo de configuração terá as seguintes configurações:
 
 _tsconfig.json_
 ```json
@@ -1268,7 +1319,6 @@ _tsconfig.json_
       "target": "ES2020",
       "module": "commonjs",
       "sourceMap": true,
-      "rootDir": "./dist",
       "strict": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
@@ -1277,21 +1327,32 @@ _tsconfig.json_
 }
 ```
 
-…
+> Vale notar que são as mesmas configurações do projeto da API exceto que não é necessário definir o atributo `outDir`.
+
+#### Scripts de testes e Execuções (package.json)
+
+Para que seja possível executar e testar a aplicação em desenvolvimento, criaremos dois scripts no arquivo `package.json`, dentro da chave `scripts` adicionaremos a entrada `"build": "parcel build ./src/index.html"`, este comando é responsável por iniciar o processo de compilação dos arquivos `.ts` e `.scss`, a segunda entrada que deve ser adicionada é a seguinte `"debug": "parcel ./src/index.html"`, este comando será responsável por executar nosso projeto no momento de desenvolvimento e testes. 
 
 _package.json_
 ```json
 {
   …
   "scripts": {
-    "build": "parcel build ./src/index.html",
-    "debug": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html",              <---adicionado
+    "debug": "parcel ./src/index.html",                    <---adicionado
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   …
 }
 ```
-…
+
+#### Arquivos manuais
+
+Crie uma pasta chamada `src` no raiz (na pasta `cliente`) do nosso projeto, dentro desta pasta todo o nosso código fonte será armazenado, na pasta `src` criaremos três arquivos o `index.html`, `main.scss` e `main.ts`, a seguir veremos o conteúdo inicial de cada um destes arquivos para que possamos testar a nossa aplicação:
+
+> se preferir, na raiz é possível já criar uma pasta chamada `dist`, onde os arquivos compilados para distribuição serão armazenados, porém não é necessário pois esta pasta será criada automaticamente assim que a aplicação for executada ou compilada.
+
+O Arquivo `index.html` é o arquivo de entrada de toda a nossa aplicação, note que ele importa o arquivo `main.ts`:
 
 _src/index.html_
 ```html
@@ -1307,83 +1368,126 @@ _src/index.html_
 </html>
 ```
 
-…
+O arquivo `main.ts` será responsável por importar e executar as funções iniciais da nossa aplicação, além de importar o arquivo de aparência padrão da aplicação, no exemplo abaixo, foi adicionado uma linha de código que escreve `Olá mundo do main.ts ... ` no corpo da nossa aplicação, assim nos permitindo ver que este arquivo foi carregado com sucesso por nossa aplicação:
 
 _src/main.ts_
 ```typescript
+// IMPORTA O ARQUIVO DE ESTILO PADRÃO DA NOSSA APLICAÇÃO
 import "./main.scss";
 
-document.body.innerHTML = "Olá mundo do .ts ... ";
+// IMPRIME `Olá mundo do main.ts ...` NO CORPO DA APLICAÇÃO
+document.body.innerHTML = "Olá mundo do main.ts ... ";
 ```
 
-…
+O arquivo `main.scss` será responsável pela aparência da nossa aplicação, neste exemplo foi adicionado uma linha de código que escreve `Olá mundo do main.scss ... ` antes do corpo da nossa aplicação, assim nos permitindo ver que este arquivo foi carregado com sucesso por nossa aplicação:
 
 _src/main.scss_
 ```scss
 body {
     &::before {
-        content: "Olá mundo do .scss ... ";
+        content: "Olá mundo do main.scss ... ";
     }
 }
 ```
 
-…
+A estrutura inicial do nosso projeto deve ser semelhante a esta:
 
 ```shell
 🗁 server
-├🗀 dist
+├🗀 dist             <---pasta onde os arquivo compilados serão armazenados
 ├🗀 node_module
-├🗁 src
-│ ├▹🗎 index.html
-│ ├▹🗎 main.scss
-│ └▹🗎 main.ts
+├🗁 src              <---pasta com os códigos fontes
+│ ├▹🗎 index.html     <---arquivo de entrada da aplicação
+│ ├▹🗎 main.scss      <---arquivo de estilo da aplicação
+│ └▹🗎 main.ts        <---arquivo de entrada das funcionalidades da aplicação
 ├▹🗎 package.json
 └▹🗎 tsconfig.json
 ```
 
+Nesta estrutura o único item opcional é a pasta `./dist`, pois a mesma será criada automaticamente quando utilizarmos o `typescript` para compilar os arquivos `.ts`.
+
+#### Teste e compilação
+
+Para que seja possível testar a aplicação execute o seguinte comando no terminal do **VSCode** `npm run debug`, por esta ser a primeira vez que a aplicação está sendo executada o `Parcel` irá baixar as bibliotecas necessárias para execução e/ou compilar, isso pode demorar um pouco, note que diferente do `ts-node` que  utilizamos na aplicação servidora, o `Parcel` continuará em execução até que o  atalho `ctrl+c` seja pressionado no terminal, isso significa que as alterações  que forem feitas durante essa execução serão automaticamente compiladas,  tornando os testes mais rápidos.
+ 
+Assim que o comando `npm run debug` for bem sucedido, no terminal uma url será apresentada, esta dará acesso a aplicação, normalmente a url é  `http://localhost:1234`, abra ela em um browser, se tudo correr bem, você verá as mensagens de _olá mundo_ do arquivo `main.scss` e `main.ts`.
+ 
+Para compilar a aplicação, exclua as pastas geradas automaticamente pelo script de teste `.cache` e `dist` e então execute o seguinte comando `npm run build`, a pasta `dist` será recriada e seu conteúdo é a versão de distribuição da  aplicação cliente.
+
 ### Webcomponent
 
-…
+Dentro desta pasta `src` criaremos uma subpasta chamada `webcomponents`, aqui armazenaremos os arquivos dos componentes que faremos para nossa aplicação, este componentes serão utilizados no HTML, uma das vantagens dos `webcomponets` é que seus scripts e aparência não podem ser afetados pelo resto do conteúdo, a não ser que estratégias sejam tomadas para tal.
+ 
+Como exemplo de como será a estrutura dos componentes de nossa aplicação, criaremos agora uma subpasta da pasta `src/webcomponents` chamada `input`, este será nosso primeiro `webcomponent`, porém nesse momento faremos o básico para apenas entendermos como são desenvolvidos os componentes.
+ 
+Na pasta `input` qua acabamos de criar, adicionaremos três arquivos: `component.html`, responsável pelo layout de nosso arquivo e pela importação do arquivo de estilo, o arquivo `component.scss` que será responsável pela aparência de nosso componente, e por fim o arquivo `component.ts` responsável por importar o template além de adicionar as funcionalidades, a seguir vêremos o conteúdo de cada um destes arquivos, com comentários para que seja possível entender o funcionamento:
+
 
 _src/webcomponents/input/component.html_
 ```html
-<link rel="stylesheet" href="./component.scss">
-<div>eu sou o template do componente</div>
+<link rel="stylesheet" href="./component.scss"> <!-- importa o arquivo de estilo -->
+<div>eu sou o template do componente</div> <!-- conteúdo de nosso componente -->
 ```
-
-…
 
 _src/webcomponents/input/component.scss_
 ```scss
-div {
-    color: pink;
+div { // seleciona os elementos divs da aplicação
+    color: pink; // deixa o elemento selecionado com a cor do texto rosa
 }
 ```
-
-…
 
 _src/webcomponents/input/component.ts_
 ```typescript
-class Input extends HTMLElement {
+// importa o template como string do arquivo `component.html` e armazena o valor
+// na variavel `template` >> não se preocupe, nesmo momento o VSCode apresentará
+// erro pois ele não sabe como importar arquivos `.html`
+import template from "./component.html";
+
+// cria uma classe chamada HTMLXInput que extende de HTMLElement
+class HTMLXInput extends HTMLElement {
+    // cria um atributo privado chamado _root que recebe um objeto ShadowRoot o 
+    // mesmo que será adicionado ao elemento que está sendo criado para o 
+    // elemento html que estamos criando, caso não tenha conhecimento sobre 
+    // Shadow DOM sugiro ler o seguinte:
+    // https://developers.google.com/web/fundamentals/web-components/shadowdom?hl=pt-br
+    // como forma de simplificar o entendimento do que esta linha respresenta,
+    // considere que _root será o elemento HTML base de nossa aplicação.
     private _root = this.attachShadow({ mode: "closed" });
 
+    // esta função é executada quando o elemento que estamos criando for 
+    // adicionado em um elemento já visivel no DOM
     connectedCallback() {
-        this._root.innerHTML = "Olá, eu sou um webcomponent! ...";
+        // adiciona ao innerHTML da raiz da nossa aplicação o valor importado
+        // do template HTML
+        this._root.innerHTML = template;
     }
 }
 
-customElements.define("x-input", Input);
+// define um novo elemento HTML chamado `x-input`, a partir da classe 
+// `HTMLXInput`, note que para elementos WebComponent é necessário que seja uma
+// string que contenha ao menos duas palavras separada por `-`
+customElements.define("x-input", HTMLXInput);
 ```
+
+Neste momento você deve ter percebido que ao importar o arquivo HTML de template o **VSCode** apresentou uma mensagem de erro, para solucionar esta situação criaremos um arquivo do tipo `.d.ts`, estes arquivos são apenas de tipo, servem  para informar como o TypeScrip deve interpretar alguns tipos, em nosso caso  criaremos um arquivo chamado `index.d.ts` na pasta raiz dos componente `src/webcomponents`, veja a seguir o arquivo comentado:
+
 
 _src/webcomponents/index.d.ts_
 ```typescript
+// declara como importar qualquer arquivo HTML
 declare module '*.html' {
+    // define que modulos HTML tem uma constante value do tipo String
     const value: string;
+    // o valor padrão retornado por estes modulos é a value string definida na 
+    // linha anterior
     export default value
 }
 ```
 
-…
+#### Como utilizar o componente criado
+
+Para utilizar o componente que criamos é necessário importá-lo, para isso no
+arquivo `src/main.ts` vamos fazer o seguinte:
 
 _src/main.ts_
 ```typescript
@@ -1391,7 +1495,7 @@ import "./main.scss";
 import "./webcomponents/input/component"; // <--- adicionado
 ```
 
-…
+Isso nos permite utilizar o componente em nosso HTML principal, vejo o exemplo:
 
 _src/main.ts_
 ```html
@@ -1403,7 +1507,7 @@ _src/main.ts_
     </head>
     <body>
         <script src="./main.ts"></script>
-        <x-input></x-input>
+        <x-input></x-input> <!-- utilização do componente criado -->
     </body>
 </html>
 ```
@@ -1484,7 +1588,6 @@ main {
 }
 ```
 
-…
 
 _src/webcomponents/input/component.ts_
 ```typescript
