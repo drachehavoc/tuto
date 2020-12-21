@@ -1469,8 +1469,7 @@ class HTMLXInput extends HTMLElement {
 customElements.define("x-input", HTMLXInput);
 ```
 
-Neste momento você deve ter percebido que ao importar o arquivo HTML de template o **VSCode** apresentou uma mensagem de erro, para solucionar esta situação criaremos um arquivo do tipo `.d.ts`, estes arquivos são apenas de tipo, servem  para informar como o TypeScrip deve interpretar alguns tipos, em nosso caso  criaremos um arquivo chamado `index.d.ts` na pasta raiz dos componente `src/webcomponents`, veja a seguir o arquivo comentado:
-
+Neste momento você deve ter percebido que ao importar o arquivo HTML de template o **VSCode** apresentou uma mensagem de erro, para solucionar esta situação criaremos um arquivo do tipo `.d.ts`, estes arquivos são apenas de tipo, servem para epecificar como o TypeScrip deve interpretar alguns tipos, em nosso caso  criaremos um arquivo chamado `index.d.ts` na pasta raiz dos componente `src/webcomponents`, veja a seguir o arquivo comentado:
 
 _src/webcomponents/index.d.ts_
 ```typescript
