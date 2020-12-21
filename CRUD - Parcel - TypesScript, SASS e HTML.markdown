@@ -1418,7 +1418,7 @@ Para compilar a aplicação, exclua as pastas geradas automaticamente pelo scrip
 
 Dentro desta pasta `src` criaremos uma subpasta chamada `webcomponents`, aqui armazenaremos os arquivos dos componentes que faremos para nossa aplicação, este componentes serão utilizados no HTML, uma das vantagens dos `webcomponets` é que seus scripts e aparência não podem ser afetados pelo resto do conteúdo, a não ser que estratégias sejam tomadas para tal.
  
-Como exemplo de como será a estrutura dos componentes de nossa aplicação, criaremos agora uma subpasta da pasta `src/webcomponents` chamada `input`, este será nosso primeiro `webcomponent`, porém nesse momento faremos o básico para apenas entendermos como são desenvolvidos os componentes.
+Para exemplificar como será a estrutura dos componentes de nossa aplicação, criaremos agora uma subpasta da pasta `src/webcomponents` chamada `input`, este será nosso primeiro `webcomponent`, porém nesse momento faremos o básico para apenas entendermos como são desenvolvidos os componentes.
  
 Na pasta `input` qua acabamos de criar, adicionaremos três arquivos: `component.html`, responsável pelo layout de nosso arquivo e pela importação do arquivo de estilo, o arquivo `component.scss` que será responsável pela aparência de nosso componente, e por fim o arquivo `component.ts` responsável por importar o template além de adicionar as funcionalidades, a seguir vêremos o conteúdo de cada um destes arquivos, com comentários para que seja possível entender o funcionamento:
 
