@@ -1663,7 +1663,7 @@ _src/webcomponents/form/component.html_
 </main>
 ```
 
-_src/webcomponents/input/component.scss_
+_src/webcomponents/form/component.scss_
 ```scss
 main {
     .button-bar {
