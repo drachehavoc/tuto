@@ -1650,6 +1650,7 @@ customElements.define("x-input", HTMLXInput);
 
 …
 
+_src/webcomponents/form/component.html_
 ```html
 <link rel="stylesheet" href="./component.scss">
 <main>
@@ -1663,6 +1664,7 @@ customElements.define("x-input", HTMLXInput);
 </main>
 ```
 
+_src/webcomponents/input/component.scss_
 ```scss
 main {
     .button-bar {
@@ -1698,6 +1700,7 @@ main {
 
 …
 
+_package.json_
 ```json
 {
   …  
@@ -1708,6 +1711,7 @@ main {
 }
 ```
 
+_src/webcomponents/form/component.ts_
 ```typescript
 import template from "./component.html";
 import { HTMLXInput } from "../input/component";
