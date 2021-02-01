@@ -2,9 +2,8 @@
  
 …
 
-## 1. Servidor - RESTFul api
+## 1. Servidor - RESTFul apii
 
-…
 
 ### Pré-requisitos
  
@@ -1496,7 +1495,7 @@ import "./webcomponents/input/component"; // <--- adicionado
 
 Isso nos permite utilizar o componente em nosso HTML principal, vejo o exemplo:
 
-_src/main.ts_
+_src/index.html_
 ```html
 <!DOCTYPE html>
 <html lang="pt-BR">
